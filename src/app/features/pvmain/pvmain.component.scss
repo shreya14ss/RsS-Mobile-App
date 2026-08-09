@@ -1,0 +1,387 @@
+// PvMain fills the space given to it by the project router outlet.
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+// ── Main content area ─────────────────────────────────────────────────────
+.main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+// ── Empty-state message when no mobile-supported view exists at this level ──
+.empty-view-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 24px;
+  text-align: center;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    color: var(--ion-color-medium);
+  }
+
+  .title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--ion-color-dark);
+  }
+
+  .hint {
+    font-size: 13px;
+    margin: 0;
+    max-width: 280px;
+    line-height: 1.4;
+  }
+}
+
+// ── Header toolbar — let color="primary" on ion-toolbar drive the background ──
+// No override needed; --ion-color-primary (#1e3a5f) is applied by Ionic automatically.
+
+.header-logo {
+  margin-left: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.header-time {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+// ── Side menu ─────────────────────────────────────────────────────────────
+ion-menu {
+  --width: 280px;
+
+  ion-content {
+    --background: #f5f6f8;
+  }
+
+  // ── Profile header (dark navy) ──────────────────────────────
+  .menu-profile-toolbar {
+    --background: #1e3a5f;
+    --min-height: 110px;
+    --color: #ffffff;
+    --border-color: transparent;
+  }
+
+  .menu-profile-wrap {
+    padding: 12px 16px 14px;
+  }
+
+  .menu-app-label {
+    color: #6aa1d6;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .menu-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .menu-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    ion-icon {
+      font-size: 22px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+
+  .menu-user-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .menu-username {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .menu-app-name {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ── Section headers ──────────────────────────────────────────
+  ion-list-header.section-header {
+    --color: rgba(30, 58, 95, 0.55);
+    min-height: 36px;
+    padding-top: 14px;
+    padding-bottom: 4px;
+    padding-inline-start: 20px;
+
+    .section-icon {
+      font-size: 14px;
+      color: rgba(30, 58, 95, 0.5);
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    ion-label {
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(30, 58, 95, 0.55) !important;
+      margin: 0;
+    }
+  }
+
+  // ── Nav items (rounded pills) ───────────────────────────────
+  ion-list {
+    background: transparent;
+    padding: 4px 0;
+  }
+
+  ion-list ion-item {
+    --padding-start: 14px;
+    --inner-padding-end: 12px;
+    --min-height: 48px;
+    --background: transparent;
+    --border-color: transparent;
+    --highlight-height: 0;
+    --border-radius: 12px;
+    margin: 4px 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: background 0.2s, color 0.2s;
+
+    ion-icon {
+      font-size: 20px;
+      color: rgba(30, 58, 95, 0.55);
+      margin-right: 10px;
+    }
+
+    ion-label {
+      font-size: 14px !important;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.78) !important;
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    // Active state — dark navy pill with white text + blue accent
+    &.active-item {
+      --background: #1e3a5f;
+      box-shadow: 0 4px 12px rgba(30, 58, 95, 0.22);
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 12px;
+        bottom: 12px;
+        width: 3px;
+        border-radius: 2px;
+        background: #6aa1d6;
+      }
+
+      ion-icon {
+        color: #ffffff;
+      }
+
+      ion-label {
+        color: #ffffff !important;
+        font-weight: 600;
+      }
+    }
+  }
+
+  // ── Footer (About + Logout pills) ───────────────────────────
+  ion-footer {
+    background: transparent;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .menu-footer-toolbar {
+    --background: transparent;
+    --border-color: transparent;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    padding: 0 12px;
+  }
+
+  .about-item,
+  .logout-item {
+    --background: rgba(0, 0, 0, 0.04);
+    --border-radius: 12px;
+    --min-height: 48px;
+    --padding-start: 14px;
+    --inner-padding-end: 12px;
+    border-radius: 12px;
+    margin: 4px 0;
+    overflow: hidden;
+
+    ion-label {
+      font-size: 14px !important;
+      font-weight: 500;
+    }
+  }
+
+  .about-item {
+    .about-icon {
+      color: rgba(30, 58, 95, 0.75) !important;
+    }
+    ion-label {
+      color: rgba(0, 0, 0, 0.72) !important;
+    }
+  }
+
+  .logout-item {
+    .logout-icon {
+      color: #e74c3c !important;
+    }
+    ion-label {
+      color: #e74c3c !important;
+    }
+  }
+}
+
+.notification-fabs {
+  position: fixed;
+  right: 12px;
+  bottom: 80px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fab-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.notification-fab {
+  --background: #163a63;
+  --box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  --color: #ffffff;
+  width: 48px;
+  height: 48px;
+  position: relative;
+  overflow: visible;
+}
+
+.notification-fab.actionable {
+  --background: #163a63;
+}
+
+.fab-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background: #8b8bf9;
+  color: #fff;
+  box-shadow: 0 0 0 2px #8b8bf9;
+}
+
+ion-fab-button::part(native) {
+  overflow: visible !important;
+}
+
+/* 📦 Notification panel */
+.global-notification-panel {
+  position: fixed !important;
+  bottom: 120px !important;
+  right: 10px !important;
+
+  width: 360px;
+  max-height: 70vh;
+
+  z-index: 999999 !important;
+
+  display: block !important;
+}
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-logo {
+  width: 28px;
+  height: 28px;
+}
+
+.header-title-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+// ── Breadcrumb secondary toolbar ──────────────────────────────────────────────
+// Sits below the primary toolbar in ion-header, always visible across all views.
+.bc-toolbar {
+  --background: var(--ion-background-color, #ffffff);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --min-height: 44px;
+  --padding-start: 0;
+  --padding-end: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  app-breadcrumb {
+    display: block;
+    width: 100%;
+  }
+}

@@ -1,0 +1,39 @@
+<ng-container *ngIf="loading">
+  <ion-list>
+    <ion-item *ngFor="let _ of [1,2,3,4,5]">
+      <ion-label>
+        <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ng-container>
+
+<ng-container *ngIf="!loading">
+  <ion-list *ngIf="data && data.length > 0" lines="full">
+    <ion-item
+      *ngFor="let item of data"
+      button
+      detail
+      (click)="onItemClick(item)">
+      <ion-label>
+        <h2>{{ getValue(item, titleKey) }}</h2>
+        <p *ngIf="subtitleKey">{{ getValue(item, subtitleKey) }}</p>
+        <div class="rs-list-badges" *ngIf="columns.length > 0">
+          <ng-container *ngFor="let col of columns">
+            <span
+              *ngIf="getValue(item, col.key)"
+              [class]="col.badge ? 'status-badge ' + (col.badgeClass ? col.badgeClass(getValue(item, col.key)) : 'status-default') : ''">
+              {{ col.label ? col.label + ': ' : '' }}{{ getValue(item, col.key) }}
+            </span>
+          </ng-container>
+        </div>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="rs-empty-state" *ngIf="!data || data.length === 0">
+    <ion-icon name="folder-open-outline" size="large" color="medium"></ion-icon>
+    <p>{{ emptyMessage }}</p>
+  </div>
+</ng-container>

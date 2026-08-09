@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  cursor: move;
+}
+
+.header > h1 {
+  flex-grow: 1;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.progressbar {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+

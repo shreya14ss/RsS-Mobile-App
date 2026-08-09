@@ -1,0 +1,59 @@
+<div class="sfb-wrapper">
+
+  <!-- ── Row 1: search + calendar trigger + projected filter button ───────── -->
+  <div class="sfb-row">
+    <div class="sfb-search" [class.has-focus]="focused">
+      <ion-icon class="sfb-search-icon" name="search-outline"></ion-icon>
+
+      <input class="sfb-input"
+             type="text"
+             [placeholder]="placeholder"
+             [ngModel]="searchText"
+             (ngModelChange)="onSearchChange($event)"
+             (focus)="focused = true"
+             (blur)="focused = false" />
+
+      <ion-icon *ngIf="searchText"
+                name="close-circle"
+                class="sfb-clear"
+                (click)="clearSearch()"></ion-icon>
+    </div>
+
+    <!-- Calendar trigger — always visible so date filtering stays discoverable
+         even before a range is applied. A small dot indicates an active range. -->
+    <button *ngIf="showDate"
+            type="button"
+            class="sfb-icon-btn"
+            (click)="openDatePicker()"
+            title="Filter by date"
+            [class.is-active]="hasDateApplied">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <span class="sfb-dot" *ngIf="hasDateApplied" aria-hidden="true"></span>
+    </button>
+
+    <!-- Filter menu trigger is projected by the parent so it can bind its own
+         matMenuTriggerFor to a per-tab menu. -->
+    <ng-content></ng-content>
+  </div>
+
+  <!-- ── Row 2: active-date chip — full width, only when a range is applied ─ -->
+  <div class="sfb-chips-row" *ngIf="hasDateApplied">
+    <span class="sfb-date-chip" (click)="openDatePicker()">
+      <ion-icon name="calendar" class="chip-icon"></ion-icon>
+      <span class="chip-text">{{ dateLabel }}</span>
+      <ion-icon name="close" class="chip-clear" (click)="onClearDate($event)"></ion-icon>
+    </span>
+  </div>
+
+  <!-- Hidden host for the shared date-time-selection dialog. We reuse its
+       dateClicked() method and selected_daterange formatting via ViewChild,
+       so we don't duplicate that logic here. -->
+  <app-date-time-selection #dateSel
+                           class="sfb-hidden-datepicker"
+                           [time_settings]="time_settings"
+                           (valueChanged)="onDateChanged($event)"
+                           [shiftList]="shiftList"
+                           [view_type]="view_type"
+                           [isShowRange]="isShowRange">
+  </app-date-time-selection>
+</div>

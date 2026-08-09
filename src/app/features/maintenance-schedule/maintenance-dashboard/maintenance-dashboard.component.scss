@@ -1,0 +1,692 @@
+// ── Design tokens ─────────────────────────────────────────────────────────
+// getStatusKey() does: status.toLowerCase().replace(/\s/g, '')
+// So CSS [data-status] values must use that transformed form, not raw enum keys.
+// e.g. "In Progress" → "inprogress", "Completed" → "completed", "Planned" → "planned"
+//
+// Status color palette matches ClientApp (getStatusColor):
+$success: #32de84; // GREEN  — completed / done
+$danger: #f88379; // RED    — cancelled / failed / critical
+$warning: #f59e0b; // AMBER  — approval / SLDC / administrative holds
+$orange: #f48024; // ORANGE — in-progress / WIP / active work
+$purple: #8b5cf6; // PURPLE — rescheduled
+$muted: #607d8b;
+$border: #e0e3e8;
+$card-bg: #ffffff;
+$text-dark: #1a1a2e;
+$text-mid: #546e7a;
+
+// ── Status pill ───────────────────────────────────────────────────────────
+// Default (unknown/unmapped) → orange
+.status-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1.5px solid $orange;
+  color: $orange;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: transparent;
+
+  // ── NAVY — planned ────────────────────────────────────────────────────
+  // "Planned" → "planned"
+  &[data-status="planned"] {
+    color: var(--ion-color-primary);
+    border-color: var(--ion-color-primary);
+  }
+
+  // ── GREEN — completed / success ───────────────────────────────────────
+  // "Completed"          (maintenance_complete, restored)
+  // "Partially Completed" (tl_partially_complete)
+  // "Work Incomplete"    (maintenance_complete_work_incomplete)
+  // "Patrolling Done"    (patrolling_completed)
+  // "Restoration Completed" (restoration_completed)
+  // "Trial Succeeded"    (trial_succeed)
+  &[data-status="completed"],
+  &[data-status="partiallycompleted"],
+  &[data-status="workincomplete"],
+  &[data-status="patrollingdone"],
+  &[data-status="restorationcompleted"],
+  &[data-status="trialsucceeded"] {
+    color: darken($success, 35%);
+    border-color: $success;
+  }
+
+  // ── RED — cancelled / failed / critical ───────────────────────────────
+  // "Cancelled"                    (maintainance_cancelled)
+  // "PTW Cancellation Issued"      (ptw_cancellation_issued)
+  // "PTW Cancel Work Completed"    (ptw_c_r_work_completed)
+  // "PTW Cancel Work Incomplete"   (ptw_c_r_work_incomplete)
+  // "NBF Cancelled"                (backcharging_cancel_issued)
+  // "PTW Cancelled"                (ptw_cancelled / OtherPTWStatus)
+  // "Rejected"                     (ptw_rejected)
+  // "Trial Failed"                 (trial_failed)
+  // "Critical"                     (critical)
+  &[data-status="cancelled"],
+  &[data-status="ptwcancellationissued"],
+  &[data-status="ptwcancelworkcompleted"],
+  &[data-status="ptwcancelworkincomplete"],
+  &[data-status="parametersubmissionpending"],
+  &[data-status="nbfcancelled"],
+  &[data-status="ptwcancelled"],
+  &[data-status="rejected"],
+  &[data-status="trialfailed"],
+  &[data-status="critical"] {
+    color: darken($danger, 20%);
+    border-color: $danger;
+  }
+
+  // ── AMBER — waiting for approval / SLDC / admin ───────────────────────
+  // "XEN Approval Requested"        → "xenapprovalrequested"
+  // "XEN Approved"                  → "xenapproved"
+  // "SLDC Shutdown Code Requested"  → "sldcshutdowncoderequested"
+  // "SLDC Shutdown Code Issued"     → "sldcshutdowncodeissued"
+  // "SLDC Charging Code Requested"  → "sldcchargingcoderequested"
+  // "SLDC Charging Code Issued"     → "sldcchargingcodeissued"
+  // "Parameter Approval Pending"    → "parameterapprovalpending"
+  // "PTW Cancellation Requested"    → "ptwcancellationrequested"
+  // "NBF Cancellation Requested"    → "nbfcancellationrequested"
+  &[data-status="xenapprovalrequested"],
+  &[data-status="xenapproved"],
+  &[data-status="sldcshutdowncoderequested"],
+  &[data-status="sldcshutdowncodeissued"],
+  &[data-status="sldcchargingcoderequested"],
+  &[data-status="sldcchargingcodeissued"],
+  &[data-status="parameterapprovalpending"],
+  &[data-status="ptwcancellationrequested"],
+  &[data-status="nbfcancellationrequested"],
+  &[data-status="requestforptw"],
+  &[data-status="ptwrequested"],
+  &[data-status="ptwissued"],
+  &[data-status="nbfrequested"],
+  &[data-status="nbfissued"],
+  &[data-status="trialrequested"] {
+    color: darken($warning, 20%);
+    border-color: $warning;
+  }
+
+  // ── ORANGE — in progress / WIP / active ───────────────────────────────
+  // "In Progress"                  → "inprogress"
+  // "Request For PTW"              → "requestforptw"
+  // "PTW Requested"                → "ptwrequested"
+  // "PTW Issued"                   → "ptwissued"
+  // "NBF Requested"                → "nbfrequested"
+  // "NBF Issued"                   → "nbfissued"
+  // "Parameter Submission Pending" → "parametersubmissionpending"
+  // "Restoration Required"         → "restorationrequired"
+  // "Trial Requested"              → "trialrequested"
+  // WIP variants contain "wip" after transform → use substring match
+  &[data-status="inprogress"],
+  &[data-status="restorationrequired"],
+  &[data-status*="wip"] {
+    color: darken($orange, 10%);
+    border-color: $orange;
+  }
+
+  // ── PURPLE — rescheduled ──────────────────────────────────────────────
+  // "Rescheduled" → "rescheduled"
+  &[data-status="rescheduled"] {
+    color: $purple;
+    border-color: $purple;
+  }
+}
+
+// ── Card base — left border mirrors the status pill colour ─────────────────
+.mnt-card {
+  background: $card-bg;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  padding: 14px 16px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .07);
+  border-left: 4px solid $orange; // default
+
+  &[data-status="planned"] {
+    border-left-color: var(--ion-color-primary);
+  }
+
+  &[data-status="completed"],
+  &[data-status="partiallycompleted"],
+  &[data-status="workincomplete"],
+  &[data-status="patrollingdone"],
+  &[data-status="restorationcompleted"],
+  &[data-status="trialsucceeded"] {
+    border-left-color: $success;
+  }
+
+  &[data-status="cancelled"],
+  &[data-status="ptwcancellationissued"],
+  &[data-status="ptwcancelworkcompleted"],
+  &[data-status="ptwcancelworkincomplete"],
+  &[data-status="parametersubmissionpending"],
+  &[data-status="nbfcancelled"],
+  &[data-status="ptwcancelled"],
+  &[data-status="rejected"],
+  &[data-status="trialfailed"],
+  &[data-status="critical"] {
+    border-left-color: $danger;
+  }
+
+  &[data-status="xenapprovalrequested"],
+  &[data-status="xenapproved"],
+  &[data-status="sldcshutdowncoderequested"],
+  &[data-status="sldcshutdowncodeissued"],
+  &[data-status="sldcchargingcoderequested"],
+  &[data-status="sldcchargingcodeissued"],
+  &[data-status="parameterapprovalpending"],
+  &[data-status="ptwcancellationrequested"],
+  &[data-status="nbfcancellationrequested"],
+  &[data-status="requestforptw"],
+  &[data-status="ptwrequested"],
+  &[data-status="ptwissued"],
+  &[data-status="nbfrequested"],
+  &[data-status="nbfissued"],
+  &[data-status="trialrequested"] {
+    border-left-color: $warning;
+  }
+
+  &[data-status="inprogress"],
+  &[data-status="restorationrequired"],
+  &[data-status*="wip"] {
+    border-left-color: $orange;
+  }
+
+  &[data-status="rescheduled"] {
+    border-left-color: $purple;
+  }
+}
+
+// ── Header ────────────────────────────────────────────────────────────────
+.view-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px 10px;
+  background: $card-bg;
+  border-bottom: 1px solid $border;
+
+  .view-icon {
+    font-size: 20px;
+    color: var(--ion-color-primary);
+  }
+
+  .view-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: $text-dark;
+    flex: 1;
+  }
+
+  .header-spinner {
+    width: 18px;
+    height: 18px;
+    --color: var(--ion-color-primary);
+  }
+}
+
+// ── Filter bar ────────────────────────────────────────────────────────────
+.filter-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: $card-bg;
+  border-bottom: 1px solid $border;
+}
+
+.filter-search-wrap {
+  display: flex;
+  align-items: center;
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 6px 10px;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-search-icon {
+  font-size: 16px;
+  color: $muted;
+  flex-shrink: 0;
+}
+
+.filter-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: $text-dark;
+  min-width: 0;
+
+  &::placeholder {
+    color: $muted;
+  }
+}
+
+.filter-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+
+  ::ng-deep app-date-time-selection {
+    flex: 1;
+    min-width: 0;
+
+    ion-item.date-item {
+      --padding-start: 10px;
+      --inner-padding-end: 4px;
+      --min-height: 38px;
+      --background: #f0f2f5;
+      --border-radius: 8px;
+      border-radius: 8px;
+      overflow: hidden;
+
+      ion-label {
+        display: none !important;
+        margin: 0 !important;
+      }
+
+      ion-input {
+        --padding-top: 0;
+        --padding-bottom: 0;
+        font-size: 13px;
+        color: #333;
+        caret-color: transparent;
+      }
+    }
+  }
+}
+
+// ── Filter menu panel ─────────────────────────────────────────────────────
+.filter-container {
+  width: 260px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 10px 4px 10px 10px;
+  overscroll-behavior: contain;
+}
+
+.filter-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px 8px 4px;
+  border-bottom: 1px solid $border;
+  margin-bottom: 4px;
+}
+
+.filter-menu-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: $text-dark;
+}
+
+.filter-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 8px;
+}
+
+// The mat-menu content is ported to the CDK overlay outside this component's
+// DOM tree, so plain :host-scoped rules don't reach it. `::ng-deep` at the
+// top level strips scoping so these apply to the ported checkbox labels.
+::ng-deep .filter-checkbox-group {
+  .mat-checkbox-layout {
+    display: flex !important;
+    align-items: flex-start !important;
+    white-space: normal !important;
+    max-width: 100%;
+  }
+
+  .mat-checkbox-inner-container {
+    flex: 0 0 auto;
+    margin-top: 3px;
+  }
+
+  .mat-checkbox-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+  }
+}
+
+.filter-empty-note {
+  font-size: 13px;
+  color: $muted;
+  padding: 8px 4px;
+  margin: 0;
+}
+
+// ── Search bar ────────────────────────────────────────────────────────────
+.search-bar-wrap {
+  background: $card-bg;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid $border;
+
+  .search-input-wrap {
+    display: flex;
+    align-items: center;
+    background: #f0f2f5;
+    border-radius: 10px;
+    padding: 6px 10px;
+    gap: 8px;
+
+    .search-icon {
+      font-size: 16px;
+      color: $muted;
+      flex-shrink: 0;
+    }
+
+    .search-clear {
+      font-size: 18px;
+      color: $muted;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      color: $text-dark;
+      outline: none;
+
+      &::placeholder {
+        color: $muted;
+      }
+    }
+  }
+}
+
+// ── Card list ─────────────────────────────────────────────────────────────
+.card-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px 8px;
+  background: #f0f2f5;
+}
+
+// ── Bay type chip ─────────────────────────────────────────────────────────
+.baytype-chip {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: $muted;
+  background: #eceff1;
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+// ── Title row ─────────────────────────────────────────────────────────────
+.card-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-dark;
+  flex: 1;
+  line-height: 1.35;
+}
+
+// ── Meta rows ─────────────────────────────────────────────────────────────
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: $text-mid;
+  font-weight: 400;
+}
+
+.meta-icon {
+  font-size: 15px;
+  flex-shrink: 0;
+
+  &.loc-icon {
+    color: #c62828;
+  }
+
+  &.date-icon {
+    color: var(--ion-color-primary);
+  }
+
+  &.time-icon {
+    color: var(--ion-color-primary);
+  }
+
+  &.obs-icon {
+    color: $orange;
+  }
+
+  &.dev-icon {
+    color: $muted;
+  }
+}
+
+.meta-date-label {
+  font-size: 11px;
+  color: $muted;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  margin-right: 2px;
+}
+
+.meta-date-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-dark;
+}
+
+// Damage report pending indicator — mirrors ClientApp
+// maintenance-common-table.component.scss .damage-pending-icon.
+.damage-pending-icon {
+  font-size: 16px;
+  vertical-align: middle;
+  margin-left: 4px;
+  color: #e65100;
+}
+
+// ── Assigned to ───────────────────────────────────────────────────────────
+.assigned-row {
+  font-size: 13px;
+  color: $text-mid;
+  margin-bottom: 6px;
+
+  strong {
+    color: $text-dark;
+    font-weight: 600;
+  }
+}
+
+// ── Shutdown tag ──────────────────────────────────────────────────────────
+.shutdown-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: darken($danger, 20%);
+
+  ion-icon {
+    font-size: 13px;
+  }
+}
+
+// ── Card divider ──────────────────────────────────────────────────────────
+.card-divider {
+  height: 1px;
+  background: $border;
+  margin: 10px 0;
+}
+
+// ── Card body (clickable info area, sibling to action button) ────────────
+.mnt-card-body {
+  cursor: pointer;
+}
+
+// ── Card action row (Plan Maintenance / View Details button) ──────────────
+.card-action-row {
+  margin-top: 10px;
+  border-top: 1px solid $border;
+  padding-top: 10px;
+}
+
+// ── Observation text ──────────────────────────────────────────────────────
+.obs-text {
+  font-size: 13px;
+  color: $text-mid;
+  margin: 0 0 6px;
+  line-height: 1.5;
+
+  .obs-text-label {
+    font-weight: 600;
+    color: $text-dark;
+  }
+}
+
+// ── Skeleton ──────────────────────────────────────────────────────────────
+.skeleton-card {
+  border-left-color: #ddd;
+
+  .skel {
+    display: block;
+    border-radius: 4px;
+    --border-radius: 4px;
+  }
+
+  .skel-title {
+    width: 65%;
+    height: 15px;
+    margin-bottom: 12px;
+  }
+
+  .skel-meta {
+    width: 55%;
+    height: 12px;
+    margin-bottom: 8px;
+  }
+
+  .skel-short {
+    width: 35%;
+  }
+
+  .skel-divider {
+    height: 1px;
+    background: $border;
+    margin: 10px 0;
+  }
+
+  .skel-bar {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+  }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 20px;
+  color: $muted;
+
+  ion-icon {
+    font-size: 54px;
+    margin-bottom: 12px;
+    opacity: .45;
+  }
+
+  p {
+    font-size: 14px;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+// ── Layout ────────────────────────────────────────────────────────────────
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+
+// ── Bottom Tab Bar ────────────────────────────────────────────────────────
+.bottom-tab-bar {
+  flex-shrink: 0;
+  display: flex;
+  overflow-x: auto;
+  background: #ffffff;
+  border-top: 1px solid $border;
+  scrollbar-width: none;
+  padding: 4px 6px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.bottom-tab-btn {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 6px 10px 8px;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  color: $muted;
+  gap: 3px;
+  transition: background 0.18s, color 0.18s;
+
+  ion-icon {
+    font-size: 22px;
+  }
+
+  // Active: app primary (navy), all content white — matches header colour
+  &.active {
+    background: var(--ion-color-primary);
+    color: #ffffff;
+
+    ion-badge {
+      --background: #ffffff;
+      --color: var(--ion-color-primary);
+    }
+  }
+}
+
+.bottom-tab-label {
+  font-size: 10px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+// .bottom-tab-badge lives in global.scss (shared across dashboards).

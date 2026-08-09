@@ -1,0 +1,53 @@
+<!-- Progress -->
+<ion-progress-bar *ngIf="!appservice.InProgress" value="1"></ion-progress-bar>
+<ion-progress-bar *ngIf="appservice.InProgress" type="indeterminate"></ion-progress-bar>
+
+<!-- Header -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{ dialogData.heading }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Content -->
+<ion-content class="ion-padding">
+
+  <form [formGroup]="form">
+
+    <rs-input
+      [label]="locale_service.Locale.language.project.maintenancesettings.heading.remarks"
+      type="textarea"
+      [control]="form.get('cancel_reason')"
+      [errorMsg]="dialogData?.reasonRequiredMessage">
+    </rs-input>
+
+  </form>
+
+</ion-content>
+
+<!-- Footer -->
+<ion-footer>
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <rs-button
+        fill="clear"
+        [label]="locale_service.Locale.language.common.cancel"
+        (clicked)="dismiss()">
+      </rs-button>
+
+      <rs-button
+        color="primary"
+        [label]="locale_service.Locale.language.common.confirm"
+        [disabled]="form.invalid"
+        [loading]="appservice.InProgress"
+        (clicked)="confirm()">
+      </rs-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-footer>

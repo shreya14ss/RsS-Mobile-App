@@ -1,0 +1,80 @@
+.title-icon {
+  font-size: 18px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+ion-footer ion-toolbar {
+  --background: #ffffff;
+  --border-color: transparent;
+}
+
+.start-btn {
+  --background: #1e3a5f;
+  --border-radius: 10px;
+  height: 48px;
+  font-weight: 600;
+  margin: 0 8px;
+}
+
+.about-content {
+  --background: #fafafa;
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.info-section {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f15c27;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 13px;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: rgba(0, 0, 0, 0.55);
+      font-weight: 500;
+      flex: 0 0 auto;
+      margin-right: 12px;
+    }
+
+    .info-value {
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: 500;
+      text-align: right;
+      word-break: break-word;
+    }
+  }
+}

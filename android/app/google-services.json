@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "386753902337",
+    "project_id": "rss-mobile-d9b9d",
+    "storage_bucket": "rss-mobile-d9b9d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386753902337:android:aadcede1150e49d2c2cd00",
+        "android_client_info": {
+          "package_name": "com.rss.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIqQ_whuetZr4c5xldrL7Bkow3fqEobcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

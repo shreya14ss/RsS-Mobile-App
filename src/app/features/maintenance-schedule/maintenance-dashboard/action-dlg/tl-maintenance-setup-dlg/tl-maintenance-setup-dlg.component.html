@@ -1,0 +1,180 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      {{ dialogData?.is_tl_planning ? 'Plan TL Scheduled Maintenance' : 'Plan Bay Scheduled Maintenance' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="modalController.dismiss(null)">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- ── Full-page loading overlay ─────────────────────────────────────────── -->
+<div class="loading-shade" *ngIf="saving">
+  <ion-spinner name="crescent" color="primary"></ion-spinner>
+  <p class="loading-msg">Processing...</p>
+</div>
+
+<ion-content>
+
+  <!-- ── Info card ────────────────────────────────────────────────────────── -->
+  <div class="info-card">
+
+    <div class="info-row" *ngIf="!dialogData.is_tl_planning">
+      <ion-icon name="layers-outline" class="info-icon"></ion-icon>
+      <div class="info-text">
+        <span class="info-label">Bay Name</span>
+        <span class="info-value">{{ dialogData.my_line_bay?.split('/')?.slice(-1)?.[0] }}</span>
+      </div>
+    </div>
+
+    <div class="info-row" *ngIf="dialogData.is_tl_planning">
+      <ion-icon name="flash-outline" class="info-icon"></ion-icon>
+      <div class="info-text">
+        <span class="info-label">TL Name</span>
+        <span class="info-value">
+          {{ dialogData.connected_bay_mnt_details?.line_name }}
+          <span class="info-sub" *ngIf="dialogData.connected_bay_mnt_details?.maintenance_list?.tower_range">
+            ({{ dialogData.connected_bay_mnt_details?.maintenance_list?.tower_range }})
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="info-row" *ngIf="dialogData.connected_bay_mnt_details?.merged_tower_range">
+      <ion-icon name="git-merge-outline" class="info-icon"></ion-icon>
+      <div class="info-text">
+        <span class="info-label">Tower Range</span>
+        <span class="info-value">{{ dialogData.connected_bay_mnt_details?.merged_tower_range }}</span>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <ion-icon name="calendar-outline" class="info-icon"></ion-icon>
+      <div class="info-text">
+        <span class="info-label">Planned Date &amp; Duration</span>
+        <span class="info-value">
+          {{ appservice.dateToString(dialogData.connected_bay_mnt_details?.plannedDate) }}
+          <span class="info-sub" *ngIf="dialogData.connected_bay_mnt_details?.time_range">
+            &nbsp;({{ dialogData.connected_bay_mnt_details?.time_range }})
+          </span>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Form ─────────────────────────────────────────────────────────────── -->
+  <form [formGroup]="form" class="form-body">
+
+    <!-- Section: Maintenance Type -->
+    <div class="section-header">
+      <ion-icon name="construct-outline" class="section-icon"></ion-icon>
+      <span>{{ dialogData.is_tl_planning ? 'TL Maintenance Type' : 'Bay Maintenance Type' }}</span>
+    </div>
+
+    <!-- No templates state -->
+    <div class="empty-state-inline" *ngIf="filteredTemplateNames.length == 0">
+      <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+      <span>{{ dialogData.is_tl_planning ? 'No valid TL maintenance available' : 'No valid bay maintenance available'
+        }}</span>
+    </div>
+
+    <!-- Legend explaining the option format — mirrors ClientApp
+         tl-maintenance-setup-dlg.component.html L35 (which places it inside
+         the mat-select panel). Ionic's action-sheet can't host a header, so
+         we put the legend right above the field. -->
+    <div class="select-legend" *ngIf="filteredTemplateNames.length > 0">
+      Note: Maintenance Name -- Scheduled Date
+    </div>
+
+    <!-- Template select -->
+    <ion-item lines="full" class="form-item" *ngIf="filteredTemplateNames.length > 0">
+      <ion-label position="floating" [color]="form.get('observations')?.value ? 'medium' : 'primary'">
+        Select maintenance type(s)
+      </ion-label>
+      <ion-select formControlName="templates" multiple="true" placeholder="Tap to choose"
+        [disabled]="form.get('observations').value" cancelText="Cancel" okText="Done" interface="action-sheet">
+        <ion-select-option *ngFor="let name of filteredTemplateNames; let i = index" [value]="name">
+          {{ name }} — {{ templateSchedules[i] }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Selected templates summary -->
+    <div class="chips-row" *ngIf="selectedTemplates.length > 0">
+      <div class="chip" *ngFor="let t of selectedTemplates">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        {{ t }}
+      </div>
+    </div>
+
+    <!-- OR divider -->
+    <div class="or-divider" *ngIf="originalObservations.length > 0 || filteredTemplateNames.length > 0">
+      <span class="or-line"></span>
+      <span class="or-text">OR</span>
+      <span class="or-line"></span>
+    </div>
+
+    <!-- Section: Observations -->
+    <div class="section-header">
+      <ion-icon name="eye-outline" class="section-icon"></ion-icon>
+      <span>Observations</span>
+    </div>
+
+    <!-- No observations state -->
+    <div class="empty-state-inline" *ngIf="originalObservations.length == 0">
+      <ion-icon name="information-circle-outline" color="medium"></ion-icon>
+      <span>No valid observations available</span>
+    </div>
+
+    <!-- Attend Observations toggle -->
+    <ion-item lines="full" class="form-item toggle-item" *ngIf="originalObservations.length > 0"
+      [class.item-disabled]="selectedTemplates.length > 0">
+      <ion-icon name="eye-outline" slot="start" class="item-icon"
+        [color]="selectedTemplates.length > 0 ? 'medium' : 'primary'">
+      </ion-icon>
+      <ion-label [color]="selectedTemplates.length > 0 ? 'medium' : 'dark'">
+        Attend Observations
+        <p>{{ filteredObservations.length }} observation(s) available</p>
+      </ion-label>
+      <ion-toggle slot="end" formControlName="observations" [disabled]="selectedTemplates.length > 0">
+      </ion-toggle>
+    </ion-item>
+
+    <!-- Connected Bay select (AETL only) -->
+    <ng-container
+      *ngIf="connected_bays.length > 0 && (filteredTemplateNames.length > 0 || filteredObservations.length > 0)">
+      <div class="section-header" style="margin-top: 20px;">
+        <ion-icon name="location-outline" class="section-icon"></ion-icon>
+        <span>Bay Assignment</span>
+      </div>
+
+      <ion-item lines="full" class="form-item">
+        <ion-label position="floating" color="primary">Select Bay</ion-label>
+        <ion-select formControlName="maintenance_on_bay" placeholder="Choose a bay" interface="action-sheet"
+          cancelText="Cancel">
+          <ion-select-option *ngFor="let bay of connected_bays" [value]="bay">
+            {{ bay.split('/').slice(-2).join(' / ') }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ng-container>
+
+  </form>
+
+</ion-content>
+
+<!-- ── Footer actions ────────────────────────────────────────────────────── -->
+<ion-footer class="dlg-footer">
+  <div class="footer-btns">
+    <ion-button fill="outline" color="medium" class="btn-cancel" (click)="modalController.dismiss(null)">
+      Cancel
+    </ion-button>
+    <ion-button fill="solid" color="primary" class="btn-create" [disabled]="saving" (click)="save()">
+      Create Maintenance
+    </ion-button>
+  </div>
+</ion-footer>

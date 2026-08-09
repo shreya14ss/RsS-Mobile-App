@@ -1,0 +1,240 @@
+<ion-progress-bar type="indeterminate" *ngIf="saving" color="primary"></ion-progress-bar>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ titleText }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- Connected Bay Alert -->
+  <ion-card *ngIf="dialogData?.connectedBayMnt?.length > 0" class="alert-card">
+    <ion-card-content>
+      <div class="alert-text">
+        Note: Maintenance is Live on Connected Bay - {{ connectedBayLabel }}
+      </div>
+      <div class="alert-action">
+        <span>If you want to Plan Bay Maintenance Plan here</span>
+        <ion-button fill="clear" size="small" (click)="navigateToMaintenanceTab()" aria-label="navigate to maintenance">
+          <ion-icon name="open-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Connected TL Alert -->
+  <ion-card *ngIf="dialogData?.connectedTLMnt?.length > 0" class="alert-card">
+    <ion-card-content>
+      <div class="alert-text">
+        Note: Maintenance is Live on Connected Bay - {{ connectedTLLabel }}
+      </div>
+      <div class="alert-action">
+        <span>If you want to Plan TL Maintenance Plan here</span>
+        <ion-button fill="clear" size="small" (click)="navigateToTLTab()" aria-label="navigate to maintenance">
+          <ion-icon name="open-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Form (only when no connected bay/TL blocker) -->
+  <form
+    [formGroup]="form"
+    *ngIf="!(dialogData?.connectedBayMnt?.length > 0) && !(dialogData?.connectedTLMnt?.length > 0)"
+    class="obs-action-form">
+
+    <!-- Observations Multi-Select -->
+    <ion-card>
+      <ion-card-header class="gradient-header">
+        <ion-card-title>
+          <ion-icon name="eye-outline"></ion-icon>
+          {{ locale_service.Locale.language.project.maintenancesettings.heading.obsData }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-no-padding">
+
+        <div class="chip-list" *ngIf="selectedObservationChips.length">
+          <ion-chip *ngFor="let chip of selectedObservationChips; trackBy: trackChipById"
+                    outline="true" color="primary">
+            <ion-label>{{ chip.description }}</ion-label>
+            <ion-icon
+              *ngIf="chip.removable"
+              name="close-circle"
+              (click)="remove(chip.id)">
+            </ion-icon>
+          </ion-chip>
+        </div>
+
+        <ion-item>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.heading.obsData }}<span class="rs-required-mark">&nbsp;*</span>
+          </ion-label>
+          <ion-select
+            formControlName="observations_list"
+            multiple="true"
+            [interfaceOptions]="{ cssClass: 'obs-select-popover' }"
+            interface="alert">
+            <ion-select-option
+              *ngFor="let observation of filteredObservationDatasource"
+              [value]="observation._id"
+              [disabled]="observation._id == dialogData.observation_details._id">
+              {{ observation.description }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Bay / Device Select -->
+    <ion-card>
+      <ion-card-content class="ion-no-padding">
+        <ion-item>
+          <ion-label position="stacked">{{ getDeviceLabel() }}<span class="rs-required-mark">&nbsp;*</span></ion-label>
+          <ion-select
+            class="wrap-select"
+            formControlName="bay"
+            interface="alert"
+            [interfaceOptions]="{ cssClass: 'wrap-alert' }"
+            (ionChange)="onBayChange($event)">
+            <ion-select-option *ngFor="let bay of baylist" [value]="bay.fullValue">
+              {{ appservice.unescapedName(bay.fullValue) }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Planned Date -->
+    <ion-card>
+      <ion-card-content class="ion-no-padding">
+        <ion-item button detail="false" (click)="dateClicked()">
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.plandate }}
+          </ion-label>
+          <ion-input
+            [value]="getSavedDate(form.get('plannedDatestr')?.value)"
+            readonly="true">
+          </ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Scheduled Maintenance List (shutdown, non-TL) -->
+    <ion-card *ngIf="dialogData?.observation_details.status == 'requireshutdown' && dialogData.device_type !== 'TL'">
+      <ion-card-header class="gradient-header">
+        <ion-card-title>
+          <ion-icon name="list-outline"></ion-icon>
+          Scheduled Maintenance List
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-no-padding">
+
+        <div class="chip-list" *ngIf="selectedScheduledChips.length">
+          <ion-chip
+            *ngFor="let item of selectedScheduledChips"
+            outline="true"
+            color="primary">
+            <ion-label>
+              <span *ngIf="item.isLvBay">(LV Bay) </span>{{ item?.template?.maintenancename }} | {{ appservice.dateToString(item.cutoff_date, 4) }}
+            </ion-label>
+            <ion-icon name="close-circle" (click)="removeScheduled(item)"></ion-icon>
+          </ion-chip>
+        </div>
+
+        <ion-item>
+          <ion-label position="stacked">Scheduled Maintenance List</ion-label>
+          <!-- Disable the select when there are no templates so tapping doesn't
+               open an empty popup. The "No data available" placeholder tells
+               the user why the field is inactive. -->
+          <ion-select
+            formControlName="scheduledMaintenance"
+            multiple="true"
+            interface="alert"
+            [disabled]="!combinedMaintenanceList?.length"
+            [placeholder]="!combinedMaintenanceList?.length ? 'No data available' : ''"
+            (ionChange)="onScheduledMaintenanceChange($event)">
+            <ion-select-option *ngFor="let item of combinedMaintenanceList" [value]="item">
+              <ng-container *ngIf="item.isLvBay">(LV Bay) </ng-container>{{ item?.template?.maintenancename }} | {{ appservice.dateToString(item.cutoff_date, 4) }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Shutdown Duration (Hour/Day) -->
+    <ion-card *ngIf="IsShutdownMaintenance">
+      <ion-card-content class="ion-no-padding">
+        <div class="shutdown-row">
+
+          <ion-item class="range-value">
+            <ion-label position="stacked">
+              Enter {{ form.value.time_range_type === 'Hour' ? 'Hour' : 'Day' }}
+            </ion-label>
+            <ion-input
+              type="number"
+              formControlName="time_range_value"
+              min="0"
+              step="0.5">
+            </ion-input>
+          </ion-item>
+
+          <ion-segment formControlName="time_range_type" class="range-segment">
+            <ion-segment-button value="Hour">
+              <ion-icon *ngIf="form.value.time_range_type === 'Hour'" name="checkmark"></ion-icon>
+              <ion-label>Hours</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Day">
+              <ion-icon *ngIf="form.value.time_range_type === 'Day'" name="checkmark"></ion-icon>
+              <ion-label>Days</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </div>
+
+        <ion-text
+          color="danger"
+          class="warning-text"
+          *ngIf="form.get('time_range_value')?.hasError('min') && (form.get('time_range_value')?.dirty || form.get('time_range_value')?.touched)">
+          Value cannot be less than 1
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- No templates message -->
+    <div class="no-template-msg" *ngIf="showNoTemplatesMessage">
+      No maintenance templates available.
+    </div>
+
+  </form>
+
+</ion-content>
+
+<!-- Footer -->
+<ion-footer class="obs-action-footer">
+  <ion-toolbar>
+    <div class="action-btn-container">
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="common-bottom-btn"
+        (click)="cancel()">
+        {{ locale_service.Locale.language.common.cancel }}
+      </ion-button>
+      <ion-button
+        expand="block"
+        class="common-bottom-btn primary-btn"
+        (click)="startMaintenance()"
+        [disabled]="form?.invalid || (dialogData?.connectedBayMnt?.length > 0) || (dialogData?.connectedTLMnt?.length > 0)">
+        Start Maintenance
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

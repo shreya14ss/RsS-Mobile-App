@@ -1,0 +1,101 @@
+<!-- ── Side menu ────────────────────────────────────────────────────────── -->
+<ion-menu contentId="main-content" menuId="main-menu" side="start" type="overlay" [swipeGesture]="true">
+
+  <!-- Profile header -->
+  <ion-header>
+    <ion-toolbar class="menu-profile-toolbar">
+      <div class="menu-profile">
+        <div class="menu-avatar">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <div class="menu-user-info">
+          <span class="menu-username">{{ userName }}</span>
+          <span class="menu-app-name">{{ viewData?.cfg?.title || productName }}</span>
+        </div>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Views from backend — filtered to maintenance-only on mobile -->
+  <ion-content>
+    <ion-list lines="none">
+
+      <!-- Project views -->
+      <ng-container *ngIf="viewData?.menu?.projectViews?.length">
+        <ion-list-header>
+          <ion-label>Views</ion-label>
+        </ion-list-header>
+        <ion-item button detail="false"
+                  *ngFor="let view of viewData.menu.projectViews"
+                  [class.active-item]="activeView === 'P' + view.name"
+                  (click)="selectView('P' + view.name)">
+          <ion-icon [name]="getViewIcon(view)" slot="start"></ion-icon>
+          <ion-label>{{ view.name }}</ion-label>
+        </ion-item>
+      </ng-container>
+
+      <!-- User views -->
+      <ng-container *ngIf="viewData?.menu?.userViews?.length">
+        <ion-list-header>
+          <ion-label>My Views</ion-label>
+        </ion-list-header>
+        <ion-item button detail="false"
+                  *ngFor="let view of viewData.menu.userViews"
+                  [class.active-item]="activeView === 'U' + view.name"
+                  (click)="selectView('U' + view.name)">
+          <ion-icon [name]="getViewIcon(view)" slot="start"></ion-icon>
+          <ion-label>{{ view.name }}</ion-label>
+        </ion-item>
+      </ng-container>
+
+      <!-- Empty state while loading -->
+      <ion-item *ngIf="!viewData?.menu?.projectViews?.length && !viewData?.menu?.userViews?.length">
+        <ion-label color="medium" style="font-size:13px;">No views available</ion-label>
+      </ion-item>
+
+    </ion-list>
+  </ion-content>
+
+  <!-- Logout pinned to bottom -->
+  <ion-footer>
+    <ion-toolbar>
+      <ion-item button detail="false" lines="none" class="logout-item" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        <ion-label>Logout</ion-label>
+      </ion-item>
+    </ion-toolbar>
+  </ion-footer>
+
+</ion-menu>
+
+<!-- ── Main page ───────────────────────────────────────────────────────── -->
+<div id="main-content" class="ion-page">
+
+  <ion-header>
+
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <img src="assets/images/rss.svg" width="32" height="32" style="margin-right:8px;" />
+      <ion-title>{{ viewData?.cfg?.title || productName }}</ion-title>
+    </ion-toolbar>
+
+    <!-- Breadcrumb sub-header -->
+    <ion-toolbar color="light" class="sub-header">
+      <div class="breadcrumb-container">
+        <!-- <app-breadcrumb [Selection]="breadcrumbSelection" [queryParams]="breadcrumbQueryParams">
+        </app-breadcrumb> -->
+      </div>
+    </ion-toolbar>
+
+  </ion-header>
+
+  <!-- Wrap outlet so outlet pages (position:absolute;inset:0) are positioned
+       relative to the area BELOW the header, not the full ion-page viewport.
+       flex:1 + position:relative creates a new containing block for the outlet. -->
+  <div class="outlet-wrap">
+    <ion-router-outlet></ion-router-outlet>
+  </div>
+
+</div>

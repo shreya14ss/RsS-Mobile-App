@@ -1,0 +1,192 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Breadcrumb Component Styles — Ionic Mobile
+// Mirrors ClientApp breadcrumb.component.scss behaviour via Ionic primitives
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Toolbar container — mirrors ClientApp .bccontainer ────────────────────────
+
+.bc-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 44px;
+  padding: 0 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: var(--ion-toolbar-background, var(--ion-background-color));
+  border-bottom: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.12));
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome / Safari
+  }
+}
+
+// ── Icon buttons — mirrors ClientApp mat-icon-button sizing ──────────────────
+
+.bc-icon-btn {
+  --padding-start: 4px;
+  --padding-end: 4px;
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  min-width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+// ── Vertical dividers — mirrors ClientApp <mat-divider vertical> ──────────────
+
+.bc-vdivider {
+  width: 1px;
+  height: 24px;
+  background: var(--ion-border-color, rgba(0, 0, 0, 0.2));
+  flex-shrink: 0;
+  margin: 0 4px;
+
+  // Extra left margin before the trail — mirrors ClientApp margin-right: 15px
+  &.bc-trail-sep {
+    margin-right: 8px;
+  }
+}
+
+// ── Inline breadcrumb trail ───────────────────────────────────────────────────
+
+.bc-trail {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Chevron between crumbs — mirrors ClientApp mat-icon navigate_next / keyboard_arrow_down
+
+.bc-chevron {
+  --padding-start: 2px;
+  --padding-end: 2px;
+  min-width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+// Linked crumb — mirrors ClientApp .bcTextLink
+
+.bc-crumb-link {
+  white-space: nowrap;
+  font-size: 13px;
+  font-family: var(--ion-font-family);
+  color: var(--ion-color-medium);
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  padding: 0 2px;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--ion-color-primary);
+  }
+}
+
+// Active (non-leaf) crumb accent — mirrors ClientApp .color-accent
+
+.bc-crumb-accent {
+  color: var(--ion-color-secondary, var(--ion-color-primary));
+}
+
+// Non-linked crumb — mirrors ClientApp .bcTextSpan
+
+.bc-crumb-span {
+  white-space: nowrap;
+  font-size: 13px;
+  font-family: var(--ion-font-family);
+  color: var(--ion-color-dark);
+  flex-shrink: 0;
+  padding: 0 2px;
+}
+
+// ── Popovers — shared base ────────────────────────────────────────────────────
+
+.bc-popover {
+  --min-width: 220px;
+  --max-width: 320px;
+  --max-height: 60vh;
+}
+
+// Level picker can be taller when showing many items
+
+.bc-level-popover {
+  --max-height: 70vh;
+}
+
+// ── Menu list inside popovers ─────────────────────────────────────────────────
+
+.bc-menu-list {
+  padding: 4px 0;
+  overflow-y: auto;
+  max-height: inherit;
+
+  ion-item {
+    --min-height: 40px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    font-size: 14px;
+  }
+
+  ion-item-divider {
+    --padding-start: 12px;
+    min-height: 1px;
+    background: var(--ion-border-color, rgba(0, 0, 0, 0.12));
+  }
+}
+
+// ── Active / highlighted item — mirrors ClientApp .bcactive ──────────────────
+
+.bc-active {
+  font-weight: 600;
+  color: var(--ion-color-primary);
+}
+
+// ── Browse / Location label — mirrors ClientApp .browse ──────────────────────
+
+.bc-browse-label {
+  font-weight: 500;
+  color: var(--ion-color-medium);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+// ── Search bar inside level popover — mirrors ClientApp .select_search ────────
+
+.bc-search-item {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --inner-padding-end: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--ion-item-background, var(--ion-background-color));
+
+  ion-input {
+    --padding-start: 6px;
+    font-size: 14px;
+  }
+}
+
+.bc-search-icon {
+  font-size: 18px;
+  color: var(--ion-color-medium);
+}

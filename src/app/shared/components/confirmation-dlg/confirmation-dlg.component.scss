@@ -1,0 +1,26 @@
+:host ::ng-deep .mat-dialog-content p {
+  line-height: 1.3;
+  margin: 0; /* remove default margin */
+  padding: 0; /* remove default padding */
+  white-space: normal;
+}
+:host ::ng-deep .mat-dialog-content p br {
+  margin-bottom: 0.25em; /* small spacing after line break */
+  display: block;
+  content: "";
+}
+
+.template-content h4 {
+  margin: 12px 0 4px;
+  font-weight: 600;
+}
+
+.template-content ul {
+  margin: 0 0 8px 16px;
+  padding: 0;
+}
+
+.template-content li {
+  line-height: 1.4;
+}
+

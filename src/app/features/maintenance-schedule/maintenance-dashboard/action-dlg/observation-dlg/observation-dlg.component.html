@@ -1,0 +1,337 @@
+<ion-progress-bar type="indeterminate" *ngIf="saving" color="primary"></ion-progress-bar>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      <span *ngIf="!dialogData?.observationDetails">
+        {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.heading.addobservation }}
+      </span>
+      <span *ngIf="dialogData?.observationDetails && !dialogData?.readonly">
+        {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.heading.updateobservation }}
+      </span>
+      <span *ngIf="dialogData?.observationDetails && dialogData?.readonly">
+        {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.heading.detailsobservation }}
+      </span>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="modalController.dismiss(null)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="form">
+
+    <!-- ── Device & Tower Card ── -->
+    <ion-card>
+      <ion-card-header class="gradient-header">
+        <ion-card-title>
+          <ion-icon name="hardware-chip-outline"></ion-icon>
+          Device Details
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="ion-no-padding">
+
+        <ion-item>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.observation_device_name[
+            (dialogData.observationtype === 'je_tl' && dialogData.device_type === 'Bay') ? 'TL' : dialogData.device_type
+            ] }}
+          </ion-label>
+          <ion-input formControlName="display_device_name" [readonly]="true"></ion-input>
+        </ion-item>
+
+        <!-- ── Tower Type (TL only) ── -->
+        <ng-container *ngIf="shouldShowContainer()">
+
+          <div class="section-label">
+            <span
+              *ngIf="form.get('tower_type').value === 'Tower' && !dialogData.observationDetails?.connected_parameter_id">
+              {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.select_tower_number }}
+            </span>
+            <span
+              *ngIf="form.get('tower_type').value === 'Inter Tower' && !dialogData.observationDetails?.connected_parameter_id">
+              {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.select_tower_range }}
+            </span>
+          </div>
+
+          <ion-radio-group formControlName="tower_type" (ionChange)="updateTower()">
+            <ion-item>
+              <ion-label>
+                {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.tower }}
+              </ion-label>
+              <ion-radio slot="start" value="Tower"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.inter_tower }}
+              </ion-label>
+              <ion-radio slot="start" value="Inter Tower"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+
+          <div class="tower-row">
+            <ion-item class="tower-input">
+              <ion-label position="stacked">Tower From</ion-label>
+              <ion-input type="number" formControlName="tower_s" [min]="min" [max]="max"
+                (ionInput)="updateTowerE($event)">
+              </ion-input>
+            </ion-item>
+
+            <ion-item class="tower-input" *ngIf="form.get('tower_type').value === 'Inter Tower'">
+              <ion-label position="stacked">Tower To</ion-label>
+              <ion-input type="number" formControlName="tower_e" [readonly]="true"></ion-input>
+            </ion-item>
+          </div>
+
+          <ion-text color="danger" class="range-error"
+            *ngIf="(form.get('tower_type').value === 'Tower' && form.controls['tower_s'].hasError('range'))
+                  || (form.get('tower_type').value === 'Inter Tower' && (form.controls['tower_s'].hasError('range') || form.controls['tower_e'].hasError('range')))">
+            Invalid Tower Range ({{ min }}–{{ max }})
+          </ion-text>
+
+        </ng-container>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ── Observation Details Card ── -->
+    <ion-card>
+      <ion-card-header class="gradient-header">
+        <ion-card-title>
+          <ion-icon name="eye-outline"></ion-icon>
+          {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.select_observation }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="ion-no-padding">
+
+        <ion-item>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.select_observation }}<span class="rs-required-mark" *ngIf="!dialogData?.observationDetails">&nbsp;*</span>
+          </ion-label>
+          <ion-select formControlName="observations" interface="popover"
+            [interfaceOptions]="{ cssClass: 'obs-select-popover' }">
+            <ion-select-option *ngFor="let ob of filteredObservationList" [value]="ob.ob">
+              {{ ob.ob }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.description }}
+          </ion-label>
+          <ion-input formControlName="description" [readonly]="dialogData?.readonly"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.remarks }}<!--
+            When status is 'fixed', isRemarksReq() attaches Validators.required
+            to the remarks control. Angular Material shows the asterisk
+            automatically via mat-form-field on the web; ion-label doesn't, so
+            we mirror it manually here.
+         --><span class="rs-required-mark" *ngIf="form.get('status')?.value === 'fixed'">&nbsp;*</span>
+          </ion-label>
+          <ion-input formControlName="remarks" [readonly]="dialogData?.readonly"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.status }}
+          </ion-label>
+          <ion-select formControlName="status" (ionChange)="onStatusChange($event.detail.value)">
+            <ion-select-option *ngIf="!filteredObservationStatus[form.get('status')?.value]"
+              [value]="form.get('status')?.value" [disabled]="true">
+              {{ locale_service.Locale.language.project.maintenancesettings.observationstatus[form.get('status')?.value]
+              }}
+            </ion-select-option>
+            <ion-select-option *ngFor="let statusoption of filteredObservationStatus | keyvalue: norder"
+              [value]="statusoption.key">
+              {{ statusoption.value }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Equipment Name -->
+        <ion-item *ngIf="(dialogData.device_type === 'Bay' && dialogData.observationtype !== 'je_tl')
+                         || (isBayObservation && dialogData.device_type === 'Equipment')">
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.select_equipment }}
+          </ion-label>
+          <ion-select formControlName="equipment_name">
+            <ion-select-option *ngFor="let eqp of equipment_name_list" [value]="eqp">
+              {{ appservice.unescapedName(eqp) }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Bay Path -->
+        <ng-container *ngIf="showPathInputBox">
+          <ion-item>
+            <ion-label position="stacked">Select Path</ion-label>
+            <ion-input [readonly]="true" formControlName="display_bay_path"></ion-input>
+            <ion-button slot="end" fill="clear" *ngIf="showPathButton" (click)="groupselectionDlg()">
+              <ion-icon name="grid-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ng-container>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ── Parameter Details Card ── -->
+    <ion-card *ngIf="dialogData?.observationDetails?.parameter_details">
+      <ion-card-header class="gradient-header">
+        <ion-card-title>
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          Parameter Details
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="ion-no-padding">
+
+        <div class="param-row">
+          <ion-item class="param-input">
+            <ion-label position="stacked">Min</ion-label>
+            <ion-input type="number" formControlName="min" [readonly]="true"></ion-input>
+          </ion-item>
+
+          <ion-item class="param-input">
+            <ion-label position="stacked">Max</ion-label>
+            <ion-input type="number" formControlName="max" [readonly]="true"></ion-input>
+          </ion-item>
+
+          <ion-item class="param-input param-value">
+            <ion-label position="stacked">Value</ion-label>
+            <ion-input formControlName="value" [readonly]="dialogData?.readonly" (ionInput)="checkValue($event)">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-text color="danger" *ngIf="isOutOfRange" class="validation-msg">
+          Invalid Input! Please enter a value between {{ rangeMinLabel }} and {{ rangeMaxLabel }}
+        </ion-text>
+        <ion-text color="warning" *ngIf="showStatusChangeWarning" class="validation-msg">
+          Value corrected. Kindly update status to Fixed or Close.
+        </ion-text>
+        <ion-text color="medium" *ngIf="observationDetails && observationDetails.connected_object_id"
+          class="validation-msg">
+          Alarm Status: {{ alarmValue ? 'Alarm' : 'Normal' }}
+        </ion-text>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Validation messages outside parameter card -->
+    <ng-container *ngIf="!dialogData?.observationDetails?.parameter_details">
+      <ion-text color="danger" *ngIf="isOutOfRange" class="validation-msg">
+        Invalid Input! Please enter a value between {{ rangeMinLabel }} and {{ rangeMaxLabel }}
+      </ion-text>
+      <ion-text color="warning" *ngIf="showStatusChangeWarning" class="validation-msg">
+        Value corrected. Kindly update status to Fixed or Close.
+      </ion-text>
+      <ion-text color="medium" *ngIf="observationDetails && observationDetails.connected_object_id"
+        class="validation-msg">
+        Alarm Status: {{ alarmValue ? 'Alarm' : 'Normal' }}
+      </ion-text>
+    </ng-container>
+
+    <!-- Observation Source: matches client app — shown only when viewing/updating
+         an existing observation. Displays the origin of the observation (Manual,
+         Alarm-triggered, or the specific maintenance type it came from). -->
+    <div class="obs-source-row" *ngIf="dialogData?.observationDetails">
+      <span class="obs-source-label">
+        {{ locale_service.Locale.language.project.maintenancesettings.obsource }}
+      </span>
+      <span class="obs-source-value">
+        <ng-container *ngIf="!observationDetails?.maintenance_type">{{ locale_service.Locale.language.project.maintenancesettings.obManual }}</ng-container>
+        <ng-container *ngIf="observationDetails?.maintenance_type === 'alarm'">{{ locale_service.Locale.language.project.maintenancesettings.obAlarm }}</ng-container>
+        <ng-container *ngIf="observationDetails?.maintenance_type && observationDetails?.maintenance_type !== 'alarm'">
+          {{ observationDetails?.maintenance_type }}
+        </ng-container>
+      </span>
+    </div>
+
+  </form>
+
+  <!-- ── Observation Status History Card ── -->
+  <ion-card *ngIf="historyDatasource?.data?.length">
+    <ion-card-header class="gradient-header" (click)="historyExpanded = !historyExpanded">
+      <ion-card-title>
+        <ion-icon name="time-outline"></ion-icon>
+        Observation Status History
+        <ion-icon [name]="historyExpanded ? 'chevron-up' : 'chevron-down'" class="collapse-icon"></ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="historyExpanded" class="ion-no-padding">
+
+      <div class="history-header">
+        <div>{{ locale_service.Locale.language.project.maintenancesettings.heading.user }}</div>
+        <div>{{ locale_service.Locale.language.project.maintenancesettings.heading.datetime }}</div>
+        <div>{{ locale_service.Locale.language.project.maintenancesettings.heading.remarks }}</div>
+        <div>{{ locale_service.Locale.language.project.maintenancesettings.heading.status }}</div>
+      </div>
+
+      <div class="history-row" *ngFor="let h of historyDatasource.data">
+        <div>{{ h.user_id }}</div>
+        <div>{{ appservice.dateToString(h.time, 11) }}</div>
+        <div>
+          {{ h.remarks }}
+          <span *ngIf="h.value !== null && h.value !== undefined && h.value !== ''">
+            ({{ h.value }})
+          </span>
+        </div>
+        <div>
+          <span class="status-chip">
+            {{ locale_service.Locale.language.project.maintenancesettings.observationstatus[h.status] }}
+          </span>
+        </div>
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+<!-- ── Footer Actions ── -->
+<ion-footer class="obs-footer">
+  <ion-toolbar>
+    <div class="action-btn-container">
+
+      <ion-button class="common-bottom-btn primary-btn" expand="block"
+        *ngIf="!dialogData?.readonly
+               && dialogData?.openDetails
+               && resolver.MaintenanceAccessRights.observation_start_maintenance_input
+               && (!dialogData?.observationDetails?.scheduled_status || dialogData?.observationDetails?.scheduled_status === 'NA')" (click)="startscheduleMaintenance()"
+        [disabled]="startButtonValidation() || isStartMaintenanceButtondisabled">
+        {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.start_maintenance }}
+      </ion-button>
+
+      <ion-button class="common-bottom-btn" expand="block" fill="outline"
+        *ngIf="dialogData?.observationDetails?.connected_maintenance_id && !dialogData.dlg" (click)="openDetails()">
+        {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.maintenance_info }}
+      </ion-button>
+
+      <ion-button class="common-bottom-btn primary-btn" expand="block"
+        *ngIf="dialogData?.observationDetails && !dialogData?.readonly"
+        (click)="updateOb(dialogData?.observationDetails)"
+        [disabled]="form.invalid || form.pristine || isOutOfRange || isStartMaintenanceButtondisabled">
+        {{ locale_service.Locale.language.common.update }}
+      </ion-button>
+
+      <ion-button class="common-bottom-btn primary-btn" expand="block" *ngIf="!dialogData?.observationDetails"
+        (click)="saveOb()" [disabled]="form.invalid">
+        {{ locale_service.Locale.language.common.save }}
+      </ion-button>
+
+    </div>
+  </ion-toolbar>
+</ion-footer>

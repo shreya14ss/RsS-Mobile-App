@@ -1,0 +1,255 @@
+// ── Host — must fill the full modal height ────────────────────────────────
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// ── Design tokens (match maintenance-dashboard palette) ───────────────────
+$primary: var(--ion-color-primary);
+$border: #e0e3e8;
+$card-bg: #ffffff;
+$text-dark: #1a1a2e;
+$text-mid: #546e7a;
+$text-light: #90a4ae;
+$surface: #f4f6f9;
+$success-bg: #e8f8f1;
+$success-text: #1a7a4a;
+
+// ── Loading overlay ───────────────────────────────────────────────────────
+.loading-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.88);
+
+  ion-spinner {
+    width: 40px;
+    height: 40px;
+  }
+
+  .loading-msg {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: $text-mid;
+  }
+}
+
+// ── Info card ─────────────────────────────────────────────────────────────
+.info-card {
+  background: $card-bg;
+  margin: 16px 16px 0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  border-left: 4px solid var(--ion-color-primary);
+
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+
+    & + .info-row {
+      border-top: 1px solid $border;
+    }
+
+    .info-icon {
+      font-size: 18px;
+      color: var(--ion-color-primary);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .info-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .info-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: $text-light;
+      }
+
+      .info-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-dark;
+
+        .info-sub {
+          font-weight: 400;
+          color: $text-mid;
+        }
+      }
+    }
+  }
+}
+
+// ── Form body ─────────────────────────────────────────────────────────────
+.form-body {
+  padding: 16px;
+}
+
+// ── Section header ────────────────────────────────────────────────────────
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 8px;
+
+  span {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $text-mid;
+  }
+
+  .section-icon {
+    font-size: 16px;
+    color: $text-mid;
+  }
+}
+
+// ── Form items ────────────────────────────────────────────────────────────
+.form-item {
+  --border-radius: 10px;
+  --background: #{$card-bg};
+  --padding-start: 14px;
+  --inner-padding-end: 14px;
+  --min-height: 56px;
+  border: 1px solid $border;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+  &.toggle-item {
+    --min-height: 62px;
+  }
+
+  &.item-disabled {
+    opacity: 0.5;
+  }
+
+  .item-icon {
+    font-size: 20px;
+    margin-right: 4px;
+  }
+
+  ion-label p {
+    font-size: 0.78rem;
+    color: $text-light;
+    margin-top: 2px;
+  }
+}
+
+// ── Selected chips ────────────────────────────────────────────────────────
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 2px 12px;
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: $success-bg;
+    color: $success-text;
+    border: 1px solid darken($success-bg, 8%);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+// ── OR divider ────────────────────────────────────────────────────────────
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 4px;
+
+  .or-line {
+    flex: 1;
+    height: 1px;
+    background: $border;
+  }
+
+  .or-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: $text-light;
+  }
+}
+
+// ── Empty state inline ────────────────────────────────────────────────────
+.empty-state-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: $surface;
+  border-radius: 8px;
+  margin-bottom: 8px;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 0.82rem;
+    color: $text-mid;
+  }
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────
+.dlg-footer {
+  --background: #{$card-bg};
+  border-top: 1px solid $border;
+
+  .footer-btns {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+
+    .btn-cancel {
+      flex: 0 0 auto;
+      min-width: 96px;
+      --border-radius: 10px;
+    }
+
+    .btn-create {
+      flex: 1;
+      --border-radius: 10px;
+    }
+  }
+}
+
+/* Legend above the maintenance-type ion-select explaining the option format.
+   Mirrors ClientApp's inline "Note: Maintenance Name -- Scheduled Date" that
+   sits inside the mat-select panel. */
+.select-legend {
+  margin: 8px 4px 2px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--ion-color-medium-shade);
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  line-height: 1.35;
+}

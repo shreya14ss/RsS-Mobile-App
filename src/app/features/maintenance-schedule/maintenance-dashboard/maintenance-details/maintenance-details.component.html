@@ -1,0 +1,805 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      <div class="toolbar-title">
+        {{ appservice.unescapedName(form.value?.device_name?.split('/')?.slice(-2)?.join('/') ?? '') || 'Maintenance Details' }}
+      </div>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- STATUS -->
+  <!-- <div class="status-bar">
+    <span class="status-pill">
+      {{ dialogData.device_details.current_status || '—' }}
+    </span>
+
+    <span class="shutdown-tag" *ngIf="dialogData.device_details.shutdown_required">
+      <ion-icon name="flash"></ion-icon> Shutdown
+    </span>
+  </div> -->
+</ion-header>
+
+<ion-content #detailsContent>
+
+  <!-- Asset Damage lock banner — mirrors ClientApp .asset-damage-banner.
+       When the bay has an unresolved damage report the whole dialog is read-only
+       and every action button/input below is disabled. -->
+  <div class="asset-damage-banner" *ngIf="assetDamageFeatureOn && assetDamageBayLocked">
+    <ion-icon name="lock-closed" color="warning"></ion-icon>
+    <span>{{ assetDamageLockBanner || 'This bay is locked for unresolved asset damage. PTW and maintenance updates are blocked until resolution.' }}</span>
+  </div>
+
+  <!-- Merge-applied: substation changes propagated, bay will unlock shortly.
+       Mirrors ClientApp .ad-merged-banner (L441-444). -->
+  <div class="ad-merged-banner"
+       *ngIf="assetDamageFeatureOn && assetDamageBayLocked && activeDamageReport?.mergeAppliedAt">
+    <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+    <span>Changes applied to substation. Bay will unlock shortly.</span>
+  </div>
+
+  <!-- Waiting for MDU to finish processing damaged equipment.
+       Mirrors ClientApp .ad-waiting-mdu (L447-450). -->
+  <div class="ad-waiting-mdu"
+       *ngIf="assetDamageFeatureOn && assetDamageBayLocked && activeDamageReport && !activeDamageReport.canMergeSubstation && !activeDamageReport.mergeAppliedAt">
+    <ion-icon name="hourglass-outline"></ion-icon>
+    <span>Waiting for MDU to process all equipment ({{ activeDamageReport.equipmentsUpdatedByMdu ?? 0 }}/{{ activeDamageReport.equipmentsTotal ?? '?' }}).</span>
+  </div>
+
+  <!-- 🔷 TOP TABS -->
+  <div class="sticky-tabs">
+    <ion-segment [(ngModel)]="activeTab" value="maintenance" (ionChange)="onActiveTabChange($event)">
+      <ion-segment-button value="maintenance">
+        <ion-label>Maintenance</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="ptw" *ngIf="dialogData?.device_details?.maintenance_type !== 'TL'
+          && dialogData?.device_details?.maintenance_type !== 'Substation'
+          && maintenanceDetails?.shutdown_required">
+        <ion-label>PTW Details</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="patrolling" *ngIf="dialogData?.device_details?.maintenance_type === 'TL'
+              && dialogData?.device_details?.maintenance_list?.template?.scheduled_patrolling === 'patrolling'">
+        <ion-label>Patrolling</ion-label>
+      </ion-segment-button>
+
+      <!-- ================= TL OBSERVATION LIST TAB ================= -->
+      <ion-segment-button value="observations_list"
+        *ngIf="!isCompleteDashboard
+               && dialogData?.device_details?.maintenance_type === 'TL'
+               && dialogData?.device_details?.activity_parameters?.length == 0">
+        <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.dialog_heading.observations_list }}</ion-label>
+        <ion-badge *ngIf="observationDatasource?.data?.length" color="primary">
+          {{ observationDatasource?.data?.length }}
+        </ion-badge>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+
+  <!-- 🔷 TAB CONTENT -->
+  <!-- Wrap tab content so it dims visually when the bay is locked, mirroring
+       ClientApp .asset-damage-dim on the left-container. All interactive
+       controls inside are additionally guarded with [disabled] bindings. -->
+  <div [class.asset-damage-dim]="assetDamageFeatureOn && assetDamageBayLocked">
+  <ng-container [ngSwitch]="activeTab">
+
+    <!-- ================= MAINTENANCE ================= -->
+    <ng-container *ngSwitchCase="'maintenance'">
+      <ion-card>
+        <ion-card-header class="gradient-header">
+          <ion-card-title>
+            <ion-icon name="information-circle"></ion-icon>
+            Basic Information
+          </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <ion-item>
+            <ion-icon name="document-text" slot="start"></ion-icon>
+            <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.mntname }}</ion-label>
+            <ion-text>{{ form.value.maintenancename || '—' }}</ion-text>
+          </ion-item>
+
+          <!-- Tower Range: shown for any TL-related maintenance (scheduled or patrolling) -->
+          <ion-item *ngIf="form.value.maintenance_list?.tower_range">
+            <ion-icon name="git-branch" slot="start"></ion-icon>
+            <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.heading.tower_range }}</ion-label>
+            <ion-text>{{ form.value.maintenance_list?.tower_range }}</ion-text>
+          </ion-item>
+
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header class="gradient-header">
+          <ion-card-title>
+            <ion-icon name="time"></ion-icon>
+            Schedule Details
+          </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <!-- Scheduled Date (cutoffDate): hidden for all TL scheduled/patrolling maintenance -->
+          <ion-item *ngIf="!dialogData.device_details.maintenance_list?.template?.scheduled_patrolling">
+            <ion-icon name="alarm" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.schdate }}</ion-label>
+            <ion-text>{{ form.value.cutoffDate | date:'dd/MM/yyyy' }}</ion-text>
+          </ion-item>
+
+          <!-- Planned Date: non-patrolling. Row becomes tappable when the user
+               has the maintenance_date right and the status still allows a
+               reschedule (Planned / XenApprovalRequested). Otherwise the value
+               is read-only. Matches the client app's Planned Date behavior. -->
+          <ion-item *ngIf="!isPatrollingTL && !canEditPlannedDate">
+            <ion-icon name="calendar" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.plnddate }}</ion-label>
+            <ion-text>{{ form.value.plannedDate | date:'dd-MM-yyyy HH:mm:ss' }}</ion-text>
+          </ion-item>
+
+          <ion-item *ngIf="!isPatrollingTL && canEditPlannedDate"
+                    button detail="false"
+                    (click)="(assetDamageFeatureOn && assetDamageBayLocked) ? null : dateClicked(null, null)"
+                    [disabled]="assetDamageFeatureOn && assetDamageBayLocked"
+                    class="editable-date-item">
+            <ion-icon name="calendar" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.plnddate }}</ion-label>
+            <ion-text>{{ form.value.plannedDate | date:'dd-MM-yyyy HH:mm:ss' }}</ion-text>
+            <ion-icon name="chevron-down-outline" slot="end" class="dt-chevron"></ion-icon>
+          </ion-item>
+
+          <!-- Patrolling TL: stacked label + date-time picker row -->
+          <ng-container *ngIf="isPatrollingTL">
+
+            <ion-item button detail="false"
+                      (click)="(assetDamageFeatureOn && assetDamageBayLocked) ? null : openPatrollingDatePicker()"
+                      [disabled]="assetDamageFeatureOn && assetDamageBayLocked"
+                      class="patrolling-date-item">
+              <ion-icon name="calendar" slot="start"></ion-icon>
+              <div class="patrolling-date-inner">
+                <span class="patrolling-date-label">{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.plnddate }}</span>
+                <div class="patrolling-dt-display">
+                  <span>{{ patrollingPlannedDateDisplay }}</span>
+                  <span class="dt-sep">|</span>
+                  <span>{{ patrollingPlannedTimeDisplay }}</span>
+                  <ion-icon name="chevron-down-outline" class="dt-chevron"></ion-icon>
+                </div>
+              </div>
+            </ion-item>
+
+            <!-- Inline hint / validation -->
+            <div class="patrolling-hint" [class.hint-warning]="isPatrollingDateInPast">
+              <ion-icon [name]="isPatrollingDateInPast ? 'warning-outline' : 'information-circle-outline'"></ion-icon>
+              <span>
+                {{ isPatrollingDateInPast
+                  ? 'Selected date is in the past. Please select today or a future date.'
+                  : 'Tap above to set the patrolling start date and time.' }}
+              </span>
+            </div>
+
+          </ng-container>
+
+          <!-- Shutdown Duration: hidden for TL scheduled/patrolling; shown for Bay/Substation/Equipment with shutdown required -->
+          <ion-item *ngIf="!dialogData.device_details.maintenance_list?.template?.scheduled_patrolling
+                           && dialogData.device_details.shutdown_required
+                           && !isConditionalMaintenance
+                           && form.value.time_range_value">
+            <ion-icon name="hourglass" slot="start"></ion-icon>
+            <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.timerqrd }}</ion-label>
+            <ion-text>
+              {{ form.value.time_range_value }} {{ form.value.time_range_type }}{{ form.value.time_range_value > 1 ? 's' : '' }}
+            </ion-text>
+          </ion-item>
+
+          <!-- Planned By -->
+          <ion-item>
+            <ion-icon name="person" slot="start"></ion-icon>
+            <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.plndby }}</ion-label>
+            <ion-text>{{ isAutoPlannedMaintenance ? 'Auto Planned' : (form.value.sse || 'Auto Planned') }}</ion-text>
+          </ion-item>
+
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Additional Info: conditional fields matching client app -->
+      <ion-card *ngIf="maintenanceDetails?.connected_hv_lv_bay
+                       || form.value.delayed_reason
+                       || maintenanceDetails?.cancel_info?.reason != null
+                       || maintenanceDetails?.complete_reason != null
+                       || (isCompleteDashboard && maintenanceDetails?.ptw_work?.remarks?.length > 0)
+                       || (backchargingSkippedMissingSubstation && !isCompleteDashboard)">
+        <ion-card-header class="gradient-header">
+          <ion-card-title>
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Additional Info
+          </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <ion-item *ngIf="backchargingSkippedMissingSubstation && !isCompleteDashboard"
+                    lines="full" class="bc-skipped-item">
+            <ion-icon name="warning-outline" slot="start" color="danger"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <div class="bc-skipped-title">Backcharging</div>
+              <div class="bc-skipped-message">
+                Backcharging Skipped — connected substation
+                <ng-container *ngIf="missingSubstationNames?.length">
+                  ({{ missingSubstationNames.join(', ') }})
+                </ng-container>
+                not found in system.
+              </div>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="maintenanceDetails?.connected_hv_lv_bay">
+            <ion-icon name="git-merge" slot="start"></ion-icon>
+            <ion-label>Connected HV/LV Bay</ion-label>
+            <ion-text>{{ maintenanceDetails?.connected_hv_lv_bay?.[0]?.split('/')?.slice(-1)?.[0] }}</ion-text>
+          </ion-item>
+
+          <ion-item *ngIf="form.value.delayed_reason">
+            <ion-icon name="time-outline" slot="start"></ion-icon>
+            <ion-label>Delayed Reason</ion-label>
+            <ion-text>{{ form.value.delayed_reason }}</ion-text>
+          </ion-item>
+
+          <ion-item *ngIf="maintenanceDetails?.cancel_info?.reason != null">
+            <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+            <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.cancelreason }}</ion-label>
+            <ion-text>{{ maintenanceDetails?.cancel_info?.reason }}</ion-text>
+          </ion-item>
+
+          <ion-item *ngIf="maintenanceDetails?.complete_reason != null">
+            <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+            <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.completereason }}</ion-label>
+            <ion-text>{{ maintenanceDetails?.complete_reason }}</ion-text>
+          </ion-item>
+
+          <ion-item *ngIf="isCompleteDashboard && maintenanceDetails?.ptw_work?.remarks?.length > 0">
+            <ion-icon name="document-outline" slot="start"></ion-icon>
+            <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.ptwremarks }}</ion-label>
+            <ion-text>{{ maintenanceDetails?.ptw_work?.remarks }}</ion-text>
+          </ion-item>
+
+        </ion-card-content>
+      </ion-card>
+
+      <!-- ================= TL INFORMATION ================= -->
+      <ion-card *ngIf="dialogData?.device_details?.tl_details">
+        <ion-card-header class="gradient-header" (click)="toggleCard('tl')">
+          <ion-card-title>
+            TL Information
+            <ion-icon [name]="activeCard === 'tl' ? 'chevron-up' : 'chevron-down'" class="collapse-icon">
+            </ion-icon>
+          </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content *ngIf="activeCard === 'tl'">
+
+          <ion-grid>
+
+            <ion-row *ngFor="let det of dialogData.device_details.tl_details | keyvalue">
+
+              <ion-col size="6">
+                {{ det.key.replaceAll('_', ' ') | titlecase }}
+              </ion-col>
+
+              <ion-col size="6" class="ion-text-end">
+
+                <ng-container *ngIf="isObjectArray(det.value); else normalValue">
+                  {{ extractBayNames(det.value) }}
+                </ng-container>
+
+                <ng-template #normalValue>
+                  {{ det.value }}
+                </ng-template>
+
+              </ion-col>
+
+            </ion-row>
+
+          </ion-grid>
+
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Future-date warning (matches client app: shown at the bottom of
+           the Maintenance Info tab when planned date is in the future). -->
+      <div class="future-mnt-warning" *ngIf="isFutureMaintenance">
+        This maintenance is scheduled for a future date and cannot be started yet.
+      </div>
+
+      <!-- Apply Changes: appears after the user reschedules the Planned Date
+           via the row picker. Persists the new date via saveUpdatedDateTime
+           (which calls UpdatePlanMnt and refreshes dialogData). -->
+      <div class="apply-changes-row"
+           *ngIf="canEditPlannedDate && isDateAndTimeChanged">
+        <ion-button expand="block" class="apply-changes-btn"
+                    (click)="saveUpdatedDateTime()"
+                    [disabled]="assetDamageFeatureOn && assetDamageBayLocked">
+          {{ locale_service.Locale.language.project.maintenancesettings.maintenancebutton.apply_changes }}
+        </ion-button>
+      </div>
+    </ng-container>
+
+
+    <!-- ================= PTW ================= -->
+    <ng-container *ngSwitchCase="'ptw'">
+
+      <ng-container *ngIf="dialogData?.device_details?.maintenance_type !== 'TL' 
+                 && dialogData?.device_details?.maintenance_type !== 'Substation' 
+                 && maintenanceDetails?.shutdown_required">
+
+        <ion-card>
+          <ion-card-header class="gradient-header">
+            <ion-card-title>Permit to Work</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <app-ptw-action-dlg
+              [maintenanceBlockedByAssetDamage]="assetDamageFeatureOn && assetDamageBayLocked"
+              [dialogData]="{
+            maintenanceDetails : dialogData.device_details,
+            common_sldc_mnts: dialogData.device_details.common_sldc_mnts,
+            new_ptw_id: dialogData.new_ptw_id,
+            mnt_on_same_bay: dialogData.mnt_on_same_bay,
+            ptw_is_active_on_same_bay: ptw_is_active_on_same_bay,
+            ptw_cancellation_requested_on_all_same_bay: ptw_cancellation_requested_on_all_same_bay,
+            mnt_to_be_restored_exists: mnt_to_be_restored_exists,
+            isAccess : true,
+            ptwIntervalDestroy$: ptwIntervalDestroy$,
+            hv_lv_ptw: dialogData.hv_lv_ptw,
+            self_backcharging : dialogData.device_details?.self_backcharging,
+            isFutureMaintenance: isFutureMaintenance
+          }">
+            </app-ptw-action-dlg>
+
+          </ion-card-content>
+        </ion-card>
+
+      </ng-container>
+
+    </ng-container>
+
+    <!-- ================= PATROLLING ================= -->
+    <ng-container *ngSwitchCase="'patrolling'">
+
+      <ion-card>
+
+        <!-- HEADER -->
+        <ion-card-header class="gradient-header" (click)="toggleCard('patrolling')">
+          <ion-card-title>
+            Patrolling Details
+            <ion-icon [name]="activeCard === 'patrolling' ? 'chevron-up' : 'chevron-down'" class="collapse-icon">
+            </ion-icon>
+          </ion-card-title>
+        </ion-card-header>
+
+        <!-- CONTENT -->
+        <ion-card-content *ngIf="activeCard === 'patrolling'">
+
+          <!-- HEADER ROW -->
+          <div class="patrolling-header">
+
+            <div class="title">
+              Assign Patrolling Team
+              <span class="range">
+                ({{ maintenanceDetails?.maintenance_list?.tower_range }})
+              </span>
+            </div>
+
+            <div class="actions">
+
+              <!-- ADD -->
+              <ion-button size="small" (click)="addPatrollingRow()"
+                [disabled]="(assetDamageFeatureOn && assetDamageBayLocked)
+                  || form.value.current_status == MaintenanceStatus.Complete
+                  || !resolver.MaintenanceAccessRights.tl_patrolling_input
+                  || clicked_device_type == 'observation_filter'">
+                <ion-icon name="add"></ion-icon>
+              </ion-button>
+
+              <!-- SUBMIT -->
+              <ion-button size="small" fill="solid" color="primary"
+                *ngIf="resolver.MaintenanceAccessRights.tl_patrolling_input" (click)="savePatrolling()" [disabled]="
+              (assetDamageFeatureOn && assetDamageBayLocked) ||
+              form.value.requests_approves?.in_progress_datetime == 0 ||
+              form.value.requests_approves?.patrolling_completed_datetime != 0 ||
+              !resolver.MaintenanceAccessRights.tl_patrolling_input ||
+              isPatrollingSubmitDisabled
+            ">
+
+                {{
+                locale_service.Locale.language.project.maintenancesettings.maintenancebutton.submit
+                }}
+
+              </ion-button>
+
+            </div>
+          </div>
+
+          <!-- TABLE HEADER -->
+          <div class="table-header">
+            <div>Tower</div>
+            <div>Team</div>
+            <div>Status</div>
+          </div>
+
+          <!-- LIST -->
+          <ion-list *ngIf="patrolling_details?.length">
+
+            <ion-item-sliding *ngFor="let p of patrolling_details; let i = index">
+
+              <!-- MAIN ROW -->
+              <ion-item (click)="updatePatrollingRow(p, i)">
+                <ion-label>
+                  <div class="row-grid">
+                    <div>
+                      {{ p?.tower_start }} - {{ p?.tower_end }}
+                    </div>
+                    <div>
+                      {{ p?.name || '—' }}
+                    </div>
+
+                    <div class="status-col">
+                      <span class="status-chip" [ngClass]="'status-' + p?.status?.toLowerCase().replace(' ', '-')">
+                        {{ p?.status }}
+                      </span>
+                    </div>
+                  </div>
+                </ion-label>
+              </ion-item>
+
+              <!-- EDIT — gated by tl_patrolling_input (mirrors web) plus mobile's
+                   existing complete-maintenance guard. -->
+              <ion-item-options side="start">
+                <ion-item-option color="primary" (click)="updatePatrollingRow(p, i)"
+                  [disabled]="form.value.current_status == MaintenanceStatus.Complete
+                    || !resolver.MaintenanceAccessRights.tl_patrolling_input">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+
+              <!-- DELETE — same gate as EDIT. -->
+              <ion-item-options side="end">
+                <ion-item-option color="danger" (click)="deletePatrollingRow(i)"
+                  [disabled]="form.value.current_status == MaintenanceStatus.Complete
+                    || !resolver.MaintenanceAccessRights.tl_patrolling_input">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+
+            </ion-item-sliding>
+
+          </ion-list>
+
+          <!-- EMPTY STATE -->
+          <div *ngIf="!patrolling_details?.length" class="empty-state">
+            ***NOTE: No Towers has been assigned***
+          </div>
+
+          <!-- UX HINT -->
+          <div *ngIf="patrolling_details?.length" class="hint-text">
+            Tap row to edit • Swipe for actions
+          </div>
+
+          <!-- DYNAMIC WARNING — lists towers in the maintenance_list.tower_range
+               that don't yet have a patrolling row. Populated from
+               MaintenanceService.unassignedTLTowers(). Mirrors ClientApp
+               maintenance-details-dlg.component.html L2140-2142. -->
+          <p *ngIf="patrolling_warning" class="patrolling-warning">
+            {{ patrolling_warning }}
+          </p>
+
+        </ion-card-content>
+      </ion-card>
+
+    </ng-container>
+
+    <!-- ================= TL OBSERVATION LIST ================= -->
+    <ng-container *ngSwitchCase="'observations_list'">
+
+      <ion-card>
+        <ion-card-header class="gradient-header">
+          <ion-card-title>
+            <ion-icon name="eye-outline"></ion-icon>
+            {{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.dialog_heading.observations_list }}
+          </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content class="ion-no-padding">
+
+          <!-- HEADER ROW: Search + Add -->
+          <div class="obs-header-toolbar">
+
+            <ion-searchbar (ionInput)="debounceSearch($event)" placeholder="Type to Search"
+              animated class="obs-searchbar">
+            </ion-searchbar>
+
+            <ion-button size="small" (click)="addObRow()"
+              [disabled]="(assetDamageFeatureOn && assetDamageBayLocked) || isObsListAddObservationButtonDisabled"
+              class="obs-add-btn">
+              <ion-icon name="add" slot="icon-only"></ion-icon>
+            </ion-button>
+
+          </div>
+
+          <!-- COLUMN HEADERS -->
+          <div class="obs-header-row">
+            <div>{{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.table_row.lineno }}</div>
+            <div>{{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.table_row.observation }}</div>
+            <div>{{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.table_row.remarks }}</div>
+            <div>{{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.table_row.status }}</div>
+          </div>
+
+          <!-- LIST -->
+          <ion-list *ngIf="filterObservationDatasource?.data?.length">
+
+            <ion-item-sliding *ngFor="let row of filterObservationDatasource.data; let rindex = index">
+
+              <!-- ROW -->
+              <ion-item>
+                <ion-label class="ion-text-wrap">
+                  <div class="obs-row-grid">
+
+                    <!-- Line No -->
+                    <div class="obs-cell">
+                      {{
+                        row.tower_type
+                          ? (row.tower_type === 'Tower'
+                              ? (row.tower_s?.trim() ? row.tower_s : '----')
+                              : (row.tower_s?.trim() && row.tower_e?.trim() ? row.tower_s + '-' + row.tower_e : '----'))
+                          : '----'
+                      }}
+                    </div>
+
+                    <!-- Observation -->
+                    <div class="obs-cell">{{ row.observations }}</div>
+
+                    <!-- Remarks -->
+                    <div class="obs-cell">{{ row.remarks?.trim() ? row.remarks : '----' }}</div>
+
+                    <!-- Status -->
+                    <div class="obs-cell">
+                      <span class="obs-status-chip">
+                        {{ locale_service.Locale.language.project.maintenancesettings.observationstatus[row.status] }}
+                      </span>
+                    </div>
+
+                  </div>
+
+
+                </ion-label>
+              </ion-item>
+
+              <!-- VIEW (swipe left) -->
+              <ion-item-options side="start">
+                <ion-item-option color="primary" (click)="viewObRow(row, rindex)">
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+
+              <!-- EDIT (swipe right) -->
+              <ion-item-options side="end">
+                <ion-item-option color="tertiary"
+                  (click)="updateObRow(row, rindex, row?.disable_button)"
+                  [disabled]="(assetDamageFeatureOn && assetDamageBayLocked) || isEditObservationBtninObservationsListdisabled(row)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+
+            </ion-item-sliding>
+
+          </ion-list>
+
+          <!-- EMPTY STATE -->
+          <div class="empty-state" *ngIf="!filterObservationDatasource?.data?.length">
+            No observations found.
+          </div>
+
+          <!-- HINT -->
+          <div class="hint-text" *ngIf="filterObservationDatasource?.data?.length">
+            Swipe left to view • Swipe right to edit
+          </div>
+
+        </ion-card-content>
+      </ion-card>
+
+    </ng-container>
+
+  </ng-container>
+  </div>
+
+
+  <!-- ================= COMMON WORKFLOW ================= -->
+  <!-- Workflow card takes the same "disabled" look as ClientApp .right-container
+       when the bay is locked. Individual sub-step buttons are also [disabled]. -->
+  <ion-card [class.asset-damage-disabled]="assetDamageFeatureOn && assetDamageBayLocked">
+    <ion-card-header class="gradient-header" (click)="toggleCard('workflow')">
+      <ion-card-title>
+        Workflow
+        <ion-icon [name]="activeCard === 'workflow' ? 'chevron-up' : 'chevron-down'" class="collapse-icon">
+        </ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="activeCard === 'workflow'">
+      <div class="stepper">
+
+        <ng-container *ngFor="let status of stepper | keyvalue: keepOriginalOrder; let i = index">
+
+          <div class="step" *ngIf="!status.value.hidden"
+            [ngClass]="{ 'blur': completedStepsIndex < i || status.value.datetime == -1 }">
+
+            <!-- HEADER -->
+            <div class="step-header">
+
+              <div class="step-icon">
+                <ion-icon *ngIf="status.value.datetime > 0" name="checkmark-circle" color="success"></ion-icon>
+
+                <ion-icon *ngIf="status.value.datetime == 0" name="ellipse-outline" color="medium"></ion-icon>
+
+                <ion-icon *ngIf="status.value.datetime == -1" name="close-circle" color="danger"></ion-icon>
+              </div>
+
+              <div class="step-label">
+                {{ status.value.label }}
+              </div>
+
+              <!-- SUB STEPS -->
+              <div *ngIf="status.value.sub_steps" class="sub-steps">
+                <ion-button
+                  *ngFor="let sub_step of status.value.sub_steps | keyvalue: keepOriginalOrder; let si = index"
+                  size="small" fill="solid" [color]="sub_step.value.datetime > 0 ? 'success' : 'medium'"
+                  (click)="openSubStepDialog(sub_step, $event)"
+                  [disabled]="assetDamageFeatureOn && assetDamageBayLocked">
+                  {{ si + 1 }}
+                </ion-button>
+              </div>
+            </div>
+
+            <!-- CONNECTOR -->
+            <div class="connector_line" *ngIf="!(status.key == MaintenanceStatus.Complete ||
+                          status.key == MaintenanceStatus.Cancel ||
+                          status.key == MaintenanceStatus.MaintainanceRescheduled)">
+            </div>
+
+            <!-- SUB LABEL -->
+            <div *ngIf="status.value.datetime > 0 && !status.value.sub_steps" class="stepper_sublabel">
+              {{ getSubLabel(status.value.datetime, status.value.id) }}
+            </div>
+
+            <div *ngIf="status.value.sub_steps" class="stepper_sublabel">
+              {{ status.value.id }}
+            </div>
+
+          </div>
+
+        </ng-container>
+
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ============ NOTE BANNERS ============ -->
+  <!-- Gates PTW/restoration workflow when another maintenance on the same bay
+       is still pending. Mirrors ClientApp maintenance-details-dlg.component.html
+       L3387-3440. The corresponding flags (mnt_to_be_restored_exists,
+       ptw_is_active_on_same_bay, ptw_cancellation_requested_on_all_same_bay)
+       are computed in the TS file — see setMaintenanceDetails(). -->
+
+  <div class="note-banner"
+       *ngIf="mnt_to_be_restored_exists && (form.value.current_status == MaintenanceStatus.Planned || form.value.current_status == MaintenanceStatus.RequestPTW)">
+    **NOTE: Restoration is pending on following Maintenance:
+    <div *ngFor="let mnt of getToBeRestoredMnts(); let index = index">{{ (index + 1) + '. ' + mnt }}</div>
+    You can proceed once all pending items are resolved.
+  </div>
+
+  <div class="note-banner"
+       *ngIf="ptw_is_active_on_same_bay && form.value.current_status == MaintenanceStatus.PTWCancelRequested && !ptw_cancellation_requested_on_all_same_bay">
+    **NOTE: PTW Cancellation Request still pending on following Maintenance:
+    <div *ngFor="let mnt of getPTWRequestPendingMnts(); let index = index">{{ (index + 1) + '. ' + mnt }}</div>
+    You can proceed once all pending items are resolved.
+  </div>
+
+  <div class="note-banner"
+       *ngIf="ptw_is_active_on_same_bay && form.value.current_status == MaintenanceStatus.PTWCancellationIssued">
+    **NOTE: PTW is still active on following Maintenance:
+    <div *ngFor="let mnt of getPTWActiveMnts(); let index = index">{{ (index + 1) + '. ' + mnt }}</div>
+    You can proceed once all pending items are resolved.
+  </div>
+
+  <div class="note-banner"
+       *ngIf="form.value.is_non_initiator_on_hold && form.value.current_status == MaintenanceStatus.PTWRequested">
+    **NOTE: This Maintenance has been initiated by {{
+      maintenanceDetails.initiator_device
+        ? maintenanceDetails.initiator_device.split('/').slice(-1)[0]
+        : 'Initiator Substation'
+    }}. As Such, you may issue PTW only after {{
+      maintenanceDetails.initiator_device
+        ? maintenanceDetails.initiator_device.split('/').slice(-1)[0]
+        : 'Initiator Substation'
+    }} perform their CB/ISO operations on the Connected Bay &amp; Issue PTW.<br />
+    Please Coordinate with {{
+      maintenanceDetails.initiator_device
+        ? maintenanceDetails.initiator_device.split('/').slice(-1)[0]
+        : 'Initiator Substation'
+    }} to move forward.
+  </div>
+
+  <div class="note-banner"
+       *ngIf="maintenanceDetails?.hasOwnProperty('is_non_initiator_on_hold') && form.value.current_status == MaintenanceStatus.PTWCancellationIssued">
+    **NOTE: This Maintenance has been initiated by {{
+      maintenanceDetails.initiator_device
+        ? maintenanceDetails.initiator_device.split('/').slice(-1)[0]
+        : 'Initiator Substation'
+    }}. As Such, you may Restore only after {{
+      maintenanceDetails.initiator_device
+        ? maintenanceDetails.initiator_device.split('/').slice(-1)[0]
+        : 'Initiator Substation'
+    }} requests NBF Cancellation.<br />
+    Please Coordinate with {{
+      maintenanceDetails.initiator_device
+        ? maintenanceDetails.initiator_device.split('/').slice(-1)[0]
+        : 'Initiator Substation'
+    }} to move forward.
+  </div>
+
+  <!-- Past-date start warning — mirrors ClientApp maintenance-details-dlg L186-195.
+       Shown next to the disabled Start Maintenance button when the planned date
+       is in the past. -->
+  <div class="past-date-warning"
+       *ngIf="show_start_maintenance_btn && form.value.current_status == MaintenanceStatus.Planned && isPatrollingTL && isPatrollingDateInPast">
+    *Maintenance cannot be started for a past date. Please select current date and click Apply Changes.
+  </div>
+
+</ion-content>
+
+<!-- ================= FOOTER ================= -->
+<ion-footer class="action-footer" *ngIf="
+    (show_start_maintenance_btn && activeTab === 'maintenance') ||
+    (shouldShowCompleteMaintenanceButton && (activeTab === 'patrolling' || activeTab === 'observations_list'))">
+
+  <ion-toolbar>
+
+    <!-- START MAINTENANCE / START PATROLLING -->
+    <ion-button *ngIf="show_start_maintenance_btn && activeTab === 'maintenance'" expand="block" class="start-btn"
+      (click)="startMaintenance()" [disabled]="(assetDamageFeatureOn && assetDamageBayLocked) ||
+                  maintenanceOnConnectedBay ||
+                  (maintenanceOfConnectedTLInBay && !maintenanceOfConnectedTLInBayAccess) ||
+                  (isPatrollingTL && isPatrollingDateInPast)">
+
+      {{
+      (dialogData.device_details.maintenance_type === 'TL' &&
+      dialogData.device_details.maintenance_list.template.scheduled_patrolling === 'patrolling')
+      ? locale_service.Locale.language.project.maintenancesettings.maintenancebutton.start_patrolling
+      : locale_service.Locale.language.project.maintenancesettings.maintenancebutton.start_maintenance
+      }}
+
+    </ion-button>
+
+    <!-- COMPLETE PATROLLING / COMPLETE MAINTENANCE -->
+    <div *ngIf="shouldShowCompleteMaintenanceButton && (activeTab === 'patrolling' || activeTab === 'observations_list')">
+
+      <ion-button expand="block" class="start-btn" (click)="manualCompleteMaintenance()"
+        [disabled]="assetDamageFeatureOn && assetDamageBayLocked">
+
+        {{
+        dialogData.device_details.maintenance_type === 'TL' &&
+        dialogData.device_details.maintenance_list.template.scheduled_patrolling === 'patrolling'
+        ? locale_service.Locale.language.project.maintenancesettings.maintenancebutton.complete_patrolling
+        : locale_service.Locale.language.project.maintenancesettings.maintenancebutton.completemaintenance
+        }}
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

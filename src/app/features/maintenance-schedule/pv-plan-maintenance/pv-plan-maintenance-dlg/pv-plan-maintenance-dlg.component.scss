@@ -1,0 +1,309 @@
+// ── Host ─────────────────────────────────────────────────────────────────────
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// ── Design tokens ────────────────────────────────────────────────────────────
+$border: #e0e3e8;
+$card-bg: #ffffff;
+$text-dark: #1a1a2e;
+$text-mid: #546e7a;
+$text-light: #90a4ae;
+$surface: #f4f6f9;
+
+// ── Loading overlay ───────────────────────────────────────────────────────────
+.loading-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.88);
+
+  ion-spinner {
+    width: 40px;
+    height: 40px;
+  }
+
+  .loading-msg {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: $text-mid;
+  }
+}
+
+// ── Future warning ────────────────────────────────────────────────────────────
+.future-warning-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255, 196, 9, 0.15);
+  border-left: 4px solid var(--ion-color-warning, #ffc409);
+  font-size: 13px;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+}
+
+// ── Connected note ────────────────────────────────────────────────────────────
+.connected-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(235, 68, 90, 0.08);
+  border-left: 3px solid var(--ion-color-danger, #eb445a);
+  border-radius: 6px;
+  margin: 8px 16px;
+  font-size: 13px;
+
+  > ion-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .connected-note-title {
+    display: block;
+    font-weight: 600;
+    color: var(--ion-color-danger, #eb445a);
+    margin-bottom: 2px;
+  }
+}
+
+.connected-note-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: $text-mid;
+  margin-top: 4px;
+
+  ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+  }
+}
+
+// ── Form body ─────────────────────────────────────────────────────────────────
+.form-body {
+  padding: 16px;
+}
+
+// ── Info card ─────────────────────────────────────────────────────────────────
+.info-card {
+  background: $card-bg;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  border-left: 4px solid var(--ion-color-primary);
+
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+
+    & + .info-row {
+      border-top: 1px solid $border;
+    }
+
+    .info-icon {
+      font-size: 18px;
+      color: var(--ion-color-primary);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .info-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .info-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: $text-light;
+      }
+
+      .info-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-dark;
+      }
+    }
+  }
+}
+
+// ── Section header ────────────────────────────────────────────────────────────
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+
+  span {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $text-mid;
+  }
+
+  .section-icon {
+    font-size: 16px;
+    color: $text-mid;
+  }
+}
+
+// ── Form items ────────────────────────────────────────────────────────────────
+.form-item {
+  --border-radius: 10px;
+  --background: #{$card-bg};
+  --padding-start: 14px;
+  --inner-padding-end: 14px;
+  --min-height: 56px;
+  border: 1px solid $border;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+  .item-icon {
+    font-size: 20px;
+    margin-right: 4px;
+  }
+}
+
+// ── Date picker item ──────────────────────────────────────────────────────────
+.date-item {
+  --min-height: 68px;
+  cursor: pointer;
+
+  .date-display {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    padding: 10px 0;
+
+    .date-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: $text-light;
+    }
+
+    .date-val-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .date-val {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-dark;
+        flex: 1;
+
+        &.placeholder {
+          color: $text-light;
+          font-weight: 400;
+        }
+      }
+
+      .dt-chevron {
+        color: $text-mid;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+// ── Warning text ──────────────────────────────────────────────────────────────
+.warning-text {
+  display: block;
+  font-size: 0.78rem;
+  padding: 4px 0 8px;
+}
+
+// ── Duration type tiles ───────────────────────────────────────────────────────
+.duration-tiles {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  .duration-tile {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 8px;
+    border: 2px solid $border;
+    border-radius: 10px;
+    background: $surface;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+
+    ion-icon {
+      font-size: 20px;
+      color: $text-light;
+      transition: color 0.2s;
+    }
+
+    span {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: $text-mid;
+      transition: color 0.2s;
+    }
+
+    &.active {
+      border-color: var(--ion-color-primary);
+      background: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.08);
+
+      ion-icon {
+        color: var(--ion-color-primary);
+      }
+
+      span {
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+.dlg-footer {
+  --background: #{$card-bg};
+  border-top: 1px solid $border;
+
+  .footer-btns {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+
+    .btn-cancel {
+      flex: 0 0 auto;
+      min-width: 96px;
+      --border-radius: 10px;
+    }
+
+    .btn-create {
+      flex: 1;
+      --border-radius: 10px;
+    }
+  }
+}

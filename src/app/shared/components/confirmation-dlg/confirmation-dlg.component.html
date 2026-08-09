@@ -1,0 +1,81 @@
+<!-- Progress -->
+<ion-progress-bar *ngIf="!appservice.InProgress" value="1"></ion-progress-bar>
+<ion-progress-bar *ngIf="appservice.InProgress" type="indeterminate"></ion-progress-bar>
+
+<!-- Content -->
+<ion-content class="ion-padding">
+
+  <!-- Question -->
+  <div [innerHTML]="dialogData.Question"></div>
+
+  <!-- Templates -->
+  <div class="template-content">
+
+    <!-- Substation -->
+    <div *ngIf="dialogData.templates?.sub?.length">
+      <h4>Substation Templates</h4>
+      <ul>
+        <li *ngFor="let name of dialogData.templates.sub">
+          {{ name }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Bay -->
+    <div *ngIf="dialogData.templates?.bay?.length">
+      <h4>Bay Templates</h4>
+      <ul>
+        <li *ngFor="let name of dialogData.templates.bay">
+          {{ name }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Equipment -->
+    <div *ngIf="dialogData.templates?.eqp?.length">
+      <h4>Equipment Templates</h4>
+      <ul>
+        <li *ngFor="let name of dialogData.templates.eqp">
+          {{ name }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- TL -->
+    <div *ngIf="dialogData.templates?.TL?.length">
+      <h4>TL Templates</h4>
+      <ul>
+        <li *ngFor="let name of dialogData.templates.TL">
+          {{ name }}
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</ion-content>
+
+<!-- Footer -->
+<ion-footer>
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <!-- No -->
+      <rs-button
+        fill="clear"
+        [label]="dialogData.NoText"
+        (clicked)="onClose(false)">
+      </rs-button>
+
+      <!-- Yes -->
+      <rs-button
+        color="primary"
+        [label]="dialogData.YesText"
+        (clicked)="onClose(true)">
+      </rs-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-footer>

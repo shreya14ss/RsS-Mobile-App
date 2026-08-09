@@ -1,0 +1,91 @@
+<div class="notification-overlay" (click)="HideUrgentDlg()">
+
+  <div class="notification-panel" (click)="$event.stopPropagation()">
+
+    <!-- HEADER -->
+    <div class="notification-header">
+      <div class="header-title-wrap">
+        <ion-icon name="notifications-outline" class="header-bell"></ion-icon>
+
+        <span class="header-title">
+          {{ selectedType === 'actionable' ? 'Actionable Notifications' : 'All Notifications' }}
+        </span>
+      </div>
+
+      <ion-button fill="clear" class="close-btn" (click)="HideUrgentDlg()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="notification-content">
+
+      <!-- LOADING -->
+      <ng-container *ngIf="isLoading">
+        <div class="notification-card skeleton-card" *ngFor="let s of [1,2,3,4,5]">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line short"></div>
+          <div class="skeleton skeleton-time"></div>
+        </div>
+      </ng-container>
+
+      <!-- DATA -->
+      <ng-container *ngIf="!isLoading && groupedNotices?.length > 0">
+
+        <ng-container *ngFor="let group of groupedNotices">
+
+          <div class="date-pill-wrapper">
+            <div class="notification-date-label">
+              {{ changeDateString(group.label) }}
+            </div>
+          </div>
+
+          <div *ngFor="let notice of group.notices; let index = index">
+
+            <div class="swipe-container" (touchstart)="onTouchStart($event)"
+              (touchmove)="onTouchMove($event, notice, index)" (touchend)="onTouchEnd($event, notice, index)">
+
+              <div class="notification-card" [class.actionable]="canNavigate(notice)">
+
+                <div class="card-header" (click)="canNavigate(notice) ? handleActionableEvent(notice, index) : null">
+                  <span class="card-title">
+                    {{ notice.sender?.name || 'Notification' }}
+                  </span>
+                  <span class="card-time">{{ notice.timestamp | date:'shortTime' }}</span>
+                </div>
+
+                <div class="card-message">
+                  {{ notice.messageText }}
+                </div>
+
+                <div class="card-footer">
+                  <ion-button *ngIf="canNavigate(notice)" fill="clear" size="small" class="card-action-btn"
+                    (click)="handleActionableEvent(notice, index)">
+                    <ion-icon name="open-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button fill="clear" size="small" class="card-close-btn" (click)="closeNotice($event, notice, index)">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </ng-container>
+
+      </ng-container>
+
+      <!-- EMPTY -->
+      <div *ngIf="!isLoading && !groupedNotices?.length" class="empty">
+        No notifications
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

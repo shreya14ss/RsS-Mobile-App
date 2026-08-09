@@ -1,0 +1,134 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Select Bay for Maintenance Planning</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()" [disabled]="saving">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- Active maintenance warning on connected bay -->
+  <ion-card *ngIf="dialogData.my_cbay_mnts" class="alert-card">
+    <ion-card-content>
+      <div class="alert-text">
+        Note: Maintenance is Live on Connected Bay —
+      </div>
+      <div class="alert-bay">
+        {{ dialogData.my_cbay_mnts[0].device_name.split('/').slice(-2).join('/') }}
+      </div>
+      <div class="alert-action">
+        <span>If you want to Plan TL Maintenance Plan here</span>
+        <ion-button fill="clear" size="small" (click)="navigateToMaintenanceTab()" aria-label="navigate to maintenance">
+          <ion-icon slot="icon-only" name="open-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Planning form (shown when no active maintenance on connected bay) -->
+  <form [formGroup]="form" *ngIf="!dialogData.my_cbay_mnts" class="dlg-form">
+
+    <!-- Shutdown Required -->
+    <ion-card>
+      <ion-card-content class="ion-no-padding">
+        <ion-item lines="none" class="checkbox-item">
+          <ion-checkbox slot="start" formControlName="reqshutdown"></ion-checkbox>
+          <ion-label class="ion-text-wrap">
+            {{ locale_service.Locale.language.project.maintenancesettings.shutreq }}
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Bay selector (shown when reqshutdown is checked) -->
+    <ion-card *ngIf="form.get('reqshutdown').value">
+      <ion-card-content class="ion-no-padding">
+        <ion-item class="form-item">
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.heading.bay_select }}
+          </ion-label>
+          <ion-select formControlName="maintenance_on_bay" interface="alert">
+            <ion-select-option *ngFor="let bay of connectedBays" [value]="bay">
+              {{ bay.split('/').slice(-2).join('/') }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Planned date -->
+    <ion-card>
+      <ion-card-content class="ion-no-padding">
+        <ion-item button detail="false" (click)="dateClicked()" class="form-item date-item">
+          <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.plandate }}
+          </ion-label>
+          <ion-input readonly="true"
+                     [value]="form.get('plannedDate').value | date: 'dd-MM-yyyy HH:mm:ss'">
+          </ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Shutdown duration (only when reqshutdown is checked) -->
+    <ion-card *ngIf="form.get('reqshutdown').value">
+      <ion-card-content class="ion-no-padding">
+        <div class="duration-label">Shutdown Duration (In Hours/Days):</div>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">
+            Enter {{ form.value.tl_time_range_type === 'Hour' ? 'Hour' : 'Day' }}<span class="rs-required-mark">&nbsp;*</span>
+          </ion-label>
+          <ion-input type="number" formControlName="tl_time_range_value" min="0" step="0.5"></ion-input>
+        </ion-item>
+
+        <ion-segment formControlName="tl_time_range_type" class="duration-segment">
+          <ion-segment-button value="Hour">
+            <ion-label>Hours</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Day">
+            <ion-label>Days</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <ion-text color="danger" class="range-error"
+                  *ngIf="form.get('tl_time_range_value')?.hasError('min')">
+          Value cannot be less than 1
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Delayed reason (shown when maintenance is overdue) -->
+    <ion-card *ngIf="isDelayedMaintenance">
+      <ion-card-content class="ion-no-padding">
+        <ion-item class="form-item">
+          <ion-label position="stacked">Delayed Reason<span class="rs-required-mark">&nbsp;*</span></ion-label>
+          <ion-input type="text" formControlName="reason"></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+  </form>
+
+</ion-content>
+
+<ion-footer class="dlg-footer">
+  <ion-toolbar>
+    <div class="action-btn-container">
+      <ion-button fill="outline" expand="block" class="common-bottom-btn"
+                  (click)="cancel()" [disabled]="saving">
+        {{ locale_service.Locale.language.common.cancel }}
+      </ion-button>
+      <ion-button fill="solid" expand="block" class="common-bottom-btn primary-btn"
+                  (click)="save()"
+                  [disabled]="form?.invalid || !!dialogData.my_cbay_mnts || saving">
+        {{ locale_service.Locale.language.common.confirm }}
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

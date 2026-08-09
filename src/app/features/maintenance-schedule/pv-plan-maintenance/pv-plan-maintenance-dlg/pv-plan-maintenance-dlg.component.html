@@ -1,0 +1,194 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Plan Maintenance</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- ── Loading overlay ─────────────────────────────────────────────────────── -->
+<div class="loading-shade" *ngIf="saving">
+  <ion-spinner name="crescent" color="primary"></ion-spinner>
+  <p class="loading-msg">Processing...</p>
+</div>
+
+<!-- ── Future date warning ─────────────────────────────────────────────────── -->
+<div *ngIf="isFutureDate" class="future-warning-bar">
+  <ion-icon name="warning-outline" color="warning"></ion-icon>
+  <span>The maintenance is scheduled to take place {{ monthsFromNow }} months from now.</span>
+</div>
+
+<ion-content>
+  <form [formGroup]="form" class="form-body">
+
+    <!-- Device name selector (rare: no obj passed) -->
+    <ion-item lines="full" class="form-item" *ngIf="!dialogData.obj">
+      <ion-icon name="hardware-chip-outline" slot="start" class="item-icon"></ion-icon>
+      <ion-label position="floating" color="primary">TL / Substation / Bay / Equipment Name<span class="rs-required-mark">&nbsp;*</span></ion-label>
+      <ion-select formControlName="device_name" interface="action-sheet" cancelText="Cancel">
+        <ion-select-option *ngFor="let option of pathOptions" [value]="option.value">
+          {{ option.viewValue }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- ── Connected line/bay notes ─────────────────────────────────────────── -->
+    <div *ngIf="dialogData.my_line_mnts" class="connected-note">
+      <ion-icon name="warning-outline" color="danger"></ion-icon>
+      <div>
+        <span class="connected-note-title">Note: Maintenance is Live on Connected Line —</span>
+        <span>{{ dialogData.obj?.mntlst?.connected_line }}</span>
+        <div class="connected-note-action">
+          If you want to Plan Bay Maintenance, tap here
+          <ion-button fill="clear" size="small" (click)="navigateToMaintenanceTab()">
+            <ion-icon slot="icon-only" name="open-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="dialogData.my_connected_bay_mnts" class="connected-note">
+      <ion-icon name="warning-outline" color="danger"></ion-icon>
+      <div>
+        <span class="connected-note-title">Note: Maintenance is Live on Connected Bay —</span>
+        <span>{{ dialogData.my_connected_bay_mnts }}</span>
+        <div class="connected-note-action">
+          If you want to Plan Bay Maintenance, tap here
+          <ion-button fill="clear" size="small" (click)="navigateToMaintenanceTab()">
+            <ion-icon slot="icon-only" name="open-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Info card ────────────────────────────────────────────────────────── -->
+    <div class="info-card">
+
+      <div class="info-row">
+        <ion-icon name="location-outline" class="info-icon"></ion-icon>
+        <div class="info-text">
+          <span class="info-label">
+            {{ dialogData.type == 'tl' || dialogData.type == 'ob_tl'
+              ? (dialogData.obj.mnt.startsWith('pov') ? 'Substation' : 'Division')
+              : (dialogData.type == 'bay' ? 'Substation' : (dialogData.type == 'eqp' ? 'Bay' : 'Parent Group')) }} Name
+          </span>
+          <span class="info-value">{{ form.value.device_name.split('/').slice(-2, -1).join('/') }}</span>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <ion-icon name="layers-outline" class="info-icon"></ion-icon>
+        <div class="info-text">
+          <span class="info-label">{{ dialogData.obj.mnt.startsWith('pov') ? 'Bay' : dialogData.obj.type }} Name</span>
+          <span class="info-value">{{ form.value.device_name.split('/').slice(-1).join('/') }}</span>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <ion-icon name="calendar-outline" class="info-icon"></ion-icon>
+        <div class="info-text">
+          <span class="info-label">{{ locale_service.Locale.language.project.maintenancesettings.cutoffdate }}</span>
+          <span class="info-value">{{ form.value.cutoffDate }}</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Planning date + duration ──────────────────────────────────────────── -->
+    <ng-container *ngIf="!dialogData.my_line_mnts && !dialogData.my_connected_bay_mnts">
+
+      <!-- Section header -->
+      <div class="section-header">
+        <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
+        <span>{{ locale_service.Locale.language.project.maintenancesettings.plandate }}</span>
+      </div>
+
+      <!-- Date picker trigger item -->
+      <ion-item lines="full" class="form-item date-item" button detail="false" (click)="openDatePicker()">
+        <ion-icon name="calendar-outline" slot="start" class="item-icon" color="primary"></ion-icon>
+        <div class="date-display">
+          <span class="date-label">{{ locale_service.Locale.language.project.maintenancesettings.plandate }}</span>
+          <div class="date-val-row">
+            <span class="date-val" [class.placeholder]="!form.get('plannedDate').value">
+              {{ form.get('plannedDate').value
+                  ? (form.get('plannedDate').value | date:'dd-MM-yyyy HH:mm:ss')
+                  : 'Tap to select date & time' }}
+            </span>
+            <ion-icon name="chevron-down-outline" class="dt-chevron"></ion-icon>
+          </div>
+        </div>
+      </ion-item>
+
+      <!-- Shutdown Duration -->
+      <ng-container *ngIf="dialogData.type != 'tl' && !dialogData.obj?.mntlst?.template?.require_schedule">
+
+        <div class="section-header" style="margin-top: 16px;">
+          <ion-icon name="hourglass-outline" class="section-icon"></ion-icon>
+          <span>Shutdown Duration</span>
+        </div>
+
+        <!-- Type tiles: Hours | Days -->
+        <div class="duration-tiles">
+          <div class="duration-tile" [class.active]="form.value.time_range_type === 'Hour'"
+               (click)="form.get('time_range_type').setValue('Hour')">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>Hours</span>
+          </div>
+          <div class="duration-tile" [class.active]="form.value.time_range_type === 'Day'"
+               (click)="form.get('time_range_type').setValue('Day')">
+            <ion-icon name="sunny-outline"></ion-icon>
+            <span>Days</span>
+          </div>
+        </div>
+
+        <!-- Value input -->
+        <ion-item lines="full" class="form-item">
+          <ion-icon name="hourglass-outline" slot="start" class="item-icon" color="primary"></ion-icon>
+          <ion-label position="stacked" color="primary">
+            Enter {{ form.value.time_range_type === 'Hour' ? 'Hours' : 'Days' }}<span class="rs-required-mark">&nbsp;*</span>
+          </ion-label>
+          <ion-input type="number" formControlName="time_range_value" min="0" step="0.5"
+            placeholder="0"></ion-input>
+        </ion-item>
+
+        <ion-note color="danger" class="warning-text"
+          *ngIf="form.get('time_range_value')?.hasError('min')
+              && (form.get('time_range_value')?.dirty || form.get('time_range_value')?.touched)">
+          Value cannot be less than 1
+        </ion-note>
+
+      </ng-container>
+
+    </ng-container>
+
+    <!-- ── Delayed Reason ────────────────────────────────────────────────────── -->
+    <ng-container *ngIf="isDelayedMaintenance">
+      <div class="section-header" style="margin-top: 16px;">
+        <ion-icon name="time-outline" class="section-icon"></ion-icon>
+        <span>Delayed Reason</span>
+      </div>
+      <ion-item lines="full" class="form-item">
+        <ion-icon name="chatbox-outline" slot="start" class="item-icon" color="primary"></ion-icon>
+        <ion-label position="stacked" color="primary">Delayed Reason<span class="rs-required-mark">&nbsp;*</span></ion-label>
+        <ion-input type="text" formControlName="reason" placeholder="Enter reason"></ion-input>
+      </ion-item>
+    </ng-container>
+
+  </form>
+</ion-content>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+<ion-footer class="dlg-footer">
+  <div class="footer-btns">
+    <ion-button fill="outline" color="medium" class="btn-cancel" (click)="dismiss()" [disabled]="saving">
+      Cancel
+    </ion-button>
+    <ion-button fill="solid" color="primary" class="btn-create"
+      [disabled]="form.invalid || isPlanmntClicked || saving" (click)="save()">
+      Confirm
+    </ion-button>
+  </div>
+</ion-footer>

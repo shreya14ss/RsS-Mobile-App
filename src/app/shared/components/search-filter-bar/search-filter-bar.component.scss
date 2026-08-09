@@ -1,0 +1,153 @@
+// Design tokens — align with dashboard filter bar palette.
+$muted:     #607d8b;
+$border:    #e0e3e8;
+$bg:        #ffffff;
+$field-bg:  #f0f2f5;
+$text-dark: #1a1a2e;
+
+.sfb-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: $bg;
+  border-bottom: 1px solid $border;
+}
+
+// ── Row 1 — search input + calendar trigger + projected filter button ─────
+.sfb-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+}
+
+// ── Search field ────────────────────────────────────────────────────────────
+.sfb-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  background: $field-bg;
+  border-radius: 10px;
+  padding: 6px 10px;
+  transition: background .18s, box-shadow .18s;
+
+  &.has-focus {
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb, 34, 23, 113), .18);
+  }
+}
+
+.sfb-search-icon {
+  font-size: 16px;
+  color: $muted;
+  flex-shrink: 0;
+}
+
+.sfb-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: $text-dark;
+  min-width: 0;
+
+  &::placeholder { color: $muted; }
+}
+
+.sfb-clear {
+  font-size: 18px;
+  color: $muted;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+// ── Row 2 — applied filters (currently just the date chip) ─────────────────
+.sfb-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px 8px;
+  flex-wrap: wrap;
+}
+
+.sfb-date-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 10px;
+  background: rgba(var(--ion-color-primary-rgb, 34, 23, 113), .10);
+  color: var(--ion-color-primary);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.2;
+  max-width: 100%;
+
+  .chip-icon { font-size: 14px; flex-shrink: 0; }
+
+  .chip-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // With a dedicated row the chip gets the full page width, so full
+    // "dd/MM/yyyy HH:mm – dd/MM/yyyy HH:mm" fits at typical phone sizes.
+  }
+
+  .chip-clear {
+    font-size: 14px;
+    padding: 2px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .06);
+    color: $text-dark;
+    flex-shrink: 0;
+    &:hover  { background: rgba(0, 0, 0, .12); }
+    &:active { background: rgba(0, 0, 0, .18); }
+  }
+}
+
+// ── Calendar icon button ────────────────────────────────────────────────────
+.sfb-icon-btn {
+  position: relative;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: $field-bg;
+  color: $text-dark;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .18s, color .18s;
+
+  ion-icon { font-size: 18px; }
+
+  &:hover  { background: darken($field-bg, 3%); }
+  &:active { background: darken($field-bg, 6%); }
+
+  &.is-active {
+    background: rgba(var(--ion-color-primary-rgb, 34, 23, 113), .12);
+    color: var(--ion-color-primary);
+  }
+
+  .sfb-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ion-color-primary);
+    box-shadow: 0 0 0 2px $bg;
+  }
+}
+
+// Hide the reused date-time-selection host — we only use it for its dialog.
+.sfb-hidden-datepicker {
+  display: none;
+}

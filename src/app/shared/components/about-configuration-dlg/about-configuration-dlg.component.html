@@ -1,0 +1,74 @@
+<ion-progress-bar *ngIf="InProgress" type="indeterminate" color="primary"></ion-progress-bar>
+<ion-progress-bar *ngIf="!InProgress" value="1" color="primary"></ion-progress-bar>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      <ion-icon name="information-circle-outline" class="title-icon"></ion-icon>
+      {{ locale_service.Locale.language.common.abtConfig }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onClose()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding about-content">
+
+  <div class="loading-overlay" *ngIf="InProgress">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <!-- Product Information -->
+  <div class="info-section" *ngIf="!InProgress">
+    <h3 class="section-title">
+      <ion-icon name="cube-outline"></ion-icon>
+      <span>Product Information</span>
+    </h3>
+
+    <div class="info-row">
+      <span class="info-label">RsS Mobile Version</span>
+      <span class="info-value">{{ versionDetails?.versionInformation }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Copy Right</span>
+      <span class="info-value">{{ versionDetails?.copyRight }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Product</span>
+      <span class="info-value">{{ versionDetails?.product }}</span>
+    </div>
+  </div>
+
+  <!-- Configuration Version -->
+  <div class="info-section" *ngIf="!InProgress">
+    <h3 class="section-title">
+      <ion-icon name="settings-outline"></ion-icon>
+      <span>Configuration Version</span>
+    </h3>
+
+    <div class="info-row">
+      <span class="info-label">Updated Version</span>
+      <span class="info-value">{{ version.ConfMajor + '.' + version.ConfMinor }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Last Updated</span>
+      <span class="info-value">{{ appService.dateToString(version.ConfLastUpdatedTime, 10) }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Remarks</span>
+      <span class="info-value">{{ version.ConfRemarks || '-' }}</span>
+    </div>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" class="start-btn" (click)="onClose()">
+      {{ locale_service.Locale.language.common.ok }}
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

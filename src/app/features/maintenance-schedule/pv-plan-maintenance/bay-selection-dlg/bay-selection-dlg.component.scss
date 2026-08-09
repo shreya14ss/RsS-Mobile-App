@@ -1,0 +1,143 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ── Cards ── */
+ion-card {
+  margin: 10px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Items / form controls ── */
+ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --min-height: 52px;
+}
+
+.form-item {
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+ion-label {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+ion-input,
+ion-select {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.checkbox-item {
+  --min-height: 48px;
+
+  ion-checkbox {
+    margin-right: 12px;
+  }
+
+  ion-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+  }
+}
+
+/* ── Date item ── */
+.date-item {
+  ion-icon {
+    margin-right: 8px;
+    font-size: 20px;
+  }
+}
+
+/* ── Connected Bay alert ── */
+.alert-card {
+  border: 1px solid rgba(var(--ion-color-danger-rgb), 0.35);
+}
+
+.alert-text {
+  color: var(--ion-color-danger);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.alert-bay {
+  font-size: 13px;
+  color: #333;
+  margin: 4px 0 10px;
+  word-break: break-all;
+}
+
+.alert-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: #333;
+}
+
+/* ── Shutdown duration ── */
+.duration-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+  padding: 12px 16px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.duration-segment {
+  margin: 8px 16px 12px;
+  --background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+}
+
+.range-error {
+  display: block;
+  font-size: 12px;
+  padding: 4px 16px 10px;
+}
+
+/* ── Footer ── */
+.dlg-footer {
+  padding-bottom: env(safe-area-inset-bottom);
+
+  ion-toolbar {
+    --background: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    padding: 0;
+  }
+}
+
+.action-btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+.common-bottom-btn {
+  --border-radius: 10px;
+  height: 48px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.primary-btn {
+  --background: var(--ion-color-primary);
+  --color: #fff;
+}
+
+ion-button[disabled] {
+  opacity: 0.5;
+}

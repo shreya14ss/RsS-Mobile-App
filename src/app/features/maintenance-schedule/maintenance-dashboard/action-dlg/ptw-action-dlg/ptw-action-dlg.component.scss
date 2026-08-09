@@ -1,0 +1,530 @@
+$ptw-breakpoint: 570px;
+
+:host {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-content: stretch;
+  align-items: stretch;
+  min-width: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+  gap: 0;
+}
+
+.form-grid mat-form-field {
+  min-width: 0;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  mat-form-field {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  @media (max-width: $ptw-breakpoint) {
+    //flex-direction: column;
+    align-items: stretch;
+
+    mat-form-field {
+      flex: 1 1 100%;
+      max-width: none;
+    }
+  }
+}
+
+.form-row-two {
+  mat-form-field {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 200px;
+
+    @media (max-width: $ptw-breakpoint) {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+  }
+}
+
+mat-form-field {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 20px 5% 0;
+  align-self: stretch;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+  box-sizing: border-box;
+
+  .content-partition {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: 0;
+    max-width: 100%;
+
+    .action-btn-container {
+      display: flex;
+      //flex-direction: column;
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin: 10px 16px 0;
+    max-width: 100%;
+  }
+
+  @media (max-width: $ptw-breakpoint) {
+    margin: 10px 8px 0;
+    padding: 0 2px;
+  }
+}
+
+.operation-section {
+  flex-wrap: wrap;
+  gap: 12px;
+
+  @media (max-width: $ptw-breakpoint) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.operation-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 10px;
+
+  mat-label {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: $ptw-breakpoint) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.operation-btn {
+  margin-left: 5px;
+
+  @media (max-width: $ptw-breakpoint) {
+    margin-left: 0;
+  }
+}
+
+.note-banner {
+  background-color: #ff7272;
+  padding: 8px 10px;
+  margin: 15px 5px 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+
+  @media (max-width: $ptw-breakpoint) {
+    margin: 12px 0 0;
+    padding: 8px;
+  }
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom form field styles */
+/*::ng-deep .mat-form-field-flex {
+  align-items: center;
+}
+
+::ng-deep .mat-form-field-infix {
+  padding: 0.5em 0;
+}
+
+::ng-deep .mat-input-element {
+  line-height: normal;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0.5em;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  background-color: white;
+}*/
+
+/* Checkbox styles */
+/*.two-line-checkbox {
+  display: flex;
+  align-items: flex-start;
+  white-space: normal;
+  line-height: 1.4;
+}*/
+:host ::ng-deep .two-line-checkbox .mat-checkbox-label {
+  white-space: normal;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    //flex-direction: column;
+    align-items: stretch;
+  }
+
+  @media (max-width: $ptw-breakpoint) {
+    //flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+
+  > button,
+  > div {
+    flex-shrink: 0;
+  }
+
+  > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+
+    @media (max-width: $ptw-breakpoint) {
+      //flex-direction: column;
+    }
+  }
+
+  > div > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  @media (max-width: $ptw-breakpoint) {
+    //flex-direction: column;
+    align-items: stretch;
+
+    > button {
+      width: 100%;
+      margin: 0;
+    }
+
+    > div {
+      width: 100%;
+    }
+
+    .mat-stroked-button {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.rbh_title.draggable {
+  cursor: move;
+}
+
+.checkbox-container {
+  margin-bottom: 3%;
+}
+
+.checkbox-item {
+  --border-width: 0;
+  --inner-border-width: 0;
+
+  ion-checkbox {
+    margin-inline-end: 8px;
+  }
+}
+
+
+.sldc-section {
+  margin: 16px 0;
+  border-radius: 8px;
+}
+
+.sldc-row {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+}
+
+.sldc-field-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+
+  @media (max-width: 599px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.sldc-field {
+  flex: 1;
+  // Make field take full width in wrapper
+  ::ng-deep .mat-form-field-wrapper {
+    margin-bottom: 0;
+  }
+}
+
+.inline-save-btn {
+  min-width: 80px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  margin-bottom: 8px; // align vertically with input bottom
+
+  @media (max-width: 599px) {
+    margin-bottom: 0;
+    width: 100%;
+  }
+}
+
+.shutdown-save {
+  background-color: #1976d2;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: #1565c0;
+  }
+}
+
+.charging-save {
+  background-color: #1976d2;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: #1565c0;
+  }
+}
+
+// Disabled state
+.inline-save-btn:disabled {
+  background-color: #e0e0e0 !important;
+  color: #757575 !important;
+}
+
+
+// PDF Export ->
+
+.pdf-only {
+  transform: translateX(-10000px);
+}
+
+.ptw-header {
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  border-bottom: 2px solid #1976d2;
+}
+
+.ptw-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.ptw-meta {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 1fr;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.ptw-meta .label {
+  font-size: 10px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.ptw-meta .value {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ptw-meta .date {
+  text-align: right;
+}
+
+.ptw-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  font-size: 12px;
+  margin-bottom: 12px;
+  gap: 6px;
+}
+.issue_checkbox {
+ border-top: 2px solid #1976d2;
+ margin-top:10px;
+ padding-top:10px;
+}
+
+.event-logs-header {
+  margin: 18px 0 10px;
+  padding-top: 10px;
+  border-top: 2px solid #1976d2;
+
+  h2 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 14px 0 8px;
+  }
+}
+
+
+.bay-title {
+  margin: 12px 0 6px;
+  padding: 6px 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  background: #f5f7fa; /* subtle contrast */
+  border-left: 4px solid #1976d2; /* visual anchor */
+  border-radius: 2px;
+}
+
+.log-card {
+  border: 1px solid #ddd;
+  padding: 4px 6px;
+  margin-bottom: 4px;
+  border-radius: 3px;
+  page-break-inside: avoid;
+}
+
+.bay-title + .log-card {
+  margin-top: 4px;
+}
+
+.log-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.log-row {
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+
+.log-row b + span {
+  margin-left: 3px;
+}
+
+.log-row span {
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.status {
+  font-weight: 600;
+}
+
+.status.performed {
+  color: #2e7d32;
+}
+
+.status.same {
+  color: #666;
+  font-weight: 400;
+}
+
+/* Note banner shown when backcharging is still active on connected bays and
+   the user is on the restoration section. Mirrors ClientApp .note-banner. */
+.ptw-note-banner {
+  background-color: #ff7272;
+  color: #ffffff;
+  padding: 10px 12px;
+  margin: 10px 12px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+

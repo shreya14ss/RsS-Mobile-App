@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.rbh_title.draggable {
+  cursor: move;
+}
+
+textarea {
+  min-height: 100px;
+}

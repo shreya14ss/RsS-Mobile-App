@@ -1,0 +1,50 @@
+<ion-header class="login-header">
+  <!-- Thin accent top-line — mirrors ClientApp's Login_headerTopLine -->
+  <div class="login-top-line" [class.login-top-line--progress]="loginProgress"></div>
+
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <img class="header-logo" src="assets/images/rss.svg" width="36" height="36" alt="RsS logo" />
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login-content">
+
+  <div class="login-main-div">
+    <ion-card class="login-card">
+
+      <!-- Card progress bar — determinate when idle, indeterminate when loading -->
+      <div class="card-progress-bar" [class.card-progress-bar--active]="loginProgress"></div>
+
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-circle-outline" class="login-title-icon"></ion-icon>
+          Login
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="form" (ngSubmit)="login()">
+
+          <rs-input label="Username" [control]="form.get('username')" [disabled]="loginProgress" autocomplete="username"
+            errorMsg="Username is required">
+          </rs-input>
+
+          <rs-input label="Password" type="password" [control]="form.get('password')" [disabled]="loginProgress"
+            autocomplete="current-password" errorMsg="Password is required">
+          </rs-input>
+
+          <ion-card-content class="login-actions">
+            <rs-button label="Login" icon="log-in" type="submit" fill="solid" expand="block" color="primary"
+              [disabled]="loginProgress || form.invalid" [loading]="loginProgress">
+            </rs-button>
+          </ion-card-content>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

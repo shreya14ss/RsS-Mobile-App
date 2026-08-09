@@ -1,0 +1,19 @@
+# This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
+# For additional information regarding the format and rule options, please see:
+# https://github.com/browserslist/browserslist#queries
+
+# You can see what browsers were selected by your queries by running:
+#   npx browserslist
+
+# Constrained to browsers Capacitor's Android WebView ships against.
+# Avoids Safari/iOS queries, because newer caniuse-lite emits range-style
+# versions (e.g. "safari 18.5-18.7", "ios_saf 15.2-15.3") that Angular 13's
+# CSS optimizer passes straight to esbuild — which rejects them with
+# "Invalid version" and breaks the production build.
+
+Chrome >= 90
+ChromeAndroid >= 90
+Firefox >= 90
+Edge >= 90
+not dead
+not IE 11

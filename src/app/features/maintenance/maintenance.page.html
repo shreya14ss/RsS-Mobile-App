@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Maintenance</ion-title>
+    <ion-buttons slot="end">
+      <!-- <ion-button (click)="loadRecords()">
+        <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+      </ion-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar
+      placeholder="Search by zone, substation, status..."
+      (ionInput)="handleSearch($event)"
+      debounce="300"
+      color="light">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Record count chip -->
+  <div class="record-count" *ngIf="!loading">
+    <ion-chip color="primary" outline>
+      <ion-icon name="layers-outline"></ion-icon>
+      <ion-label>{{ filteredRecords.length }} record{{ filteredRecords.length !== 1 ? 's' : '' }}</ion-label>
+    </ion-chip>
+  </div>
+
+  <!-- Main list -->
+  <rs-mobile-list
+    [data]="filteredRecords"
+    [columns]="listColumns"
+    titleKey="title"
+    subtitleKey="subtitle"
+    [loading]="loading"
+    emptyMessage="No maintenance records found."
+    (itemClicked)="onItemClicked($event)">
+  </rs-mobile-list>
+
+</ion-content>
+
+<!-- Detail Modal -->
+<ion-modal [isOpen]="showDetail" (didDismiss)="closeDetail()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Record Detail</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeDetail()">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content *ngIf="selectedItem">
+      <ion-list lines="full">
+
+        <ion-item>
+          <ion-label>
+            <p>Status</p>
+            <span [class]="'status-badge ' + statusBadgeClass(selectedItem.status)">
+              {{ statusLabel(selectedItem.status) }}
+            </span>
+          </ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.zone">
+          <ion-label><p>Zone</p><h3>{{ selectedItem.zone }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.circle">
+          <ion-label><p>Circle</p><h3>{{ selectedItem.circle }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.division">
+          <ion-label><p>Division</p><h3>{{ selectedItem.division }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.substation">
+          <ion-label><p>Substation</p><h3>{{ selectedItem.substation }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.bay">
+          <ion-label><p>Bay</p><h3>{{ selectedItem.bay }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.subtitle">
+          <ion-label><p>Maintenance Type</p><h3>{{ selectedItem.subtitle }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.plannedDate">
+          <ion-label><p>Planned Date</p><h3>{{ selectedItem.plannedDate | date:'mediumDate' }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="selectedItem.cutoffDate">
+          <ion-label><p>Cut-off Date</p><h3>{{ selectedItem.cutoffDate | date:'mediumDate' }}</h3></ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label><p>Record ID</p><h3 style="font-size:12px; color:var(--ion-color-medium)">{{ selectedItem._id }}</h3></ion-label>
+        </ion-item>
+
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -1,0 +1,272 @@
+<!-- Loader -->
+<div class="loading-shade" *ngIf="InProgress">
+  <ion-spinner name="crescent"></ion-spinner>
+</div>
+
+<div class="content-container">
+
+  <form [formGroup]="form">
+
+    <!-- ================= SLDC SECTION ================= -->
+    <div *ngIf="showSLDCBlock">
+
+      <!-- Shutdown Code -->
+      <div *ngIf="!isConditional">
+        <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.shutdown_code"
+          [control]="form.get('sldcshutdowncode')">
+        </rs-input>
+
+        <rs-button *ngIf="form.get('sldcshutdowncode')?.enabled && !isCompleteDashboard"
+          [disabled]="InProgress || maintenanceBlockedByAssetDamage || form.get('sldcshutdowncode')?.invalid || !form.get('sldcshutdowncode')?.dirty"
+          (clicked)="saveSldcShutdownCode()" label="Save">
+        </rs-button>
+      </div>
+
+      <!-- Charging Code -->
+      <div>
+        <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.charging_code"
+          [control]="form.get('sldcchargingcode')">
+        </rs-input>
+
+        <ion-text color="danger"
+          *ngIf="!form.get('sldcchargingcode')?.value?.trim() && current_status === MaintenanceStatus.PTWCancellationIssued">
+          Required for restoration
+        </ion-text>
+
+        <rs-button *ngIf="form.get('sldcchargingcode')?.enabled"
+          [disabled]="InProgress || maintenanceBlockedByAssetDamage || form.get('sldcchargingcode')?.invalid || !form.get('sldcchargingcode')?.dirty"
+          (clicked)="saveSldcChargingCode()" label="Save">
+        </rs-button>
+      </div>
+
+    </div>
+
+    <!-- ================= FORM FIELDS ================= -->
+
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.ptwno"
+      [control]="form.get('ptw_id')" [disabled]="true">
+    </rs-input>
+
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.bay"
+      [control]="form.get('show_device_name')" [disabled]="true">
+    </rs-input>
+
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.ssename"
+      [control]="form.get('ssename')">
+    </rs-input>
+
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.issuedto"
+      [control]="form.get('issuedto')">
+    </rs-input>
+
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.issuedby"
+      [control]="form.get('issuedby')">
+    </rs-input>
+
+    <rs-input label="Cancelled By" [control]="form.get('cancelledby')">
+    </rs-input>
+
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.work"
+      [control]="form.get('workpurpose')" [disabled]="true">
+    </rs-input>
+
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.remarks"
+      [control]="form.get('remarks')">
+    </rs-input>
+
+    <!-- ================= CHECKBOX ================= -->
+
+    <ion-item *ngIf="showPTWCheckbox && isButtonContainerAccess" class="checkbox-item">
+      <ion-checkbox slot="start" formControlName="ptwissuecheckbox"></ion-checkbox>
+      <ion-label class="ion-text-wrap">
+        {{locale_service.Locale.language.project.maintenancesettings.maintenancenotes.bcissue}}
+      </ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="showRequestPTWCancelCheckbox && isButtonContainerAccess" class="checkbox-item">
+      <ion-checkbox slot="start" formControlName="ptwcancelcheckbox"></ion-checkbox>
+      <ion-label class="ion-text-wrap">
+        {{locale_service.Locale.language.project.maintenancesettings.maintenancenotes.ptwcancel}}
+        {{ ptwDataSource?.ptw_id }}
+      </ion-label>
+    </ion-item>
+
+  </form>
+
+  <!-- ================= ICON ACTIONS ================= -->
+
+  <div class="icon-actions">
+    <!-- <ion-button fill="clear"
+      *ngIf="ptwDataSource && dialogData?.maintenanceDetails.requests_approves.ptw_issued_datetime > 0"
+      (click)="export('pdf')">
+      <ion-icon name="download-outline"></ion-icon>
+    </ion-button> -->
+
+    <ion-button fill="clear"
+      *ngIf="dialogData?.maintenanceDetails.requests_approves.ptw_issued_datetime > 0 && eventLogsPerformed?.length > 0"
+      (click)="openEventPerformedDialog()">
+      <ion-icon name="calendar"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- ================= EVENT LOG VIEWER MODAL ================= -->
+
+  <ion-modal [isOpen]="showEventLogModal" (didDismiss)="showEventLogModal = false" cssClass="auto-height-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Event Log</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showEventLogModal = false">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div *ngFor="let entry of groupedEventLogs | keyvalue">
+          <h4 class="bay-title">{{ entry.key }}</h4>
+          <div *ngFor="let log of $any(entry.value)" class="log-card">
+            <div class="log-title">{{ log.display_name }}</div>
+            <div class="log-row">
+              <b>From:</b> <span>{{ log.prev_text }}</span>
+              <b>To:</b> <span>{{ log.cur_text }}</span>
+              <span [class]="'status ' + (log.is_performed ? 'performed' : 'same')">
+                {{ log.is_performed ? 'Performed' : 'No Change' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- ================= PDF EXPORT PREVIEW MODAL ================= -->
+
+  <ion-modal [isOpen]="showExportModal" (didDismiss)="showExportModal = false" cssClass="auto-height-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>PTW Export Preview</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showExportModal = false">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div id="ptwPDF">
+          <div class="ptw-header">
+            <div class="ptw-title">PERMIT TO WORK</div>
+            <div class="ptw-meta">
+              <div>
+                <div class="label">PTW No.</div>
+                <div class="value">{{ exportModalData?.ptwDataSource?.ptw_id }}</div>
+              </div>
+              <div>
+                <div class="label">Bay</div>
+                <div class="value">{{ exportModalData?.maintenanceDetails?.device_name?.split('/')?.slice(-1)[0] }}</div>
+              </div>
+              <div>
+                <div class="label">Work Purpose</div>
+                <div class="value">{{ exportModalData?.maintenanceDetails?.maintenance_list?.template?.maintenancename }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="ptw-details">
+            <div><b>Issued To:</b> {{ exportModalData?.ptwDataSource?.issuedto }}</div>
+            <div><b>Issued By:</b> {{ exportModalData?.ptwDataSource?.issuedby }}</div>
+            <div><b>Cancelled By:</b> {{ exportModalData?.ptwDataSource?.cancelledby }}</div>
+            <div><b>Remarks:</b> {{ exportModalData?.ptwDataSource?.remarks }}</div>
+          </div>
+          <div *ngIf="exportModalData?.eventLogs" class="event-logs-header">
+            <h2>Event Logs</h2>
+            <div *ngFor="let entry of exportModalData.eventLogs | keyvalue">
+              <div class="bay-title">{{ entry.key }}</div>
+              <div *ngFor="let log of $any(entry.value)" class="log-card">
+                <div class="log-title">{{ log.display_name }}</div>
+                <div class="log-row">
+                  <b>From:</b> <span>{{ log.prev_text }}</span>
+                  <b>To:</b> <span>{{ log.cur_text }}</span>
+                  <span [class]="'status ' + (log.is_performed ? 'performed' : 'same')">
+                    {{ log.is_performed ? 'Performed' : 'No Change' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- ================= OPERATION ================= -->
+
+  <div *ngIf="false">
+    <ion-item>
+      <ion-label>Operation By Operator:</ion-label>
+      <ion-button (click)="addEventLog('ptw')" [disabled]="disableEventLog">
+        Event Log
+      </ion-button>
+    </ion-item>
+  </div>
+
+  <div *ngIf="false">
+    <ion-item>
+      <ion-label>Operation By Operator:</ion-label>
+      <ion-button (click)="addEventLog('restoration')" [disabled]="disableRestoration">
+        Restoration
+      </ion-button>
+    </ion-item>
+  </div>
+
+  <!-- ================= MAIN ACTION BUTTONS ================= -->
+
+  <div *ngIf="isButtonContainerAccess">
+
+    <rs-button *ngIf="resolver.MaintenanceAccessRights.rqst_ptw_Button" (clicked)="requestPTW()"
+      [disabled]="disableRequestPTW"
+      label="{{ locale_service.Locale.language.project.maintenancesettings.maintenancebutton.requestptw }}">
+    </rs-button>
+
+    <rs-button *ngIf="resolver.MaintenanceAccessRights.rqst_ptw_cancel_button" (clicked)="requestPTWCancel()"
+      [disabled]="disableRequestPTWCancel"
+      label="{{ locale_service.Locale.language.project.maintenancesettings.maintenancebutton.requestptwcancellation }}">
+    </rs-button>
+
+    <rs-button *ngIf="resolver.MaintenanceAccessRights.issue_ptw_button
+                 && (!below66KVVoltageLevel
+                     || (current_status !== MaintenanceStatus.PTWCancellationIssued
+                         && current_status !== MaintenanceStatus.BCCancelCertificateIssued))"
+      (clicked)="issuePTW()"
+      [disabled]="disableIssuePTW"
+      label="{{locale_service.Locale.language.project.maintenancesettings.maintenancebutton.issueptw}}">
+    </rs-button>
+
+    <rs-button *ngIf="resolver.MaintenanceAccessRights.issue_ptw_button && dialogData.maintenanceDetails?.connected_bay"
+      (clicked)="requestBackcharging()" [disabled]="disableRequestBackCharging"
+      label="{{ locale_service.Locale.language.project.maintenancesettings.maintenancebutton.requestbackcharging }}">
+    </rs-button>
+
+    <rs-button *ngIf="resolver.MaintenanceAccessRights.issue_ptw_button && dialogData.maintenanceDetails?.connected_bay"
+      (clicked)="requestBackchargingCancel()" [disabled]="disableRequestBackChargingCancel"
+      label="{{ locale_service.Locale.language.project.maintenancesettings.maintenancebutton.requestbackchargingcancel }}">
+    </rs-button>
+
+    <rs-button *ngIf="showCancelPTW" (clicked)="cancelPTW()" [disabled]="disableCancelPTW"
+      label="{{locale_service.Locale.language.project.maintenancesettings.maintenancebutton.cancelptw}}">
+    </rs-button>
+
+  </div>
+
+  <!-- ================= NOTE =================
+       Mirrors ClientApp ptw-action-dlg.component.html L317. Shown when the
+       user is on the restoration button section but backcharging is still
+       active on connected bays — gates the Restoration button (which is
+       hidden separately via hasActiveBC in the button *ngIf). -->
+  <div class="ptw-note-banner" *ngIf="hasActiveBC && showRestorationButtonSection">
+    Backcharging is still active for Connected Bays, Can't Issue Restoration.
+  </div>
+
+</div>

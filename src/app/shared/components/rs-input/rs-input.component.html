@@ -1,0 +1,33 @@
+<ion-item [class.ion-invalid]="showError" lines="full">
+  <ion-label position="floating">
+    {{ label }}<span *ngIf="isRequired" class="rs-required-mark" aria-label="required">&nbsp;*</span>
+  </ion-label>
+
+  <!-- Normal Input -->
+  <!-- Uses [readonly] rather than [disabled] because Angular ignores
+       [disabled] on inputs bound via [formControl]. readonly is a native
+       HTML attribute, so it blocks editing regardless and keeps the text
+       at normal opacity (which is what callers passing disabled: true here
+       actually want — a legible, non-editable display field). -->
+  <ion-input
+    *ngIf="type !== 'textarea'"
+    [type]="type"
+    [formControl]="$any(control)"
+    [readonly]="disabled"
+    [autocomplete]="autocomplete">
+  </ion-input>
+
+  <!-- Textarea Support -->
+  <ion-textarea
+    *ngIf="type === 'textarea'"
+    [formControl]="$any(control)"
+    [readonly]="disabled"
+    autoGrow="true"
+    maxlength="500">
+  </ion-textarea>
+
+</ion-item>
+
+<ion-text color="danger" *ngIf="showError">
+  <small class="ion-padding-start">{{ errorMsg }}</small>
+</ion-text>

@@ -1,0 +1,191 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      {{ resolver.MaintenanceAccessRights.create_conditional_maintenance ? 'Configure Breakdown Maintenance' : 'Event Log Breakdown Maintenance' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="cancel()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- ── Full-page loading overlay ─────────────────────────────────────────── -->
+<div class="loading-shade" *ngIf="saving">
+  <ion-spinner name="crescent" color="primary"></ion-spinner>
+  <p class="loading-msg">Processing...</p>
+</div>
+
+<ion-content>
+
+  <!-- ── Info card ────────────────────────────────────────────────────────── -->
+  <div class="info-card">
+
+    <div class="info-row">
+      <ion-icon name="layers-outline" class="info-icon"></ion-icon>
+      <div class="info-text">
+        <span class="info-label">Bay Name</span>
+        <span class="info-value">{{ dialogData?.bay }}</span>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <ion-icon name="warning-outline" class="info-icon"></ion-icon>
+      <div class="info-text">
+        <span class="info-label">Reason</span>
+        <span class="info-value">{{ dialogData?.reason || 'NA' }}</span>
+      </div>
+    </div>
+
+    <div class="info-row" *ngIf="trpping_remarks">
+      <ion-icon name="chatbox-ellipses-outline" class="info-icon"></ion-icon>
+      <div class="info-text">
+        <span class="info-label">Remarks</span>
+        <span class="info-value">{{ trpping_remarks || 'NA' }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Form ─────────────────────────────────────────────────────────────── -->
+  <form [formGroup]="form" class="form-body" *ngIf="isEditableMode && dialogData?.current_status != 'planned'">
+
+    <!-- Section: Equipment selection -->
+    <div class="section-header">
+      <ion-icon name="hardware-chip-outline" class="section-icon"></ion-icon>
+      <span>Equipment Selection</span>
+    </div>
+
+    <!-- No templates message -->
+    <div class="empty-state-inline" *ngIf="!saving && filteredEqName?.length === 0">
+      <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+      <span>No equipment template exists</span>
+    </div>
+
+    <!-- Equipment select -->
+    <ion-item lines="full" class="form-item" *ngIf="filteredEqName?.length > 0">
+      <ion-label position="floating" color="primary">Select Equipment Names<span class="rs-required-mark">&nbsp;*</span></ion-label>
+      <ion-select formControlName="eqname" multiple="true" placeholder="Tap to choose"
+                  interface="action-sheet" cancelText="Cancel" okText="Done">
+        <ion-select-option *ngFor="let eq of filteredEqName" [value]="eq">
+          {{ appservice.unescapedName(eq) }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Selected eq chips -->
+    <div class="chips-row" *ngIf="selectedEqNames.length > 0">
+      <div class="chip" *ngFor="let eq of selectedEqNames">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        {{ appservice.unescapedName(eq) }}
+        <ion-icon name="close-circle" class="chip-remove" (click)="removeEq(eq)"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Section: Scheduled Maintenance -->
+    <div class="section-header">
+      <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
+      <span>Scheduled Maintenance</span>
+    </div>
+
+    <div class="empty-state-inline" *ngIf="showNoTemplatesMessage">
+      <ion-icon name="information-circle-outline" color="medium"></ion-icon>
+      <span>No maintenance templates available</span>
+    </div>
+
+    <ion-item lines="full" class="form-item" *ngIf="combinedMaintenanceList?.length > 0">
+      <ion-label position="floating" color="primary">Scheduled Maintenance List</ion-label>
+      <ion-select formControlName="scheduledMaintenance" multiple="true" placeholder="Tap to choose"
+                  interface="action-sheet" cancelText="Cancel" okText="Done"
+                  (ionChange)="onScheduledMaintenanceSelect($event.detail.value)">
+        <ion-select-option *ngFor="let item of combinedMaintenanceList" [value]="item">
+          <span *ngIf="item.isLvBay">(LV Bay) </span>{{ item.template?.maintenancename }} | {{ appservice.dateToString(item.cutoff_date, 4) }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Selected scheduled chips -->
+    <div class="chips-row" *ngIf="selectedScheduled.length > 0">
+      <div class="chip" *ngFor="let item of selectedScheduled">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        <span *ngIf="item.isLvBay">(LV Bay) </span>{{ item.template?.maintenancename }} | {{ appservice.dateToString(item.cutoff_date, 4) }}
+        <ion-icon name="close-circle" class="chip-remove" (click)="removeScheduled(item)"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Time range -->
+    <ng-container *ngIf="selectedScheduled.length > 0">
+      <div class="section-header">
+        <ion-icon name="time-outline" class="section-icon"></ion-icon>
+        <span>Shutdown Duration</span>
+      </div>
+
+      <div class="time-row">
+        <ion-item lines="full" class="form-item time-input">
+          <ion-label position="floating" color="primary">
+            Enter {{ form.value.time_range_type === 'Hour' ? 'Hours' : 'Days' }}
+          </ion-label>
+          <ion-input type="number" formControlName="time_range_value" min="0" step="0.5"></ion-input>
+        </ion-item>
+
+        <ion-segment formControlName="time_range_type" class="time-toggle">
+          <ion-segment-button value="Hour">
+            <ion-label>Hours</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Day">
+            <ion-label>Days</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <ion-text color="danger" class="range-error"
+                *ngIf="form.get('time_range_value')?.hasError('min') && (form.get('time_range_value')?.dirty || form.get('time_range_value')?.touched)">
+        Value cannot be less than 1
+      </ion-text>
+    </ng-container>
+
+    <!-- Require M&P toggle -->
+    <ion-item lines="full" class="form-item toggle-item">
+      <ion-icon name="construct-outline" slot="start" class="item-icon" color="primary"></ion-icon>
+      <ion-label>Require M&amp;P</ion-label>
+      <ion-toggle slot="end" formControlName="requireMnp"></ion-toggle>
+    </ion-item>
+
+  </form>
+
+  <!-- Read-only message when no editing rights or already planned -->
+  <div class="empty-state-inline" *ngIf="!saving && (!isEditableMode || dialogData?.current_status == 'planned')">
+    <ion-icon name="information-circle-outline" color="medium"></ion-icon>
+    <span *ngIf="dialogData?.current_status == 'planned'">A maintenance has already been planned for this event.</span>
+    <span *ngIf="dialogData?.current_status != 'planned' && !isEditableMode">You don't have permission to configure breakdown maintenance.</span>
+  </div>
+
+</ion-content>
+
+<!-- ── Footer actions ────────────────────────────────────────────────────── -->
+<ion-footer class="dlg-footer">
+  <!-- Planned state: stack Maintenance Info on top, Cancel below -->
+  <div class="footer-btns footer-btns--stacked" *ngIf="dialogData?.current_status == 'planned' && dialogData?.connected_mnt_id">
+    <ion-button fill="solid" color="primary" class="btn-create"
+                [disabled]="saving" (click)="openMaintenanceDetails()">
+      <ion-icon slot="start" name="open-outline"></ion-icon>
+      Maintenance Info
+    </ion-button>
+    <ion-button fill="outline" color="medium" class="btn-cancel" (click)="cancel()">
+      Cancel
+    </ion-button>
+  </div>
+
+  <!-- Editable state: Cancel + Start Maintenance side-by-side -->
+  <div class="footer-btns" *ngIf="!(dialogData?.current_status == 'planned' && dialogData?.connected_mnt_id)">
+    <ion-button fill="outline" color="medium" class="btn-cancel" (click)="cancel()">
+      Cancel
+    </ion-button>
+    <ion-button *ngIf="isEditableMode && dialogData?.current_status != 'planned'"
+                fill="solid" color="primary" class="btn-create"
+                [disabled]="saving || form?.invalid" (click)="save()">
+      Start Maintenance
+    </ion-button>
+  </div>
+</ion-footer>

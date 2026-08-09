@@ -1,0 +1,88 @@
+<div class="ion-page">
+  <ng-container >
+
+    <!-- ── Maintenance views: rendered DIRECTLY (no ion-content wrapper) ──────
+       ion-content inside another ion-content causes blank rendering in Ionic.
+       pvmain + its children render their own scroll/layout. -->
+  
+
+    <!-- ── All other views: standard scrollable ion-content ─────────────────── -->
+    <ion-content *ngIf="!isPlanMaintenance && !isMaintenanceDashboard && !isCompletedMaintenance">
+      <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
+      <!-- ── Events (_PE) ────────────────────────────────────────────────────── -->
+      <ng-container *ngIf="isSpecialEvent">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="calendar-outline" style="margin-right:8px;"></ion-icon>Events
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p style="color:rgba(0,0,0,0.5);">Event log view — coming soon.</p>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+
+      <!-- ── Alarms (_PA) ────────────────────────────────────────────────────── -->
+      <ng-container *ngIf="isSpecialAlarm">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="notifications-outline" style="margin-right:8px;"></ion-icon>Alarms
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p style="color:rgba(0,0,0,0.5);">Alarm view — coming soon.</p>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+
+      <!-- ── Status (_PS) ────────────────────────────────────────────────────── -->
+      <ng-container *ngIf="isSpecialStatus">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="help-circle-outline" style="margin-right:8px;"></ion-icon>Status
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p style="color:rgba(0,0,0,0.5);">Status view — coming soon.</p>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+
+      <!-- ── History (_PH) ───────────────────────────────────────────────────── -->
+      <ng-container *ngIf="isSpecialHistory">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="time-outline" style="margin-right:8px;"></ion-icon>History
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p style="color:rgba(0,0,0,0.5);">History view — coming soon.</p>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+
+      <!-- ── Dashboard / project view ────────────────────────────────────────── -->
+      <ng-container *ngIf="isDashView">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon [name]="activeViewData?.view_icon || 'home-outline'" style="margin-right:8px;"></ion-icon>
+              {{ activeViewData?.name || activeView }}
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p style="color:rgba(0,0,0,0.5);">Dashboard view — coming soon.</p>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+
+    </ion-content>
+  </ng-container>
+</div>

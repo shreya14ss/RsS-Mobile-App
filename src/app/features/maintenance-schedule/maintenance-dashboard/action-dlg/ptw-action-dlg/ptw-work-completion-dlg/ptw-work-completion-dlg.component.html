@@ -1,0 +1,69 @@
+<!-- Progress -->
+<ion-progress-bar *ngIf="!InProgress" value="1"></ion-progress-bar>
+<ion-progress-bar *ngIf="InProgress" type="indeterminate"></ion-progress-bar>
+
+<!-- Header -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{locale_service.Locale.language.project.maintenancesettings.heading.workcompletionstatus}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Content -->
+<ion-content class="ion-padding">
+
+  <form [formGroup]="form">
+
+    <!-- Radio Group -->
+    <ion-radio-group formControlName="maintenance_status">
+
+      <ion-item>
+        <ion-radio slot="start" value="ptw_c_r_work_completed"></ion-radio>
+        <ion-label>
+          {{locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.workcompleted}}
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-radio slot="start" value="ptw_c_r_work_incomplete"></ion-radio>
+        <ion-label>
+          {{locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.workincomplete}}
+        </ion-label>
+      </ion-item>
+
+    </ion-radio-group>
+
+    <!-- Remarks -->
+    <rs-input [label]="locale_service.Locale.language.project.maintenancesettings.actiondlg.inputfields.remarks"
+      [control]="form.get('cancel_remarks')">
+    </rs-input>
+
+  </form>
+
+</ion-content>
+
+<!-- Footer — same button treatment as observation-dlg / bay-selection-dlg
+     (plain ion-button so the .common-bottom-btn / .primary-btn CSS actually
+     applies; rs-button wraps into a host element that the selectors don't
+     match). -->
+<ion-footer class="custom-footer">
+
+  <div class="action-btn-container">
+
+    <!-- Cancel -->
+    <ion-button class="common-bottom-btn" expand="block" fill="outline" (click)="onCancel()">
+      {{ locale_service.Locale.language.common.cancel }}
+    </ion-button>
+
+    <!-- Submit -->
+    <ion-button class="common-bottom-btn primary-btn" expand="block"
+      [disabled]="form.invalid || InProgress" (click)="cancelPTW()">
+      <ion-spinner *ngIf="InProgress" name="crescent" slot="start"></ion-spinner>
+      {{ locale_service.Locale.language.project.maintenancesettings.maintenancebutton.sendcancellationrequest }}
+    </ion-button>
+
+  </div>
+
+</ion-footer>

@@ -1,0 +1,156 @@
+// Matches ClientApp's login layout: white bg, sticky header, centered card
+
+ion-content.login-content {
+  --background: #fafafa;
+}
+
+// ── Header ──────────────────────────────────────────────────────────────────
+
+.login-header {
+  ion-toolbar {
+    --background: #303030; // matches ClientApp mat-toolbar default dark
+    --color: #ffffff;
+  }
+
+  .header-logo {
+    margin-left: 8px;
+    margin-right: 4px;
+  }
+}
+
+// Thin top accent line — mirrors ClientApp's Login_headerTopLine (mat-progress-bar fixed top)
+.login-top-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #f15c27;
+  z-index: 99;
+
+  &--progress {
+    background: linear-gradient(90deg, #f15c27 0%, #ff8a50 40%, #f15c27 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite linear;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// ── Card ─────────────────────────────────────────────────────────────────────
+
+.login-main-div {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  padding: 0 12px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  margin: 10px;
+  border-radius: 4px;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+  background: #ffffff;
+  position: relative;
+  overflow: visible;
+
+  ion-card-header {
+    padding-bottom: 0;
+    background: #ffffff;
+  }
+
+  ion-card-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 20px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  .login-title-icon {
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  ion-card-content {
+    background: #ffffff;
+  }
+
+  // rs-input fields — white background, underline style matching ClientApp mat-form-field
+  rs-input {
+    display: block;
+    margin-bottom: 4px;
+
+    ion-item {
+      --background: #ffffff;
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      --highlight-color-focused: #f15c27;
+      --border-color: rgba(0, 0, 0, 0.42);
+    }
+
+    ion-label {
+      color: rgba(0, 0, 0, 0.54) !important;
+      font-size: 12px !important;
+    }
+
+    ion-input {
+      --background: #ffffff;
+      --color: rgba(0, 0, 0, 0.87);
+      --placeholder-color: rgba(0, 0, 0, 0.38);
+      font-size: 16px;
+    }
+  }
+}
+
+// Card top progress bar — matches ClientApp's .mat-progress-bar inside mat-card
+.card-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #f15c27;
+  border-radius: 4px 4px 0 0;
+
+  &--active {
+    background: linear-gradient(90deg, #f15c27 0%, #ff8a50 40%, #f15c27 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite linear;
+  }
+}
+
+// Actions row — mirrors ClientApp mat-card-actions align="start"
+.login-actions {
+  padding: 12px 0 0 0;
+  display: flex;
+  justify-content: center;
+  /* or remove flex entirely */
+
+  rs-button {
+    width: 100%;
+  }
+
+  rs-button ion-button {
+    --background: var(--ion-color-primary);
+    --color: #fff;
+
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+
+    border-radius: 10px;
+  }
+}

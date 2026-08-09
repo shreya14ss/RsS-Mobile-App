@@ -1,0 +1,476 @@
+<!-- ── Header ─────────────────────────────────────────────────────────────── -->
+<div class="view-header">
+  <ion-icon name="hammer-outline" class="view-icon"></ion-icon>
+  <span class="view-title">Maintenance Dashboard</span>
+  <ion-spinner *ngIf="saving" name="crescent" class="header-spinner"></ion-spinner>
+</div>
+
+
+<!-- ── Filter Bar (shared: search + date chip + filter menu) ──────────────── -->
+<app-search-filter-bar
+    [searchText]="dashboardSearchText"
+    (searchTextChange)="onDashboardSearch($event)"
+    placeholder="Search substation, bay, TL…"
+    [time_settings]="time_settings"
+    view_type="mnt_db"
+    [isShowRange]="null"
+    (dateChange)="dateTimeChanged($event)"
+    (clearDate)="clearAllSelections()">
+  <ion-button fill="solid" shape="round" size="small"
+              [matMenuTriggerFor]="mainFilterMenu"
+              (click)="getFilterDetails(selectedTabLabel)">
+    <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+  </ion-button>
+</app-search-filter-bar>
+
+<mat-menu #mainFilterMenu panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+  <div class="filter-container" (click)="$event.stopPropagation()">
+    <div class="filter-menu-header">
+      <span class="filter-menu-title">Filters</span>
+      <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+        <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+      </ion-button>
+    </div>
+    <mat-accordion *ngIf="filter_dashboard[selectedTabLabel]">
+      <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <!-- Per-category search — mirrors pv-plan-maintenance so long option
+             lists (statuses, bays, mnt types) can be narrowed down. -->
+        <ion-searchbar class="filter-search"
+                       mode="md"
+                       [value]="filter_search_text[category.key] || ''"
+                       (ionInput)="filter_search_text[category.key] = $event.target.value"
+                       (click)="$event.stopPropagation()"
+                       placeholder="Search"
+                       debounce="100"
+                       showClearButton="focus"></ion-searchbar>
+        <div class="filter-checkbox-group">
+          <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                        [checked]="category.value.selected[option] === '1'"
+                        (click)="$event.stopPropagation()"
+                        (change)="onCheckboxChange(option, category.value.selected)">
+            {{ option }}
+          </mat-checkbox>
+          <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+            No matches
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <p *ngIf="!filter_dashboard[selectedTabLabel]" class="filter-empty-note">No filters available for this tab.</p>
+  </div>
+</mat-menu>
+
+<!-- ── Card List ──────────────────────────────────────────────────────────── -->
+<div class="card-list">
+
+  <!-- Skeleton -->
+  <ng-container *ngIf="saving">
+    <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+      <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+      <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+      <ion-skeleton-text animated class="skel skel-meta skel-short"></ion-skeleton-text>
+      <div class="skel-divider"></div>
+      <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+    </div>
+  </ng-container>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="!saving && (selectedTab?.dataSource?.filteredData?.length === 0)">
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+    <p>No active maintenance for {{ selectedTabLabel }}</p>
+  </div>
+
+  <!-- ── Observation cards ────────────────────────────────────────────────── -->
+  <ng-container *ngIf="!saving && selectedTabLabel === 'Observations List'">
+    <div *ngFor="let item of selectedTab?.dataSource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+      [attr.data-status]="getStatusKey(item.status)" (click)="openObservationDetails(item)">
+
+      <!-- Title row — device name (e.g. "132kV Sagga Line Bay"). Falls back
+           to mnttype/device_type only when ob_line_name is missing. -->
+      <div class="card-title-row">
+        <span class="card-title">{{ item.ob_line_name || item.mnttype || item.device_type || 'Observation' }}</span>
+        <span class="status-pill" [attr.data-status]="getStatusKey(item.status)">{{ getObsStatusLabel(item.status) }}</span>
+      </div>
+
+      <!-- Description (moved up to where date used to be — the parameter or
+           fault description is the most identifying piece of info on the card). -->
+      <div class="meta-row" *ngIf="item.description">
+        <ion-icon name="document-text-outline" class="meta-icon"></ion-icon>
+        <span>{{ item.description }}</span>
+      </div>
+
+      <!-- Observation type -->
+      <div class="meta-row" *ngIf="item.observationtype">
+        <ion-icon name="eye-outline" class="meta-icon obs-icon"></ion-icon>
+        <span>{{ item.observationtype }}</span>
+      </div>
+
+      <!-- Location (parent substation, or line name for TL observations) -->
+      <div class="meta-row" *ngIf="item.substation || item.ob_line_name">
+        <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+        <span>{{ item.substation || item.ob_line_name }}</span>
+      </div>
+
+      <!-- Line number (TL observations) -->
+      <div class="meta-row" *ngIf="item.lineno">
+        <ion-icon name="git-branch-outline" class="meta-icon"></ion-icon>
+        <span>Tower {{ item.lineno }}</span>
+      </div>
+
+      <!-- Maintenance status -->
+      <div class="meta-row" *ngIf="item.scheduled_status && item.scheduled_status !== 'NA'">
+        <ion-icon name="construct-outline" class="meta-icon"></ion-icon>
+        <span>Maint. Status: {{ item.scheduled_status }}</span>
+      </div>
+
+      <div class="card-divider" *ngIf="item.time || item.observations || item.remarks"></div>
+
+      <!-- Date / time (swapped down to where description used to be). -->
+      <div class="meta-row" *ngIf="item.time">
+        <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+        <span>{{ appservice.dateToString(item.time, 4) }}</span>
+      </div>
+
+      <!-- Observations -->
+      <div class="meta-row" *ngIf="item.observations">
+        <ion-icon name="clipboard-outline" class="meta-icon"></ion-icon>
+        <span>{{ item.observations }}</span>
+      </div>
+
+      <!-- Remarks -->
+      <div class="meta-row" *ngIf="item.remarks">
+        <ion-icon name="chatbubble-ellipses-outline" class="meta-icon"></ion-icon>
+        <span><span class="obs-text-label">Remarks: </span>{{ item.remarks }}</span>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- ── Other PTW cards ──────────────────────────────────────────────────── -->
+  <ng-container *ngIf="!saving && selectedTabLabel === 'Other Permits'">
+    <div *ngFor="let item of selectedTab?.dataSource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+      [attr.data-status]="getStatusKey(item.status)" (click)="openDetails(item)">
+
+      <div class="card-title-row">
+        <span class="card-title">{{ item.permitType || 'Permit to Work' }}</span>
+        <span class="status-pill" [attr.data-status]="getStatusKey(item.status)">{{ item.statusLabel }}</span>
+      </div>
+
+      <!-- Location -->
+      <div class="meta-row" *ngIf="item.substation || item.bay">
+        <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+        <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}</span>
+        <ion-icon *ngIf="isDamagedBay(item)"
+                  name="warning"
+                  class="damage-pending-icon"
+                  title="Damage report pending"></ion-icon>
+      </div>
+
+      <!-- Issue date -->
+      <div class="meta-row" *ngIf="item.issueDateTime">
+        <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+        <span class="meta-date-label">Issued</span>
+        <span class="meta-date-val">{{ appservice.dateToString(item.issueDateTime, 4) }}</span>
+      </div>
+
+      <!-- Assigned to -->
+      <div class="assigned-row" *ngIf="item.issuedTo">
+        <strong>Assigned to:</strong> {{ item.issuedTo }}
+      </div>
+
+      <!-- Shutdown warning -->
+      <div class="shutdown-tag" *ngIf="item.shutdownRequired">
+        <ion-icon name="flash-outline"></ion-icon> Shutdown Required
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- ── Asst. Mnt. Elmnt cards ──────────────────────────── -->
+  <ng-container *ngIf="!saving && selectedTabLabel === 'Asst. Mnt. Elmnt'">
+    <div *ngFor="let item of selectedTab?.dataSource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+      [attr.data-status]="getStatusKey(item.status)">
+
+      <!-- Card body — click opens the detail/action modal -->
+      <div class="mnt-card-body" (click)="openDetails(item)">
+
+        <div class="card-title-row">
+          <span class="card-title">{{ item.mnttype }}</span>
+          <span class="status-pill" [attr.data-status]="getStatusKey(item.status)">{{ item.statusLabel || item.status }}</span>
+        </div>
+
+        <!-- Location: substation / bay -->
+        <div class="meta-row" *ngIf="item.substation">
+          <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+          <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}</span>
+          <ion-icon *ngIf="isDamagedBay(item)"
+                    name="warning"
+                    class="damage-pending-icon"
+                    title="Damage report pending"></ion-icon>
+        </div>
+
+        <!-- Connected line + tower range -->
+        <div class="meta-row" *ngIf="item.line_name">
+          <ion-icon name="flash-outline" class="meta-icon loc-icon"></ion-icon>
+          <span>{{ item.line_name }}{{ item.tower_range ? ' — ' + item.tower_range : '' }}</span>
+        </div>
+
+        <!-- Scheduled date -->
+        <div class="meta-row">
+          <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+          <span class="meta-date-label">Scheduled</span>
+          <span class="meta-date-val">{{ appservice.dateToString(item.cutoffDate, 4) }}</span>
+        </div>
+
+        <!-- Planned date -->
+        <div class="meta-row" *ngIf="item.plannedDate">
+          <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+          <span class="meta-date-label">Planned</span>
+          <span class="meta-date-val">{{ appservice.dateToString(item.plannedDate, 4) }}</span>
+        </div>
+
+        <!-- Shutdown warning -->
+        <div class="shutdown-tag" *ngIf="item.shutdown_required">
+          <ion-icon name="flash-outline"></ion-icon> Shutdown Required
+        </div>
+
+      </div>
+
+      <!-- Action button — sibling of card body, independent click target -->
+      <div class="card-action-row">
+        <ion-button fill="solid" color="primary" size="small" expand="block"
+          [disabled]="item.disable_action"
+          (click)="openPlanMaintenance(item)">
+          {{ resolver.MaintenanceAccessRights.maintenence_parameter_approve_revert ? 'Plan Bay Maintenance' : (resolver.MaintenanceAccessRights.tl_maintenance_parameter_approve_revert ? 'Plan TL Maintenance' : 'View Details') }}
+        </ion-button>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- ── Connected TL cards ──────────────────────────────────────────────── -->
+  <ng-container *ngIf="!saving && selectedTabLabel === 'Connected TL'">
+    <div *ngFor="let item of selectedTab?.dataSource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+      [attr.data-status]="getStatusKey(item.status)">
+
+      <!-- Card body — click opens the detail/action modal -->
+      <div class="mnt-card-body" (click)="openDetails(item)">
+
+        <div class="card-title-row">
+          <span class="card-title">{{ item.mnttype }}</span>
+          <span class="status-pill" [attr.data-status]="getStatusKey(item.status)">{{ item.statusLabel || item.status }}</span>
+        </div>
+
+        <!-- TL line name + tower range -->
+        <div class="meta-row" *ngIf="item.line_name">
+          <ion-icon name="flash-outline" class="meta-icon loc-icon"></ion-icon>
+          <span>{{ item.line_name }}{{ item.tower_range ? ' — ' + item.tower_range : '' }}</span>
+        </div>
+
+        <!-- Bay location (where the bay is) -->
+        <div class="meta-row" *ngIf="item.substation">
+          <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+          <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}</span>
+          <ion-icon *ngIf="isDamagedBay(item)"
+                    name="warning"
+                    class="damage-pending-icon"
+                    title="Damage report pending"></ion-icon>
+        </div>
+
+        <!-- Scheduled date -->
+        <div class="meta-row">
+          <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+          <span class="meta-date-label">Scheduled</span>
+          <span class="meta-date-val">{{ appservice.dateToString(item.cutoffDate, 4) }}</span>
+        </div>
+
+        <!-- Planned date -->
+        <div class="meta-row" *ngIf="item.plannedDate">
+          <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+          <span class="meta-date-label">Planned</span>
+          <span class="meta-date-val">{{ appservice.dateToString(item.plannedDate, 4) }}</span>
+        </div>
+
+        <!-- Shutdown warning -->
+        <div class="shutdown-tag" *ngIf="item.shutdown_required">
+          <ion-icon name="flash-outline"></ion-icon> Shutdown Required
+        </div>
+
+      </div>
+
+      <!-- Action button — sibling of card body, independent click target -->
+      <div class="card-action-row">
+        <ion-button fill="solid" color="primary" size="small" expand="block"
+          [disabled]="item.disable_action"
+          (click)="openPlanMaintenance(item)">
+          {{ resolver.MaintenanceAccessRights.maintenence_parameter_approve_revert ? 'Plan Bay Maintenance' : (resolver.MaintenanceAccessRights.tl_maintenance_parameter_approve_revert ? 'Plan TL Maintenance' : 'View Details') }}
+        </ion-button>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- ── Breakdown Maintenance cards ──────────────────────────────────────── -->
+  <ng-container *ngIf="!saving && selectedTabLabel === 'Breakdown Maintenance'">
+    <div *ngFor="let item of (selectedTab?.dataSource?.filteredData | slice:0:breakdownDisplayLimit); trackBy: trackByMntCard" class="mnt-card"
+      [attr.data-status]="getStatusKey(item.current_status)" (click)="openDetails(item)">
+
+      <!-- Title + status pill -->
+      <div class="card-title-row">
+        <span class="card-title">{{ locale_service.Locale.language.project.eventview.reason_vals[item.reason] ?? item.reason ?? 'Event' }}</span>
+        <span class="status-pill" [attr.data-status]="getStatusKey(item.current_status)">{{ item.current_status }}</span>
+      </div>
+
+      <!-- Location: substation › bay -->
+      <div class="meta-row">
+        <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+        <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}</span>
+        <ion-icon *ngIf="isDamagedBay(item)"
+                  name="warning"
+                  class="damage-pending-icon"
+                  title="Damage report pending"></ion-icon>
+      </div>
+
+      <!-- Hierarchy: zone / circle / division -->
+      <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+        <ion-icon name="git-network-outline" class="meta-icon"></ion-icon>
+        <span>{{ item.zone }}{{ item.circle ? ' / ' + item.circle : '' }}{{ item.division ? ' / ' + item.division : '' }}</span>
+      </div>
+
+      <!-- Event datetime -->
+      <div class="meta-row" *ngIf="item.datetime">
+        <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+        <span class="meta-date-label">Event Time</span>
+        <span class="meta-date-val">{{ appservice.dateToString(item.datetime, 4) }}</span>
+      </div>
+
+    </div>
+
+    <ion-infinite-scroll *ngIf="(selectedTab?.dataSource?.filteredData?.length ?? 0) > breakdownDisplayLimit"
+                         threshold="100px" (ionInfinite)="loadMoreBreakdown($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more events...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ng-container>
+
+  <!-- ── Standard device cards ────────────────────────────────────────────── -->
+  <!-- Substation / Bay / Equipment / Scheduled TL / Patrolling TL / HotLine  -->
+  <ng-container *ngIf="!saving && selectedTabLabel !== 'Observations List' && selectedTabLabel !== 'Other Permits' && selectedTabLabel !== 'Asst. Mnt. Elmnt' && selectedTabLabel !== 'Connected TL' && selectedTabLabel !== 'Breakdown Maintenance'">
+    <div *ngFor="let item of selectedTab?.dataSource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+      [attr.data-status]="getStatusKey(item.status)" (click)="openDetails(item)">
+
+      <!-- Title + status pill -->
+      <div class="card-title-row">
+        <span class="card-title">{{ item.mnttype }}</span>
+        <span class="status-pill" [attr.data-status]="getStatusKey(item.status)">{{ (selectedTabLabel === 'Patrolling TL' && item.status?.toLowerCase() === 'planned') ? 'As and When' : item.status }}</span>
+      </div>
+
+      <!-- Location: substation › bay › eqp  OR  line / tower range -->
+      <div class="meta-row">
+        <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+        <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}{{ item.eqp ? ' / ' + item.eqp : '' }}</span>
+        <ion-icon *ngIf="isDamagedBay(item)"
+                  name="warning"
+                  class="damage-pending-icon"
+                  title="Damage report pending"></ion-icon>
+      </div>
+
+      <!-- Cutoff / Scheduled date -->
+      <!-- PATROLLING TL -->
+      <ng-container *ngIf="selectedTabLabel === 'Patrolling TL'; else defaultDates">
+
+        <div class="meta-row">
+          <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+          <span class="meta-date-label">Last Patrolling</span>
+          <span class="meta-date-val">
+            {{ (item.maintenance_list?.last_patrolling_date && item.maintenance_list?.last_patrolling_date != 0) ? appservice.dateToString(item.maintenance_list?.last_patrolling_date, 4) : '----' }}
+          </span>
+        </div>
+
+      </ng-container>
+
+      <!-- DEFAULT (Scheduled TL, Bay, etc.) -->
+      <ng-template #defaultDates>
+
+        <!-- Scheduled -->
+        <div class="meta-row">
+          <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+          <span class="meta-date-label">Scheduled</span>
+          <span class="meta-date-val">
+            {{ appservice.dateToString(item.cutoffDate, 4) }}
+          </span>
+        </div>
+
+        <!-- Planned -->
+        <div class="meta-row">
+          <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+          <span class="meta-date-label">Planned</span>
+          <span class="meta-date-val">
+            {{ appservice.dateToString(item.plannedDate, 4) }}
+          </span>
+        </div>
+
+      </ng-template>
+
+      <!-- Shutdown warning -->
+      <div class="shutdown-tag" *ngIf="item.shutdown_required">
+        <ion-icon name="flash-outline"></ion-icon> Shutdown Required
+      </div>
+
+    </div>
+  </ng-container>
+
+</div>
+
+<!-- ── Bottom Tab Bar (sibling to card-list, NOT inside scroll container) ──── -->
+<div class="bottom-tab-bar" #bottomTabBar>
+  <button *ngFor="let tab of allLables" class="bottom-tab-btn" [class.active]="selectedTabLabel === tab.label"
+    (click)="onTabChange(tab.label)">
+    <ng-container [ngSwitch]="tab.label">
+      <ion-icon *ngSwitchCase="'Substation'" name="business-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Bay'" name="layers-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Equipment'" name="hardware-chip-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Scheduled TL'" name="flash-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Patrolling TL'" name="walk-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Asst. Mnt. Elmnt'" name="link-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Connected TL'" name="git-branch-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Observations List'" name="eye-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Other Permits'" name="document-text-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="'Breakdown Maintenance'" name="warning-outline"></ion-icon>
+      <ion-icon *ngSwitchDefault name="grid-outline"></ion-icon>
+    </ng-container>
+    <span class="bottom-tab-label">{{ tab.label === 'Breakdown Maintenance' ? 'Breakdown Mnt' : tab.label }}</span>
+    <ion-badge *ngIf="getTabCount(tab) > 0" class="bottom-tab-badge">{{ getTabCount(tab) }}</ion-badge>
+  </button>
+</div>
+
+<!-- ── Maintenance Details Modal ──────────────────────────────────────────── -->
+<ion-modal [isOpen]="!!opened_dlg_details" (ionModalDidDismiss)="opened_dlg_details = null">
+  <ng-template>
+    <app-maintenance-details [dialogData]="opened_dlg_details"></app-maintenance-details>
+  </ng-template>
+</ion-modal>
+
+<!-- ── TL / Bay Maintenance Setup Modal ───────────────────────────────────── -->
+<ion-modal [isOpen]="!!opened_tl_setup_dlg" (ionModalDidDismiss)="opened_tl_setup_dlg = null">
+  <ng-template>
+    <app-tl-maintenance-setup-dlg [dialogData]="opened_tl_setup_dlg"></app-tl-maintenance-setup-dlg>
+  </ng-template>
+</ion-modal>
+
+<!-- ── Observation Details Modal ──────────────────────────────────────────── -->
+<ion-modal [isOpen]="!!opened_observation_dlg" (ionModalDidDismiss)="onObservationDlgDismiss($event)">
+  <ng-template>
+    <app-observation-dlg [dialogData]="opened_observation_dlg"></app-observation-dlg>
+  </ng-template>
+</ion-modal>
+
+<!-- ── Breakdown / Conditional Maintenance Setup Modal ────────────────────── -->
+<ion-modal [isOpen]="!!opened_breakdown_setup_dlg" (ionModalDidDismiss)="onBreakdownSetupDismiss($event)">
+  <ng-template>
+    <app-conditional-maintenance-setup-dlg [dialogData]="opened_breakdown_setup_dlg"></app-conditional-maintenance-setup-dlg>
+  </ng-template>
+</ion-modal>

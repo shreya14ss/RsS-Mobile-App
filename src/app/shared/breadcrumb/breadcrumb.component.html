@@ -1,0 +1,68 @@
+<div class="bc-container">
+
+  <div class="bc-trail">
+    <ng-container *ngFor="let selitem of Selection; let last = last; let first = first; let index = index;">
+
+      <!-- Chevron / dropdown trigger — opens level selector for this crumb -->
+      <ion-button *ngIf="!first || selitem.elements.length > 1 || selitem.parent_route != null"
+                  fill="clear" class="bc-icon-btn bc-chevron"
+                  (click)="openLevelMenu(selitem, $event)">
+        <ion-icon
+          [name]="(!last || selitem.sel_index != null) ? 'chevron-forward-outline' : 'chevron-down-outline'"
+          slot="icon-only"></ion-icon>
+      </ion-button>
+
+      <!-- Linked crumb -->
+      <a *ngIf="(!last || selitem.sel_index != null) && selitem.elements[selitem.sel_index]?.route != null"
+         class="bc-crumb-link"
+         [class.bc-crumb-accent]="index < Selection.length - 2 || (index == Selection.length - 2 && Selection[index + 1].sel_index != null)"
+         (click)="goCrumb(selitem)">
+        {{ appservice.unescapedName(selitem.elements[selitem.sel_index].name) }}
+      </a>
+
+      <!-- Non-linked crumb -->
+      <span *ngIf="(!last || selitem.sel_index != null) && selitem.elements[selitem.sel_index]?.route == null"
+            class="bc-crumb-span">
+        {{ appservice.unescapedName(selitem.elements[selitem.sel_index].name) }}
+      </span>
+
+    </ng-container>
+  </div>
+
+</div>
+
+<!-- LEVEL SELECTOR POPOVER -->
+<ion-popover [isOpen]="levelMenuOpen" [event]="levelPopoverEvent"
+             (didDismiss)="closeLevelMenu()" [dismissOnSelect]="false"
+             class="bc-popover bc-level-popover">
+  <ng-template>
+    <ion-list class="bc-menu-list" lines="none">
+
+      <ng-container *ngIf="activeLevel?.elements?.length > 5; else simpleList">
+        <ion-item class="bc-search-item" lines="none">
+          <ion-icon name="search-outline" slot="start" class="bc-search-icon"></ion-icon>
+          <ion-input [(ngModel)]="searchText" placeholder="Type to Filter"
+                     (click)="$event.stopPropagation()"
+                     (keydown)="$event.stopPropagation()"></ion-input>
+        </ion-item>
+
+        <ion-item button *ngFor="let item of filterMenuElements(activeLevel, searchText); let i = index"
+                  (click)="onLevelItemClick(activeLevel, item)">
+          <ion-label [class.bc-active]="i === activeLevel?.sel_index">
+            {{ appservice.unescapedName(item.name) }}
+          </ion-label>
+        </ion-item>
+      </ng-container>
+
+      <ng-template #simpleList>
+        <ion-item button *ngFor="let item of activeLevel?.elements; let i = index"
+                  (click)="onLevelItemClick(activeLevel, item)">
+          <ion-label [class.bc-active]="i === activeLevel?.sel_index">
+            {{ appservice.unescapedName(item.name) }}
+          </ion-label>
+        </ion-item>
+      </ng-template>
+
+    </ion-list>
+  </ng-template>
+</ion-popover>

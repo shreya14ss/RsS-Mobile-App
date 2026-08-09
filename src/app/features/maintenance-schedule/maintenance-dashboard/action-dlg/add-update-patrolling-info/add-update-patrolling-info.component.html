@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      {{ dialogData?.obj ? 'Edit Info' : 'Add Info' }}
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="modalController.dismiss(null)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="form">
+
+    <ion-item>
+      <ion-label position="stacked">
+        {{locale_service.Locale.language.project.maintenancesettings.heading.towerstart}}
+      </ion-label>
+      <ion-input type="number" [min]="dialogData.min" [max]="dialogData.max" formControlName="tower_start">
+      </ion-input>
+    </ion-item>
+
+    <ion-text color="danger" *ngIf="form.get('tower_start')?.hasError('min')">
+      Tower Number must be ≥ {{ dialogData.min }}
+    </ion-text>
+
+    <ion-item>
+      <ion-label position="stacked">
+        {{locale_service.Locale.language.project.maintenancesettings.heading.towerend}}
+      </ion-label>
+      <ion-input type="number" [min]="dialogData.min" [max]="dialogData.max" formControlName="tower_end">
+      </ion-input>
+    </ion-item>
+
+    <ion-text color="danger" *ngIf="form.get('tower_end')?.hasError('max')">
+      Tower Number must be ≤ {{ dialogData.max }}
+    </ion-text>
+
+    <ion-item>
+      <ion-label position="stacked">
+        {{locale_service.Locale.language.project.maintenancesettings.heading.patrollingteamname}}<span class="rs-required-mark">&nbsp;*</span>
+      </ion-label>
+      <ion-input formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">
+        {{locale_service.Locale.language.project.maintenancesettings.heading.status}}<span class="rs-required-mark">&nbsp;*</span>
+      </ion-label>
+
+      <ion-select formControlName="status">
+        <ion-select-option
+          *ngFor="let status of locale_service.Locale.language.project.maintenancesettings.patrollingstatus | keyvalue : norder"
+          [value]="status.value">
+          {{status.value}}
+        </ion-select-option>
+      </ion-select>
+
+    </ion-item>
+
+  </form>
+
+</ion-content>
+
+<!-- Footer -->
+<ion-footer *ngIf="!form.disabled" class="custom-footer">
+
+  <div class="action-btn-container">
+
+    <!-- ADD -->
+    <ion-button class="common-bottom-btn primary-btn" expand="block" *ngIf="!dialogData.obj" [disabled]="form.invalid"
+      (click)="save()">
+
+      {{locale_service.Locale.language.common.save}}
+    </ion-button>
+
+    <!-- UPDATE -->
+    <ion-button class="common-bottom-btn primary-btn" expand="block" *ngIf="dialogData.obj" [disabled]="form.invalid"
+      (click)="update()">
+
+      {{locale_service.Locale.language.common.update}}
+    </ion-button>
+
+  </div>
+
+</ion-footer>

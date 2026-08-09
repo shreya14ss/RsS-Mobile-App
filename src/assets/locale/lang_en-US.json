@@ -1,0 +1,4485 @@
+{
+  "fontConfig": {
+    "name": "Rubik"
+  },
+  "language": {
+    "common": {
+      "search": "Search",
+      "notification": "Notifiaction/Message",
+      "editenvironmentvariables": "Edit Environment Variables",
+      "saveenvironment": "Save Environment",
+      "rgbcolor": "RGB",
+      "hsvcolor": "HSV",
+      "hslcolor": "HSL",
+      "solidcolor": "Solid Color",
+      "radialcolor": "Radial",
+      "linearcolor": "Linear",
+      "mylinks": "My Links",
+      "ok": "Ok",
+      "confirm": "Confirm",
+      "update": "Update",
+      "select": "Select",
+      "areyousure": "Are you Sure ?",
+      "logoutconfirm": "Are you Sure..! Do you want to Logout?",
+      "alarm": "Alarms",
+      "db": "UMAC Database",
+      "umc_connected": "UMAC Core Connected",
+      "umc_disconnected": "UMAC Core Disconnected",
+      "db_connected": "DB Connected",
+      "db_disconnected": "DB Disconnected",
+      "back": "Back",
+      "cancel": "Cancel",
+      "close": "Close",
+      "exit": "Exit",
+      "changepwdsuccess": "Password Updated Successfully",
+      "delete": "Delete",
+      "clearCutOff": "Clear Cut Off",
+      "config": "Configuration",
+      "cpwd": "Confirm Password",
+      "customize": "Customize and Control",
+      "del": "Deleted Successfully",
+      "deletesuccess": "User Deleted Successfully",
+      "down": "Last",
+      "failed": "Failed",
+      "error": "Error",
+      "forward": "Forward",
+      "logout": "Sign Out",
+      "linkeddevices": "Linked Devices",
+      "dupliTab": "Duplicate Tab",
+      "abtConfig": "About",
+      "menu": "Menu",
+      "next": "Next",
+      "no": "No",
+      "oldpwd": "Old Password",
+      "previous": "Previous",
+      "project": "Project",
+      "projectview": "Project Views",
+      "addprojectview": "Add Project View",
+      "adduserview": "Add My View",
+      "template": "Template",
+      "createtemplate": "Create Template",
+      "importtemplate": "Import Template",
+      "lsview": "Load Shedding",
+      "lsreport": "Report",
+      "pwd": "Password",
+      "enrgylogaccess": "Set Active Shift for Energy Log",
+      "saveshift": "Save Shift",
+      "save": "Save",
+      "reset": "Reset",
+      "restore": "Restore",
+      "apply": "Apply",
+      "switchsuccess": "Switch User Successfully",
+      "tenant": "Tenant",
+      "up": "Up",
+      "userexitsotherask": "User Already Exists in some other Project/Tenant! Do you want to add the same?",
+      "userexitspromoteask": "User Already Exists! Do you want to promote the same?",
+      "userview": "User Views",
+      "welcome": "Welcome!",
+      "coreconsole": "Core Console",
+      "stop": "Stop",
+      "start": "Start",
+      "consoleconnected": "Console Log Connected",
+      "consoledisconnected": "Console Log Disconnected",
+      "selectatleastone": "Please Select Atleat One Type for Starting Console Connection...",
+      "notconnected": "Not Connected",
+      "yes": "Yes",
+      "handsetLoc": "Your Location",
+      "root": "<--Root-->",
+      "show": "Show",
+      "hide": "Hide",
+      "enable": "Enable",
+      "disable": "Disable",
+      "top": "Top",
+      "bottom": "Bottom",
+      "skew": "Chart",
+      "panel": "Panel",
+      "outside": "Outside",
+      "edit": "Edit",
+      "inside": "Inside",
+      "dailyactivation": {
+        "dayList": [
+          "Sun",
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat"
+        ],
+        "end": "End",
+        "start": "Start"
+      },
+      "soundoff": "Sound Off",
+      "soundon": "Sound On",
+      "upload": "Upload",
+      "radio": {
+        "enableDisable": {
+          "true": "Enable",
+          "false": "Disable"
+        },
+        "showHide": {
+          "true": "Show",
+          "false": "Hide"
+        },
+        "ignore": {
+          "true": "Ignore",
+          "false": "Consider"
+        },
+        "inverted": {
+          "true": "Inverted",
+          "false": "Normal"
+        }
+      },
+      "Consoletype": {
+        "General_Info": "General Info",
+        "Critical_Info": "Critical Info",
+        "Error_Message": "Error Message",
+        "Critical_Error": "Critical Error",
+        "Receive_Frame": "Receive Frame",
+        "Send_Frame": "Send Frame",
+        "Event": "Event",
+        "Control": "Control"
+      },
+      "downloading": "Downloading...",
+      "downloadcompleted": "Download Completed",
+      "exportfaild": "Export Failed",
+      "umacCoreConnectionDisconnection": {
+        "disconnected": "Disconnected ...",
+        "init": "Initializing ...",
+        "maintenance": "Maintenance Mode...",
+        "resuming": "Resuming Mode...",
+        "fault": "Fault Mode...",
+        "hault": "Hault Mode...",
+        "switchFault": "Switch Fault Mode...",
+        "switchmaintenance": "Switch Maintenance Mode...",
+        "switchhault": "Switch Hault Mode...",
+        "umacCore": "Umac Core ",
+        "redumacCore": "Redundant Umac Core ",
+        "mainumacCore": "Main Umac Core ",
+        "inRunMode": "In Running Mode ...",
+        "inStandMode": "In Standy Mode ..."
+      },
+      "no_entries": "There are no records to display for the selected date range",
+      "questionForSave": "Do you want to save this change?",
+      "timeEarlier": "Selected time cannot be earlier than the last submitted time",
+      "timeLater": "Selected time cannot be later than the current time."
+    },
+    "config": {
+      "head": "Configuration",
+      "addproject": "Add Project",
+      "addprojectuser": "Add Project User",
+      "addsuperuser": "Add Super User",
+      "addtenant": "Add Tenant",
+      "addtenantadmin": "Add Tenant Admin",
+      "addtenantuser": "Add Tenant User",
+      "adduser": "Add User",
+      "addusertype": {
+        "admin": "Administrator",
+        "all": "All",
+        "user": "User"
+      },
+      "askswitchadmin": "Do you really want to Switch User to Administrator?",
+      "askswitchuser": "Do you really want to Switch Administrator to User?",
+      "cancel": "Cancel",
+      "changepwd": "Change Password",
+      "customshapeeditor": "Custom Shape Editor",
+      "viewbinreport": "Binary Report",
+      "circuitname": "Circuit Name",
+      "config": "Logo",
+      "cpwd": "Confirm Password",
+      "dataformat": "Date Format",
+      "dateandtime": "Date and Time",
+      "dateandtimeuptominutes": "Date and Time Upto Minutes",
+      "datetime": "Date/Time",
+      "deleteproject": "Delete Project",
+      "deleteprojectask": "This will delete Project with all its settings and Users. Do you really want to delete Project?",
+      "deletetenant": "Delete Tenant",
+      "deletetenantask": "This will delete all Projects and Users within Tenant. Do you really want to delete Tenant?",
+      "deleteuser": "Delete User",
+      "deleteuserask": "Do you really want to delete User?",
+      "diainame": "DI/AI Name",
+      "dname": "Display Name",
+      "editproject": "Edit Project",
+      "edittenant": "Edit Tenant",
+      "edituser": "Edit User",
+      "email": "Email Address",
+      "enterproject": "Enter Project",
+      "entertenant": "Enter Tenant",
+      "filter": "Filter",
+      "filteruser": "Filter User Type",
+      "link": "Link",
+      "loginid": "Login ID",
+      "mismatch": "Password Mismatch",
+      "mobile": "Mobile",
+      "assign": "Assign Positions",
+      "name": "Name",
+      "offset": "OffSet (Min.)",
+      "project": "Projects",
+      "projectcreatesuccess": "Project Created Successfully...",
+      "projectdeletesuccess": "Project Deleted Successfully...",
+      "projecteditsuccess": "Project Updated Successfully...",
+      "projectname": "Project Name",
+      "projectuser": "Project Users",
+      "pwd": "Password",
+      "pwdmismatch": "Password Mismatch",
+      "nouserpostions": "No User positions available.",
+      "require": "Any of # is require",
+      "save": "Save",
+      "startscreenformat": "Start Screen Format",
+      "status": "Status",
+      "superuser": "Super Users",
+      "switchtoadmin": "Switch to Admin",
+      "switchtouser": "Switch to User",
+      "tenant": "Tenants",
+      "tenantcreatesuccess": "Tenant Created Successfully...",
+      "tenantdeletesuccess": "Tenant Deleted Successfully..",
+      "tenanteditsuccess": "Tenant Updated Successfully...",
+      "tenantuser": "Tenant Users",
+      "timeonly": "Time Only",
+      "timeonlyuptominutes": "Time Only Upto Minutes",
+      "title": "Title",
+      "type": "Select Type",
+      "umacipaddress": "UMaC IP Address",
+      "umacport": "UMaC Port",
+      "umacprojectname": "UMac Project Name",
+      "allowcontrol": "Allow Control in hand set",
+      "updateprojectuser": "Edit Project User",
+      "updatesuperuser": "Edit Super User",
+      "updatetenantuser": "Edit Tenant User",
+      "uplogotxt": "Upload Logo",
+      "usercreatesuccess": "User Created Successfully...",
+      "userupdatesuccess": "User Updated Successfully..."
+    },
+    "errorcode": {
+      "closedshifts_notfound": "Error Fetching Closed Shifts",
+      "obj_standards_notfound": "Error Fetching Objects List",
+      "txt_standards_notfound": "No Text Standards Exist",
+      "notfound": "Not Found...!",
+      "Baytype_not_present": "Some baytypes of this substation not added in mapping",
+      "unknown": "An unknown error has occured",
+      "access": "Access Denied...!",
+      "api": "Server Down ! Please try after some time",
+      "db": "Database Error!",
+      "log": "User Already Login. (Try after sometime if browser closed without logout)",
+      "alreadylogin1": "User Already Login... If you click on force login",
+      "alreadylogin2": "This action will logout the current user to other Machines...!",
+      "login": "Login ID / E-mail / Mobile not Found",
+      "pass": "Invalid password",
+      "proj": "Project does not Exists",
+      "cs_exists": "Custom Shape Already Exists",
+      "cs_not_exists": "Custom Shape Not Exists",
+      "proj_exists": "Project Already Exists",
+      "session": "Session Expired / Ended ...",
+      "syntax": "Syntax Error!",
+      "view_exists": "View Already Exists",
+      "view_notexists": "View does not Exists",
+      "file_invalid": "Invalid File",
+      "ten": "Tenant does not Exists",
+      "ten_exists": "Tenant Already Exists",
+      "ucl": "UMaC Database Not available and Unable to connect with Core.",
+      "usr": "User does not exists",
+      "invalidCred": "Login Id or Password Invalid",
+      "usr_exists": "User Already Exists",
+      "hub": "Hub Error",
+      "store": "UMaC Core Error",
+      "device": "Device Disconnected",
+      "core": "GatewayCore Error",
+      "prt_nack": "Protocol Communication Error / Timeout",
+      "prt_config": "Protocol Configuration Error",
+      "umac_store_nack": "Unable to send command! Check UMaC Core connectivity.",
+      "image_exists": "Image name already exists..",
+      "sound_exists": "Sound name already exists..",
+      "svg_processing": "Error Processing in SVG Document",
+      "noright": "No User Rights Assigned...",
+      "reopen": "Kindly reopen View After Some Time...",
+      "invalidtype": "Invalid value type is configured in SVG",
+      "categoryFetchErr": "Error while fetch Category List",
+      "maintenance": {
+        "equipments_fetch_error": "Error Fetching Equipment",
+        "invalid_user": "Invalid User",
+        "db_get_observation": "Database error while fetching linked observation",
+        "ob_update_logic_failed": "Error while updating observation logic",
+        "db_update_observation": "Database error while updating observation",
+        "ob_create_logic_failed": "Error while creating observation object",
+        "db_add_observation": "Database error while creating observation",
+        "ob_notcreated": "Observation could not be created",
+        "db": "Database Error",
+        "ob_notfound": "Observation document not found",
+        "bc_notcreated": "Backcharging certificate not created",
+        "bc_id_exists": "Backcharging ID already exists",
+        "bc_notfound": "Backcharging certificate not found",
+        "bc_notupdated": "Unable to update backcharging certificate",
+        "bc_issued_success": "Backcharging certificate successfully issued",
+        "eqtypelist_notfound": "Equipment types list not found",
+        "baylist_notfound": "Bay list not found",
+        "device_notfound": "Device not found",
+        "list_notfound": "List not found",
+        "frqtemp_notcreated": "Frequency template not created",
+        "paramtemp_notcreated": "Activity Parameter template not created",
+        "parammaptemp_notcreated": "Activity Parameter Map template not created",
+        "tltemp_notcreated": "Transmission Line template not created ",
+        "subtemp_notcreated": "Substation template not created",
+        "baytemp_notcreated": "Bay template not created",
+        "eqptemp_notcreated": "Equipment template not created",
+        "frqtemp_notfound": "Frequency template not found",
+        "paramtemp_notfound": "Activity Parameter template not found",
+        "parammaptemp_notfound": "Activity Parameter Map template not found",
+        "tltemp_notfound": "Transmission Line template not found",
+        "subtemp_notfound": "Substation template not found",
+        "baytemp_notfound": "Bay template not found",
+        "eqptemp_notfound": "Equipment template not found",
+        "hotline_notfound": "Hotline Template Not Found",
+        "connected_param_notfound": "Connected Parameter template not found",
+        "freq_fetch_error": "Unable to fetch Frequency templates",
+        "param_fetch_error": "Unable to fetch Activity Parameter templates",
+        "parammap_fetch_error": "Unable to fetch Activity Parameter Map templates",
+        "tltemp_fetch_error": "Unable to fetch Transmission Line templates",
+        "subtemp_fetch_error": "Unable to fetch Substation templates",
+        "baytemp_fetch_error": "Unable to fetch Bay templates",
+        "eqptemp_fetch_error": "Unable to fetch Equipment templates",
+        "hotline_fetch_error": "Unable to fetch Hotline templates",
+        "freq_delete_error": "Unable to delete Frequency template",
+        "param_delete_error": "Unable to delete Activity Parameter template",
+        "parammap_delete_error": "Unable to delete Activity Parameter Map template",
+        "tltemp_delete_error": "Unable to delete Transmission Line template",
+        "subtemp_delete_error": "Unable to delete Substation template",
+        "baytemp_delete_error": "Unable to delete Bay template",
+        "eqptemp_delete_error": "Unable to delete Equipment template",
+        "htemp_delete_error": "Unable to delete Hotline template",
+        "frqtemp_notupdated": "Frequency template not updated",
+        "paramtemp_notupdated": "Activity Parameter template not updated",
+        "parammaptemp_notupdated": "Activity Parameter Map template not updated",
+        "tltemp_notupdated": "Transmission Line template not updated",
+        "subtemp_notupdated": "Substation template not updated",
+        "baytemp_notupdated": "Bay template not updated",
+        "eqptemp_notupdated": "Equipment template not updated",
+        "template_not_applied": "Error Applying Templates",
+        "hotlinetemp_notupdated": "Hotline template not updated",
+        "oblist_notfound": "Observations List not found",
+        "sub_notfound": "Error fetching Substation Details",
+        "bay_notfound": "Error fetching Bay Details",
+        "eq_fetch_error": "Error fetching Equipment details",
+        "bay_notexist": "Bay Doesn't exist in Substation",
+        "tl_notfound": "Error fetching TL details",
+        "tl_notupdated": "Error updating TL details",
+        "tlmaintenancelist_notfound": "Error fetching TL Maintenance Details",
+        "tlmnt_notfound": "Error fetching TL Maintenance",
+        "eq_notfound": "Equipment not found on Device Master",
+        "sub_notupdated": "Error Updating Substation Master Document",
+        "tlmaster_notupdated": "Error Updating TL Master Document",
+        "bay_type_notfound": "Bay Type not found",
+        "bay_not_found": "Requested bay does not exist",
+        "param_notfound": "Error Fetching Parameter Details",
+        "mnt_creation_failed": "Maintenance creation failed",
+        "temp_fetch_error": "Error fetching Templates",
+        "tl_range_fetch_error": "Unable to fetch assigned towers",
+        "mnts_notupdated": "Error updating maintenance documents",
+        "mnt_notupdated": "Failed to update maintenance",
+        "mnt_notdeleted": "Failed to delete maintenance document",
+        "mnt_notfound": "Failed to fetch maintenance document",
+        "mnts_notfound": "Failed to fetch maintenance documents",
+        "otherptw_notfound": "Error fetching Other PTW Document",
+        "otherptw_creation_failed": "Other PTW creation failed",
+        "otherptw_exists": "Other PTW already exists",
+        "otherptw_notupdated": "Error updating Other PTW",
+        "empty_observation_list": "Observation list is empty ",
+        "observations_notfound": "Some observation IDs are invalid or could not be processed",
+        "ob_update_error": "Unable to update Observation",
+        "ptw_notfound": "Error fetching PTW Details",
+        "ptw_create_error": "Unable to create PTW document",
+        "ptw_update_error": "Unable to update PTW document",
+        "submnt_notfound": "Error fetching Substation maintenance",
+        "baymnt_notfound": "Error fetching Bay maintenance",
+        "eqmnt_notfound": "Error fetching equipment maintennace",
+        "hmnt_notfound": "Error fetching Hotline maintenance",
+        "htlmnt_notfound": "Error fetching Hotline TL maintenance",
+        "parameterlist_fetch_error": "Error Fetching Activity Parameters List",
+        "tl_delete_error": "Unable to Delete TL in Database",
+        "tl_update_error": "Unable to Update TL in Database",
+        "tl_add_error": "Unable to Add TL in Database",
+        "sub_delete_error": "Unable to Delete Substation in Database",
+        "sub_update_error": "Unable to Update Substation in Database",
+        "sub_add_error": "Unable to Add Substation in Database"
+      },
+      "coreMsg": {
+        "1": "CouchDB Initialization Error",
+        "2": "Error Retrieving Changes Document",
+        "3": "Document Size Too Large Error",
+        "4": "JSON Parsing Error",
+        "5": "Configuration File Opening Error",
+        "6": "Invalid Configuration File Error",
+        "7": "Invalid Changes Document Error",
+        "8": "Bay Type Does Not Exist",
+        "9": "Bay Type Already Exists",
+        "10": "Substation Does Not Exist",
+        "11": "Substation Already Exists",
+        "12": "Added Object Already Exists",
+        "13": "Object Does Not Exist",
+        "14": "Object Standard Does Not Exist",
+        "15": "Bay Does Not Exist",
+        "33": "Invalid Change Type",
+        "34": "Invalid Group Path",
+        "35": "Object Update Name Error",
+        "36": "Invalid Bay Types",
+        "48": "IEC 104 Device Does Not Exist",
+        "49": "IEC 104 Tag Standard Does Not Exist",
+        "50": "IEC 104 CASDU Does Not Exist",
+        "65": "Error In Getting Substation Document",
+        "66": "Error In Getting indexBayEqNameOrType View",
+        "67": "Invalid indexBayEqNameOrType view",
+        "68": "Invalid Substation Document",
+        "255": "Configuration DLL Not Exist"
+      },
+      "datanotfound": "No Data Found",
+      "while_tracking_changes": "while tracking changes",
+      "roster_id_not_found": "No Roster Found in Cureent",
+      "ft": "Cannot Insert Future Entries"
+    },
+    "login": {
+      "head": "Login",
+      "id": "Login ID / E-mail / Mobile",
+      "logsuccess": "Successfully Logged In...",
+      "alreadylogin": "Already Logged in to the same Project",
+      "password": "Password",
+      "submit": "Login",
+      "forcelogin": "Force Login"
+    },
+    "loginratelimit": {
+      "hourlylimit": "Hourly attempt limit reached. Please wait",
+      "minuteslimit": "Too many failed attempts. Please wait"
+    },
+    "forgotpassword": {
+      "head": "Forgot Password",
+      "forgotpassword": "Forgot Password",
+      "hrmsid": "Login Id",
+      "sendotp": "Send OTP",
+      "optsent": "OTP Sent",
+      "not-found": "User Not Found",
+      "enterotp": "Enter OTP",
+      "verify": "Verify",
+      "cancel": "Cancel",
+      "resend": "Resend OTP",
+      "newpassword": "Enter New Password",
+      "confirmnewpassword": "Confirm New Password",
+      "invalidotp": "Invalid OTP",
+      "wrongpass": "Wrong Password",
+      "passwordchanged": "Password Changed Successfully",
+      "chngpass": "Change Password",
+      "enterid": "Please Enter User ID",
+      "notmatch": "Passwords Do Not Match",
+      "otp-sucess": "Verification Complete",
+      "wrong-otp": "Wrong OTP",
+      "otp-expire": "OTP Expire"
+    },
+    "loggeddevicedetails": {
+      "confirmdeletemsg": "You Want to Delete This Log",
+      "db": "Something Went Wrong",
+      "usr": "Something Went Wrong",
+      "sucess": "Log Deleted!",
+      "deletelog": "Delete LogIn Detail"
+    },
+    "loginselect": {
+      "baseswitch": "Switch Configurator / Project",
+      "basetitle": "Enter Configurator / Project",
+      "configprojectswitch": "Switch to Project",
+      "editenvironmentvariables": "Environment Variables",
+      "configswitch": "Switch to Configurator",
+      "configtitle": "Enter Configurator",
+      "ok": "Enter",
+      "projectswitch": "Switch Project",
+      "projecttitle": "Enter Project",
+      "selectproject": "Select Project",
+      "selecttenant": "Select Tenant"
+    },
+    "project": {
+      "enterPassword": "Enter Password",
+      "binaryreporthead": "Binary Report",
+      "addviews": "Add View",
+      "gotomylink": "<-- Go -->",
+      "new_tab": "Open in Duplicate tab",
+      "editshortcut": "Edit My Link",
+      "createshortcut": "Create Shortcut",
+      "copy": "Copy",
+      "template": "Template",
+      "option": "Option",
+      "mylink": "My Link",
+      "linkname": "Link Name",
+      "mylinkdeletesuccess": "My Link Deleted Successfully...",
+      "import": "Import",
+      "rectangle": "Rectangle",
+      "export": "Export",
+      "zoom": {
+        "fittocontent": "Fit to all content",
+        "fittoselection": "Fit to selection",
+        "fittocanvas": "Fit to canvas"
+      },
+      "hvgeditor": {
+        "align": {
+          "alignleft": "Align Left",
+          "alignright": "Align Right",
+          "aligncentre": "Align Centre",
+          "aligntop": "Align Top",
+          "selected": "Selected",
+          "page": "Page",
+          "largestobject": "Largest object",
+          "smallestobject": "Smallest object",
+          "alignmiddle": "Align Middle",
+          "alignbottom": "Align Bottom"
+        },
+        "topbar": {
+          "menu": "Menu",
+          "save": "Save [S]",
+          "documentproperties": "Document Properties [D]",
+          "import": "Import SVG",
+          "importimg": "Import Image",
+          "restore": "Restore Shape",
+          "exportshp": "Export Shape",
+          "export": "Export As Svg Image",
+          "groupelements": "Group Elements [G]",
+          "ungroupelements": "Ungroup Elements",
+          "aligndistribhorizontal": "Align Distrib Horizontal",
+          "aligndistribvertical": "Align Distrib Vertical",
+          "angle": "Angle",
+          "enter": "Enter",
+          "zoom": "Zoom",
+          "undo": "Undo [Z]",
+          "redo": "Redo [Y]",
+          "showhide": "Show/Hide",
+          "bringtofront": "Bring to Front",
+          "sendtoback": "Send to Back",
+          "clone": "Clone [C]",
+          "delete": "Delete [Delete]",
+          "bold": "Bold [B]",
+          "italic": "Italic [I]",
+          "underline": "Underline",
+          "overline": "Overline"
+        },
+        "rightbar": {
+          "x": "x",
+          "y": "y",
+          "canvassetting": "Canvas Settings",
+          "width": "Width",
+          "constant": "Constants",
+          "constantval": "Constant Values",
+          "elements": "Elements",
+          "elementcons": "Element Constants",
+          "datasel": "Data-Selection",
+          "height": "Height",
+          "resolution": "Resolution",
+          "referencepath": "Reference Path",
+          "relativepath": "Relative Path",
+          "radiuscorner": "Radius corner",
+          "cx": "cx",
+          "transform": "Transform",
+          "shapeselector": "Shape Selector",
+          "cy": "cy",
+          "radius": "Radius",
+          "radiusx": "Radius X",
+          "radiusy": "Radius Y",
+          "x1": "x1",
+          "y1": "y1",
+          "y2": "y2",
+          "x2": "x2",
+          "fontsize": "Font Size",
+          "letterspacing": "Letter Spacing",
+          "wordspacing": "Word Spacing",
+          "maxwidth": "Max-Width",
+          "angle": "Angle",
+          "blur": "Blur",
+          "closesubpaths": "Close Subpaths",
+          "closem": "Close M",
+          "pathelements": "Path Elements",
+          "editelements": "Edit Elements",
+          "addmove": "Add Move",
+          "editpath": "Edit Path"
+        },
+        "bottombar": {
+          "changezoom": "Change Zoom Level",
+          "changefillcolor": "Change Fill Color",
+          "changestrokecolor": "Change Stroke Color",
+          "changestrokewidth": "Change Stroke Width by 1",
+          "changestrokedash": "Change stroke dash style",
+          "linejoin": "Line Join",
+          "linecap": "Line Cap",
+          "linejoinmiter": "Linejoin: Miter",
+          "linejoinround": "Linejoin: Round",
+          "linejoinbevel": "Linejoin: Bevel",
+          "linecapbutt": "Linecap: Butt",
+          "linecapsquare": "Linecap: Square",
+          "linecapround": "Linecap: Round",
+          "opacity": "Opacity",
+          "clickchangefillcolor": "Click to change fill color"
+        },
+        "dataconstant": {
+          "type": {
+            "attr": "Attribute",
+            "property": "Value"
+          }
+        },
+        "elemAdditionalTypes": {
+          "value-units": "Value-Units",
+          "object-name": "Object Name"
+        },
+        "elemconstant": {
+          "elemtype": {
+            "elevalue": "Value"
+          }
+        },
+        "dataselection": {
+          "type": {
+            "none": "None",
+            "hmi": "Popup",
+            "view": "View",
+            "link": "Link",
+            "control": "Control",
+            "interlock": "Interlock"
+          },
+          "valuetypes": {
+            "digital": "Digital",
+            "analog": "Analog",
+            "string": "String"
+          },
+          "execution": {
+            "direct": "Direct",
+            "sbo": "SBO",
+            "both": "Both"
+          },
+          "x": "X",
+          "y": "Y",
+          "width": "Width",
+          "height": "Height",
+          "title": "Title",
+          "min": "Min",
+          "max": "Max",
+          "popupwidth": "Popup-width",
+          "popupheight": "Popup-height",
+          "pathtype": "Path-type",
+          "path_type": {
+            "cs": "Custom Shape",
+            "svg": "View Shape"
+          }
+        },
+        "insertshape": "Insert Shape",
+        "select": "Select",
+        "selectshapee": "Select Shape",
+        "pencil": "Pencil Tool [Q]",
+        "selectpopupsize": "Select PopUp Size",
+        "selectposition": "Select Position",
+        "execution": "Execution",
+        "single": "Single",
+        "restore": "Restore",
+        "range": "Range",
+        "selectsize": "Select Size",
+        "edit": "Edit",
+        "dynamicdata": "Dynamic Data",
+        "pathtool": "Path Tool [P]",
+        "rectangle": "Rectangle",
+        "hvgbackground": "HVG Background",
+        "dataconstants": "Data-Constant",
+        "addcustomshape": "Add Custom Shape",
+        "adddata": "Add Data",
+        "editdata": "Edit Data",
+        "vieweditorr": "View Editor",
+        "name": "Name",
+        "new": "New",
+        "newfromselected": "New from Selected",
+        "types": "Type",
+        "elementtype": "Element Type",
+        "vieweditor": "Select View Shape",
+        "template": "Template",
+        "value": "Value",
+        "valuetext": "Value Text",
+        "min": "Min",
+        "max": "Max",
+        "target": "Target",
+        "targetgroup": "Target Group Path",
+        "targetview": "Target View",
+        "valuetype": "Value Type",
+        "linee": "Line Tool [L]",
+        "square": "Square",
+        "ellipse": "Ellipse",
+        "freehandrectangle": "Free-Hand Rectangle",
+        "freehandellipse": "Free-Hand Ellipse",
+        "squarerecttool": "Square/Rect Tool",
+        "circleellipsetool": "Ellipse/Circle Tool",
+        "customShapetool": "Custom Shape Tool",
+        "panning": "Panning",
+        "circle": "Circle",
+        "triangle": "Triangle",
+        "text": "Text Tool [T]",
+        "selectshape": "Select Custom Shape",
+        "customshape": "Custom Shape Name",
+        "angle": "Angle",
+        "zoom": "Zoom"
+      },
+      "opertionalview": {
+        "opviewconfigtitle": "Operational View Configuration",
+        "heading": "Heading",
+        "subgrpwise": "Sub Group Wise",
+        "subgrpheading": "Sub Group Heading",
+        "inverse": "Inverse",
+        "submit": "Submit",
+        "edit": "Edit",
+        "resotypes": {
+          "hourly": "Hourly",
+          "shift": "ShiftWise",
+          "daily": "Daily"
+        }
+      },
+      "grpopertionalview": {
+        "resolution": "Resolution",
+        "resotypes": {
+          "one_min": "1 Min.",
+          "five_min": "5 Min.",
+          "ten_min": "10 Min.",
+          "fifteen_min": "15 Min.",
+          "thirty_min": "30 Min.",
+          "hourly": "Hourly",
+          "daily": "Daily",
+          "shift": "ShiftWise"
+        }
+      },
+      "logstartupview": {
+        "lsviewconfigtitle": "Log Startup View Configuration"
+      },
+      "maintenance_device_info_view": {
+        "no_device": "No Information to Display",
+        "show_info": "Show Info & Expand",
+        "go_back": "Go Back"
+      },
+      "shiftsummaryview": {
+        "ShiftClose": "Shift Close",
+        "close_shift": "Close Shift",
+        "hourlylog": "Hourly Log",
+        "shiftlog": "Shift Log",
+        "eventlog": "Event Log",
+        "prevshiftalert": "Close Previous Shift First",
+        "selectshift": "Select Shift",
+        "shift_close_event_alert": "Please make sure that all the Events of this shift has been logged!",
+        "no_shift_display": "There are no shifts to Display",
+        "disable_reason": "Disabled: Incomplete Hourly Log/Shift Log/Energy Log"
+      },
+      "ShiftClosereport": {
+        "users": "Users",
+        "ShiftClose": "Shift Close",
+        "hourlylog": "Hourly Log",
+        "shiftdata": "Shift Data",
+        "energylog": "Energy Log",
+        "date": "Date",
+        "shift": "Shift",
+        "tick": "✓",
+        "cross": "X"
+      },
+      "usersinshift": {
+        "norosterforselecteddatetime": "No Roster has been Configured for selected Date/Time",
+        "nousers": "No users"
+      },
+      "pvtrippingreport": {
+        "datetime": "Datetime",
+        "endtime": "Endtime",
+        "duration": "Duration",
+        "path": "Path",
+        "quality": "Quality",
+        "reason": "Reason",
+        "load": "Load"
+      },
+      "trippingsettings": {
+        "triptype": "Tripping Type",
+        "heading": "Aggregation Heading",
+        "trippingcolumns": "Tripping Columns",
+        "trippingtypes": {
+          "none": "None",
+          "sum": "Sum",
+          "average": "Average",
+          "custom": "Custom"
+        },
+        "triping_detail": "Tripping Details",
+        "col_stings": "Columns Settings"
+      },
+      "mode": {
+        "recursive": "Recursive",
+        "non_recursive": "Non-Recursive"
+      },
+      "projectgroupView": {
+        "groupname": "Group Name",
+        "addprogrpView": "Add Project Group View",
+        "updateprogrpView": "Update Project Group View",
+        "deleteprogrpView": "Delete Project Group View",
+        "projectgroupsaved": "Project View Group Settings Saved Successfully...",
+        "addto": "Add To"
+      },
+      "backupDb": {
+        "IncludeUsers": "Include Users",
+        "IncludeImages": "Include Images",
+        "IncludeSounds": "Include Sounds",
+        "IncludeCustomShapes": "Include Custom Shapes",
+        "IncludeViewsAndHMIShapes": "Include Views & HMI Shapes",
+        "IncludeAutomaticReports": "Include Automatic Reports",
+        "IncludeMtcData": "Include Operations and Maintenance Data",
+        "backup": "Backup",
+        "restorescratch": "Restore Scratch",
+        "restoremerge": "Restore Merge",
+        "backupsucc": "Backup Downloaded Successfully..."
+      },
+      "timesettings": {
+        "selectionhead": "Select Date/Time",
+        "apply": "Apply",
+        "selectdate": "Select Date/time",
+        "rangeselection": {
+          "my_shift": "My Shift",
+          "current_shift": "Current Shift",
+          "previous_shift": "Previous Shift",
+          "last_2_shifts": "Last 2 Shifts",
+          "current_day": "Today",
+          "previous_day": "Yesterday",
+          "last_2_days": "Last 2 Days",
+          "current_week": "Current Week",
+          "previous_week": "Previous Week",
+          "current_month": "Current Month",
+          "previous_month": "Previous Month",
+          "current_year": "Current Year",
+          "previous_year": "Previous Year",
+          "last_5_hours": "Last 5 Hours",
+          "last_24_hours": "Last 24 Hours",
+          "last_5_days": "Last 5 Days",
+          "last_7_days": "Last 7 Days",
+          "last_30_days": "Last 30 Days",
+          "last_12_months": "Last 12 Months",
+          "previous_5_hours": "Previous 5 Hours",
+          "previous_24_hours": "Previous 24 Hours",
+          "previous_5_days": "Previous 5 Days",
+          "previous_7_days": "Previous 7 Days",
+          "previous_30_days": "Previous 30 Days",
+          "previous_12_months": "Previous 12 Months",
+          "custom": "Custom"
+        },
+        "resolutionlbl": "Resolution",
+        "range_type": "Range Type",
+        "shift_name": "Shift Name",
+        "resolutions": {
+          "one_min": "1 Min.",
+          "five_min": "5 Min.",
+          "ten_min": "10 Min.",
+          "fifteen_min": "15 Min.",
+          "thirty_min": "30 Min.",
+          "hourly": "Hourly",
+          "daily": "Daily",
+          "weekly": "Weekly",
+          "monthly": "Monthly",
+          "yearly": "Yearly"
+        },
+        "mnt_opr_dashboard_resolutions": {
+          "one_min": "1 Min.",
+          "five_min": "5 Min.",
+          "ten_min": "10 Min.",
+          "fifteen_min": "15 Min.",
+          "thirty_min": "30 Min.",
+          "hourly": "Hourly",
+          "shift": "Shift",
+          "weekly": "Weekly",
+          "monthly": "Monthly",
+          "yearly": "Yearly"
+        },
+        "disableResolutionOneFiveTen": "Required 1,5,10 Min. Resolution Within Month?"
+      },
+      "selectgrptitle": "Select Group",
+      "selectobjtitle": "Select Object",
+      "selectgrpobjtitle": "Select Group Object Title",
+      "group_object_selection": {
+        "searchlabel": "Search",
+        "searchplaceholder": "Type to search...",
+        "no_result_found": "No Result Found",
+        "search_input_criteria": "Please Enter More Than One Character"
+      },
+      "eventview": {
+        "maxrows": "Maximum Rows",
+        "select_column_filter": "Select Columns Filter",
+        "interval": "Interval",
+        "title": "Title",
+        "startvalue": "Start Value",
+        "faultsetting": "Fault Settings",
+        "page": "Page",
+        "of": "of",
+        "faultUpdateSucc": "Fault Report Updated Successfully...",
+        "removefilter": "Remove Filter",
+        "filter": "Filter",
+        "groupselect": "Filter Group",
+        "objselect": "Filter Object",
+        "rowperpage": "Row Per Page",
+        "datetime": "Date / Time",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "duration": "Duration",
+        "object": "Object",
+        "status": "Status",
+        "value": "Value",
+        "originator": "Originator",
+        "additional": "Additional Text",
+        "quality": "Quality",
+        "select_reasons_catagory": "Select Reasons/COT",
+        "reason": "Reason",
+        "remarks": "Remarks",
+        "reason_vals": {
+          "ALL": "All",
+          "EVENT": "Event",
+          "CYCLIC": "Cyclic",
+          "POLL": "Polling",
+          "INTERROGATION": "Interrogation",
+          "LOCAL_COMMAND": "Manual Command",
+          "REMOTE_COMMAND": "Remote Command",
+          "AUTOMATIC_COMMAND": "Automatic Command",
+          "STARTUP": "Startup",
+          "DISCONNECTION": "Disconnection",
+          "INTERNAL": "Internal",
+          "TRIPPING": "Tripping",
+          "BREAKDOWN": "Breakdown",
+          "INDICATIONS": "Indications",
+          "PRM": "PRM",
+          "MANUAL_OPERATIONS": "Manual Operations",
+          "MAINTENANCE": "Maintenance",
+          "USER_INPUT": "Manual Entry"
+        },
+        "hvpnl_reason_vals": {
+          "ALL": "All",
+          "TRIPPING": "Tripping",
+          "BREAKDOWN": "Breakdown",
+          "INDICATIONS": "Indications",
+          "PRM": "PRM",
+          "MANUAL_OPERATIONS": "Manual Operations",
+          "MAINTENANCE": "Maintenance",
+          "USER_INPUT": "Log Sheet Parameters",
+          "EVENT": "ICCP",
+          "INTERROGATION": "Interrogation",
+          "STARTUP": "Startup",
+          "DISCONNECTION": "Disconnection",
+          "INTERNAL": "Internal"
+        },
+        "hvpnl_reason_vals_event_log": {
+          "ALL": "All",
+          "TRIPPING": "Tripping",
+          "BREAKDOWN": "Breakdown",
+          "INDICATIONS": "Indications",
+          "PRM": "PRM",
+          "MANUAL_OPERATIONS": "Manual Operations",
+          "STARTUP": "Startup"
+        },
+        "hvpnl_reason_outage_vals": {
+          "ALL": "All",
+          "TRIPPING": "Tripping",
+          "BREAKDOWN": "Breakdown",
+          "INDICATIONS": "Indications",
+          "PRM": "PRM",
+          "MANUAL_OPERATIONS": "Manual Operations",
+          "MAINTENANCE": "Maintenance",
+          "USER_INPUT": "Log Sheet Parameters",
+          "EVENT": "ICCP",
+          "INTERROGATION": "Interrogation",
+          "STARTUP": "Startup",
+          "DISCONNECTION": "Disconnection"
+        },
+        "recording_time": "Recording Date / Time",
+        "entry_time": "Entry Date / Time"
+      },
+      "event": "Events",
+      "series": "Series",
+      "type": "Type",
+      "alarm": "Alarms",
+      "acknowledge": "Acknowledge",
+      "execute": "Execute",
+      "executeWithInterlock": "Execute With InterlockBypass",
+      "select": "Select",
+      "selectWithInterlock": "Select With InterlockBypass",
+      "interlock_bypass": "Interlock Bypass",
+      "synccheck_bypass": "Synch Check Bypass",
+      "test_bit": "Test Bit",
+      "sbo": "SBO",
+      "exit": "Exit",
+      "cancel": "Cancel",
+      "interlocktitle": "Interlock",
+      "docontroltitle": "Control Command",
+      "commentreason": "Comment/Reason",
+      "sum": "Sum (OR)",
+      "product": "(And) ->",
+      "alarmhead": {
+        "name": "Name",
+        "obj_category": "Object Category",
+        "showreset": "Show Reset",
+        "ack": "Acknowledge",
+        "del": "Delete",
+        "state": "State",
+        "datetime": "Date / Time",
+        "obj": "Object",
+        "status": "Status",
+        "severity": "Severity",
+        "noalarmack": "No Alarm Selected For Acknowledgement",
+        "noalarmdel": "No Alarm Selected For Deletion",
+        "sendack": "Successfully Alarm Acknowledgement sent",
+        "sendackerror": "UMaC Core/Hub Error ! Kindly Contact Administrator.",
+        "senddel": "Successfully Alarm Deletion sent",
+        "senddelerror": "UMaC Core/Hub Error ! Kindly Contact Administrator.",
+        "minval": "MinValue : ",
+        "maxval": "MaxValue : ",
+        "filter": "Filter",
+        "all": "- All -",
+        "removefilter": "Remove Filter",
+        "filtergroup": "Filter Group",
+        "objfilter": "Filter Object"
+      },
+      "command": {
+        "cancel_send": "Sending Cancel Command...",
+        "cancel_ok": "Cammand Cancellation Sent Successfully...",
+        "select_send": "Sending Select Command...",
+        "select_sent": "Selection Sent. Waiting for Acknowledge...",
+        "selection_success": "Selection Completed ! Kindly Execute Command ...",
+        "execute_send": "Sending Execute Command...",
+        "execute_sent": "Execution Sent. Waiting for Acknowledge...",
+        "terminate_wait": "Execution Confirmed. Waiting for Termination...",
+        "input_wait": "Execution/Termination Confirmed. Waiting for Input...",
+        "execute_confirmed": "Execution Confirmed. Waiting for Termination and Input...",
+        "command_ok": "Command Completed Successfully...",
+        "control_alredy_slect": "Command Already Selected...!!!"
+      },
+      "report": {
+        "selectall": "Select All",
+        "column_filter": "Individual Filter",
+        "select_filter": "Select Filter",
+        "condition_filter": "Conditional Filter",
+        "errorcode": {
+          "view_not_found": "View not found.",
+          "view_not_save": "Unable to write View."
+        },
+        "apexcharts": {
+          "months": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+          ],
+          "shortMonths": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "days": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "shortDays": [
+            "Sun",
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat"
+          ],
+          "toolbar": {
+            "exportToSVG": "Download SVG",
+            "exportToPNG": "Download PNG",
+            "menu": "Menu",
+            "selection": "Selection",
+            "selectionZoom": "Selection Zoom",
+            "zoomIn": "Zoom In",
+            "zoomOut": "Zoom Out",
+            "pan": "Panning",
+            "reset": "Reset Zoom"
+          }
+        },
+        "chartseries": {
+          "single": "Single",
+          "multi": "Multiple"
+        },
+        "maptypes": {
+          "link": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        },
+        "dataobjects": {
+          "head": "Object Details"
+        },
+        "reporttabs": {
+          "generalsetting": "General",
+          "objectsetting": "Object",
+          "chartsetting": "Chart",
+          "panelsetting": "Panel",
+          "trippingsetting": "Tripping",
+          "timesetting": "Time",
+          "colorrange": "Color Range",
+          "markersetting": "Marker",
+          "tlsetting": "Line",
+          "substation": "Substation",
+          "filterstb": "Filters",
+          "geojsondb": "GeoJson",
+          "datawithimg": "Popups",
+          "colorcodes": "Color Codes"
+        },
+        "generalsettingheading": {
+          "heading": "Heading",
+          "series": "Series Type",
+          "chart_type": "Chart Type",
+          "startScreen": "Start Screen"
+        },
+        "custom_validation": {
+          "emptyformula": "Formula Cannot Be Empty",
+          "oprstart": "Formula Should Not Start With Operators",
+          "oprend": "Formula Should Not End With Operators",
+          "missingrc": ") is missing!",
+          "missinglc": "( is missing!",
+          "missingrs": "] is missing!",
+          "missingls": "[ is missing!",
+          "emptyparanthesis": "Please Add A Formula Inside Empty Parenthesis (...)",
+          "emptysqrbracket": "Please Add A Formula Inside Empty Function [...]",
+          "addtousesb": "Please Add A Function To Use [...] Brackets",
+          "enclosesum": "Please Use [...] Brackets To Enclose SUM Function",
+          "encloseavg": "Please Use [...] Brackets To Enclose AVG Function",
+          "enclosecnt": "Please Use [...] Brackets To Enclose CNT Function",
+          "unusualspell": "Check Unusual Spelling:",
+          "removespecialch": "Please Remove Unnecessary Special Characters",
+          "repeatedopr": "Please Check Repeated Operators",
+          "formulaaftercol": "Formula Should Be After Column",
+          "onlyplusinsideavg": "AVG function should only inlcude + operator",
+          "colnotexists": "Column Doesn't Exists",
+          "openclosebr": "Please Check Order of Opening and Closing brackets"
+        },
+        "panelsetting": {
+          "headerbgcol": "Header Background Color",
+          "headertxtcol": "Header Text Color",
+          "headstartbgcol": "Headstart Background Color",
+          "filereaderr": "File Reading Error",
+          "errfileread": "Error in File Reading",
+          "expsettings": {
+            "exceltemplate": {
+              "green": "Green Template",
+              "grey": "Grey Template",
+              "custom": "Custom Template"
+            },
+            "customsaved": "Custom Theme Saved",
+            "headfootbg": "Title Background Color",
+            "headfootfnt": "Title Font Color",
+            "header_bg": "Header/Footer Background Color",
+            "header_fnt": "Header/Footer Font Color",
+            "empty_bg": "Empty Row Background Color",
+            "dataone_bgcol": "Data Background Color1",
+            "datatwo_bgcol": "Data Background Color2",
+            "data_fntcol": "Data Font Color",
+            "data_brdcol": "Data Border Color",
+            "exptheme": "Excel Theme",
+            "selectexpfootersum": "Select Footer Row",
+            "selectexpfootertable": "Footer Sum",
+            "exportsettings": "Export Settings",
+            "selectexpheader": "Select Export Header",
+            "expheaderalign": {
+              "expheadalign": "Export Header Alignment",
+              "left": "Left",
+              "center": "Center"
+            },
+            "expwidthformattitle": "Excel Column Header Format",
+            "expwidthformat": {
+              "fittoval": "Fit To Value",
+              "aslinebreak": "As Per View"
+            }
+          },
+          "footerrow": "Footer Row",
+          "single": {
+            "head": "Single Series",
+            "multihead": "Multiple Series",
+            "tableposition": "Table Position",
+            "defaultValue": "Value",
+            "headName": "Time Column Heading",
+            "headValue": "Value",
+            "layoutTxt": "Layout",
+            "layout": {
+              "vertical": "Vertical",
+              "horizontal": "Horizontal",
+              "custom": "Custom",
+              "group": "Row Grouping",
+              "col_group": "Column Group"
+            },
+            "pnel_type": "Panel Type",
+            "panel_type": {
+              "table": "Table",
+              "horizontal_card": "Horizontal Card",
+              "vertical_card": "Vertical Card"
+            }
+          },
+          "multi": {
+            "head": "Multi Series",
+            "headTime": "Time",
+            "headCount": "Count",
+            "headSystem": "System",
+            "default": "Default",
+            "configurable": "Configurable",
+            "layoutTxt": "Layout",
+            "layout": {
+              "vertical": "Vertical",
+              "col_group": "Column Group"
+            }
+          },
+          "displayFormat": {
+            "auto": "Auto",
+            "fulldate": "Full Date",
+            "fulldatetime": "Full Date Time",
+            "fulldatetimetillmin": "Full Date Time Till Minute",
+            "timeonly": "Time Only",
+            "timeonlytillmin": "Time Only Till Minute",
+            "startdate": "Start Date Only",
+            "startdatewithtime": "Start Date With Time",
+            "enddate": "End Date Only",
+            "enddatewithtime": "End Date With Time"
+          },
+          "timeColumnHeading": "Time Display Format",
+          "footer": {
+            "id": "Row Id",
+            "heading": "Heading",
+            "footertxt": "Footer",
+            "footersetings": "Footer Settings",
+            "col_lst": {
+              "All": "All"
+            },
+            "type": "Type",
+            "formula": "Formula",
+            "columns": "Columns",
+            "add": "Add Footer Settings",
+            "edit": "Edit Footer Settings",
+            "delete": "Delete Footer Settings",
+            "aggtypewarning": "Add Atleast One Non-Custom Footer Row To Apply Custom Formula",
+            "expfooterwarning": "Please Add Atleast One Footer In Footer Settings",
+            "aggregation_type": {
+              "Sum": "Sum",
+              "Average": "Average",
+              "Minimum": "Minimum",
+              "Maximum": "Maximum",
+              "Custom": "Footer Custom",
+              "v_custom": "Value Custom",
+              "standard": "Standard"
+            },
+            "feature_description": {
+              "v_custom": {
+                "title": "Supported Formula Syntax:",
+                "items": [
+                  {
+                    "note": "Only works on Report value rows"
+                  },
+                  {
+                    "code": "p(n)",
+                    "description": "→ Value from last row of the current column"
+                  },
+                  {
+                    "code": "p(n-1)",
+                    "description": "→ Value from previous row"
+                  },
+                  {
+                    "code": "p5",
+                    "description": "→ Shortcut for value at row 5"
+                  },
+                  {
+                    "code": "pa(n)",
+                    "description": "→ Last available value before last row (excludes ----)"
+                  },
+                  {
+                    "code": "p(n) - p(n-1)",
+                    "description": "→ Difference between last and 2nd last row"
+                  }
+                ]
+              },
+              "Custom": {
+                "title": "Supported Formula Syntax:",
+                "items": [
+                  {
+                    "note": "Only works on Footer rows"
+                  },
+                  {
+                    "code": "p5",
+                    "description": "→ Shortcut for value at Footer row 5"
+                  }
+                ]
+              }
+            }
+          },
+          "footersum": {
+            "add": "Add Footer Sum Settings",
+            "edit": "Edit Footer Sum Settings",
+            "delete": "Delete Footer Sum Settings"
+          },
+          "expinsertrow": "Insert Row Table",
+          "expInsertRowObj": {
+            "defaultrows": "Restore Default Rows",
+            "text": "Text",
+            "insertNum": "Number Of Rows To Insert",
+            "rowNum": "Row Number",
+            "colNum": "Column Number",
+            "bgcolor": "Background Color",
+            "fontsize": "Font Size",
+            "fontcolor": "Font Color",
+            "rowN": "Row Number",
+            "colN": "Column Number",
+            "bgCol": "Background Color",
+            "v_align": "Vertical Alignment",
+            "h_align": "Horizontal Alignment",
+            "mergerange": "Merge Range",
+            "bold": "Bold",
+            "italic": "Italic",
+            "mergerangewarning": "Please Give Valid Cell Range",
+            "insrowduplicatewarning": "Row is Already Merged",
+            "alreadymergewarning": "Cell is Already Merged",
+            "lasttitlerownum": "Last Title Row Number",
+            "add": "Add Insert Row Settings",
+            "edit": "Edit Insert Row Settings",
+            "delete": "Delete Insert Row Settings"
+          },
+          "dynamicTabPos": {
+            "text": "Text",
+            "insertNum": "Number Of Rows To Insert",
+            "rowNum": "Row Number",
+            "colNum": "Column Number",
+            "skip_Row": "Skip Row",
+            "image": "Image",
+            "bgcolor": "Background Color",
+            "fontsize": "Font Size",
+            "fontcolor": "Font Color",
+            "left": "Left",
+            "center": "Center",
+            "txtimage": "Text/Image",
+            "rowN": "Row Number",
+            "colN": "Column Number",
+            "bgCol": "Background Color",
+            "v_align": "Vertical Alignment",
+            "h_align": "Horizontal Alignment",
+            "mergerange": "Merge Range",
+            "headersettings": "Header Settings",
+            "add": "Add Dynamic Table Settings",
+            "edit": "Edit Dynamic Table Settings",
+            "delete": "Delete Dynamic Table Settings",
+            "insertrows": "Insert Rows",
+            "valign": "Vertical Alignment",
+            "valignopt": {
+              "top": "Top",
+              "middle": "Middle",
+              "bottom": "Bottom",
+              "distributed": "Distributed"
+            },
+            "halign": "Horizontal Alignment",
+            "halignopt": {
+              "left": "Left",
+              "center": "Center",
+              "right": "Right",
+              "fill": "Fill"
+            },
+            "bold": "Bold",
+            "boldopt": {
+              "true": "True",
+              "false": "False"
+            },
+            "italic": "Italic",
+            "italicopt": {
+              "true": "True",
+              "false": "False"
+            }
+          }
+        },
+        "chartsettingOld": {
+          "caption": {
+            "head": "Caption",
+            "caption": "Caption",
+            "subcaption": "Sub-Caption",
+            "captionFontSize": "CaptionFontSize",
+            "subCaptionFontSize": "SubCaptionFontSize",
+            "captionOnTop": "Caption :   ",
+            "captionFontColor": "Caption Color",
+            "subCaptionFontColor": "Sub-Caption Color"
+          },
+          "axis": {
+            "head": "Axis",
+            "xAxisName": "X-Axis Name",
+            "xAxisNameFontColor": "X-AxisNameFontColor",
+            "xAxisNameFontSize": "X-AxisNameFontSize",
+            "showXAxisLine": "X-Axis-Line  ",
+            "yAxisName": "Y-Axis Name",
+            "yAxisNameFontColor": "Y-AxisNameFontColor",
+            "yAxisNameFontSize": "Y-AxisNameFontSize",
+            "showYAxisLine": "Y-Axis-Line  "
+          },
+          "functional": {
+            "animation": "Animation",
+            "head": "Functional Attributes",
+            "theme": "Theme",
+            "showLabels": "Labels   ",
+            "showValues": "Values   ",
+            "labelFontColor": "Label Font Color",
+            "labelFontSize": "Label Font Size",
+            "placeValuesInside": "Place Values   ",
+            "maxColWidth": "Column Width",
+            "bgColor": "Background Color",
+            "bgAlpha": "Background Alpha",
+            "plotHighlightEffect": "Legend Highlight Effect"
+          },
+          "tooltip": {
+            "head": "Tooltip Attributes",
+            "showToolTip": "Tool Tip   ",
+            "plottooltext": "Tool-Text",
+            "toolTipColor": "Tool-Tip Color"
+          },
+          "piechart": {
+            "head": " Pie/Doughnut Properties",
+            "pieRadius": "Pie Radius",
+            "startingAngle": "Start-Angle",
+            "enableSlicing": "Slicing   ",
+            "slicingDistance": "Slicing distance",
+            "pieSliceDepth": "Pie-3D Depth",
+            "enableRotation": "Rotation   ",
+            "doughnutRadius": "Doughnut Radius",
+            "pieYScale": "Y-Scale",
+            "enableMultiSlicing": "Multislicing ",
+            "radius3D": "Radius 3D"
+          },
+          "legend": {
+            "head": "Legend Properties",
+            "showLegend": "Legend",
+            "legendItemFontBold": "Legend Font",
+            "legendItemFontSize": "Legend Font Size",
+            "legendItemFontColor": "Legend Font Color",
+            "legendBgColor": "Legend Background Color",
+            "legendBgAlpha": "Legend Background Alpha",
+            "legendShadow": "Legend Shadow",
+            "legendBorderColor": "Legend Border Color"
+          },
+          "zoomlinedy": {
+            "head": "Axis",
+            "parentYAxis": "Y-Axis",
+            "showXAxisLine": "X-Axix Line",
+            "showYAxisValues": "Y-Axis Values",
+            "xAxisName": "X-Axis Name",
+            "pYAxisName": "Primary Y-Axis Name",
+            "pYAxisNameFontColor": "Primary Y-Axis Name Font-Color",
+            "pYAxisNameFontSize": "Primary Y-Axis Name Font-Size",
+            "pYAxisNameBgColor": "Primary Y-Axis Name Background Color",
+            "pYAxisNameBorderColor": "Primary Y-Axis Name Border Color",
+            "sYAxisName": "Secondary Y-Axis Name",
+            "sYAxisNameFontColor": "Secondary Y-Axis Name Font Color",
+            "sYAxisNameFontSize": "Secondary Y-Axis Name Font Size",
+            "sYAxisNameBgColor": "Secondary Y-Axis Name Background Color",
+            "sYAxisNameBorderColor": "Secondary Y-Axis Name Border Color"
+          },
+          "angulargauge": {
+            "head": "Gauge Properties",
+            "gaugeStartAngle": "Start Angle",
+            "gaugeEndAngle": "End Angle",
+            "gaugeOuterRadius": "Outer Radius",
+            "gaugeInnerRadius": "Inner Radius",
+            "gaugeFillMix": "Fill Mix",
+            "gaugeFillRatio": "Fill Ratio",
+            "showGaugeBorder": "Gauge Border",
+            "gaugeBorderColor": "Border Color",
+            "gaugeBorderThickness": "Border Thickness"
+          },
+          "pivot": {
+            "head": "Pivot Properties",
+            "pivotRadius": "Pivot Radius",
+            "pivotFillColor": "Pivot Fill Color",
+            "pivotFillAngle": "Pivot Fill Angle",
+            "pivotFillType": "Pivot Fill Type",
+            "pivotFillMix": "Pivot Fill Mix",
+            "pivotFillRatio": "Pivot Fill Ratio",
+            "showPivotBorder": "Pivot Border",
+            "pivotBorderThickness": "Pivot Border Thickness",
+            "pivotBorderColor": "Pivot Border Color",
+            "pivotbgcolor": "Pivot Background Color"
+          },
+          "gaugeaxis": {
+            "head": "Axis/Tick Mark Properties ",
+            "upperlimit": "Upper Limit",
+            "lowerlimit": "Lower Limit",
+            "showTickMarks": "Tick Marks",
+            "showTickValues": "Tick Values",
+            "ticksBelowGauge": "Ticks Below Gauge",
+            "majorTMNumber": "Major TMNumber",
+            "majorTMColor": "Major TMColor",
+            "majorTMHeight": "Major TMHeight",
+            "majorTMThickness": "MajorTMThickness",
+            "minorTMNumber": "Minor TMNumber",
+            "minorTMColor": "Minor TMColor",
+            "minorTMHeight": "Minor TMHeight",
+            "minorTMThickness": "MinorTMThickness",
+            "tickMarkDistance": "TickMark Distance",
+            "tickValueDistance": "TickValue Distance",
+            "tickValueStep": "TickValue Step"
+          },
+          "cylinder": {
+            "head": "Cylinder Properties",
+            "cylOriginX": "Origin X",
+            "cylOriginY": "Origin Y",
+            "cylRadius": "Radius",
+            "cylHeight": "Height",
+            "cylYScale": "Y Scale",
+            "cylFillColor": "Fill Color",
+            "cylGlassColor": "Glass Color"
+          },
+          "led": {
+            "head": "Led properties",
+            "ledSize": "Led Size",
+            "ledGap": "Led Gap",
+            "useSameFillColor": "Fill Color",
+            "useSameFillBgColor": "Fill Background Color"
+          },
+          "thermometer": {
+            "head": "Thermometer Properties",
+            "thmBulbRadius": "Thermometer Radius",
+            "thmHeight": "Thermometer Height",
+            "thmfillcolor": "Thermometer Fill Color",
+            "thmGlassColor": "Thermometer Glass Color"
+          }
+        },
+        "chartsetting": {
+          "chart": {
+            "head": "Chart",
+            "children": {
+              "animation": "Animation",
+              "backgroundColor": "Background Color",
+              "borderColor": "Border Color",
+              "borderRadius": "Border Radius",
+              "borderWidth": "Border Width",
+              "ignoreHiddenSeries": "Hidden Series",
+              "inverted": "Inverted",
+              "plotBackgroundColor": "Gauge Plot Background Color",
+              "plotBorderWidth": "Gauge Plot Border Width",
+              "plotShadow": "Gauge Plot Shadow",
+              "height": "Gauge Height",
+              "options3d": {
+                "head": "3D Options",
+                "children": {
+                  "enabled": "Enable",
+                  "alpha": "Tilt towards X-axis",
+                  "beta": "Tilt towards Y-axis",
+                  "depth": "Depth"
+                }
+              },
+              "yaxissecondary": {
+                "head": "Dual Y-Axis Secondary",
+                "children": {
+                  "dualaxes": "Dual Axes",
+                  "title": {
+                    "head": "Y-Axis Title",
+                    "children": {
+                      "text": "Secondary Title"
+                    },
+                    "style": {
+                      "head": "Color",
+                      "children": {
+                        "color": "Color"
+                      }
+                    }
+                  },
+                  "opposite": "Opposite"
+                }
+              }
+            }
+          },
+          "title": {
+            "head": "Title",
+            "children": {
+              "text": "Text"
+            }
+          },
+          "subtitle": {
+            "head": "Sub Title",
+            "children": {
+              "text": "Text"
+            }
+          },
+          "stacking": {
+            "head": "Stacking",
+            "children": {
+              "enabled": "Enable"
+            }
+          },
+          "plotOptions": {
+            "head": "Plot Options",
+            "children": {
+              "pie": {
+                "head": "Pie",
+                "children": {
+                  "showInLegend": "Show Legend",
+                  "allowPointSelect": "Allow Point Selection",
+                  "sliced": "Sliced",
+                  "slicedOffset": "Sliced Offset",
+                  "depth": "Depth",
+                  "dataLabels": {
+                    "head": "Data Labels",
+                    "children": {
+                      "enabled": "Enable"
+                    }
+                  },
+                  "donut": {
+                    "head": "Donut Settings",
+                    "children": {
+                      "enabled": "Enable Donut Settings",
+                      "innersize": "InnerSize",
+                      "depth": "Depth"
+                    }
+                  }
+                }
+              },
+              "line": {
+                "head": "Line",
+                "children": {
+                  "dataLabels": {
+                    "head": "Data Labels",
+                    "children": {
+                      "enabled": "Enable"
+                    }
+                  }
+                }
+              },
+              "column": {
+                "head": "Column",
+                "children": {
+                  "dataLabels": {
+                    "head": "Data Labels",
+                    "children": {
+                      "enabled": "Enable"
+                    }
+                  },
+                  "pointWidth": "Column Width",
+                  "stackingOption": {
+                    "head": "Stacking",
+                    "children": {
+                      "enabled": "Enable"
+                    }
+                  }
+                }
+              },
+              "bar": {
+                "head": "Bar",
+                "children": {
+                  "dataLabels": {
+                    "head": "Data Labels",
+                    "children": {
+                      "enabled": "Enable"
+                    }
+                  },
+                  "pointWidth": "Column Width",
+                  "stackingOption": {
+                    "head": "Stacking",
+                    "children": {
+                      "enabled": "Enable"
+                    }
+                  }
+                }
+              },
+              "cylinder": {
+                "head": "Cylinder",
+                "children": {
+                  "dataLabels": {
+                    "head": "Data Labels",
+                    "children": {
+                      "enabled": "Enable"
+                    }
+                  }
+                }
+              },
+              "scatter": {
+                "head": "Scatter",
+                "children": {
+                  "marker": {
+                    "head": "Marker",
+                    "children": {
+                      "radius": "radius",
+                      "states": {
+                        "head": "States",
+                        "children": {
+                          "hover": {
+                            "head": "Hover",
+                            "children": {
+                              "enabled": "Enabled",
+                              "lineColor": "LineColor"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "states": {
+                    "head": "States",
+                    "children": {
+                      "hover": {
+                        "head": "Hover",
+                        "children": {
+                          "marker": {
+                            "head": "Marker",
+                            "children": {
+                              "enabled": "Enabled"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "gauge": {
+                "head": "Gauge",
+                "children": {
+                  "plotBackgroundColor": "Gauge Plot Background Color",
+                  "plotBorderWidth": "Gauge Plot Border Width",
+                  "plotShadow": "Gauge Plot Shadow",
+                  "height": "Gauge Height",
+                  "dial": {
+                    "head": "Dial Settings",
+                    "children": {
+                      "radius": "Radius",
+                      "backgroundColor": "Background Color",
+                      "baseWidth": "Base Width",
+                      "baseLength": "Base Length",
+                      "rearLength": "Rear Length"
+                    }
+                  },
+                  "pivot": {
+                    "head": "Pivot",
+                    "children": {
+                      "backgroundColor": "Background Color",
+                      "radius": "Radius"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "dataLabels": {
+            "head": "Data Labels",
+            "children": {
+              "format": "Format",
+              "borderWidth": "Border Width",
+              "color": "Color",
+              "style": {
+                "head": "Style",
+                "children": {
+                  "fontSize": "Font Size"
+                }
+              }
+            }
+          },
+          "xAxis": {
+            "head": "X-Axis",
+            "children": {
+              "title": {
+                "head": "Title",
+                "children": {
+                  "text": "Text"
+                }
+              },
+              "labels": {
+                "head": "Labels",
+                "children": {
+                  "enabled": "Enable"
+                }
+              }
+            }
+          },
+          "yAxis": {
+            "head": "Y-Axis",
+            "children": {
+              "title": {
+                "head": "Title",
+                "children": {
+                  "text": "Text"
+                }
+              },
+              "yaxissecondary": {
+                "head": "Dual Y-Axis Secondary",
+                "children": {
+                  "dualaxes": "Dual Axes",
+                  "title": {
+                    "head": "Y-Axis Title",
+                    "children": {
+                      "text": "Secondary Title"
+                    }
+                  }
+                }
+              },
+              "min": "Minimum",
+              "max": "Maximum",
+              "tickPixelInterval": "Tick Pixel Interval",
+              "tickPosition": "Inside",
+              "tickColor": "Tick Color",
+              "tickLength": "Tick Length",
+              "tickWidth": "Tick Width",
+              "minorTickInterval": "Minor Tick Interval",
+              "labels": {
+                "head": "Labels",
+                "children": {
+                  "distance": "Distance",
+                  "style": {
+                    "head": "style",
+                    "children": {
+                      "fontSize": "Font Size"
+                    }
+                  }
+                }
+              },
+              "linewidth": "Line Width"
+            }
+          },
+          "legend": {
+            "head": "Legend",
+            "children": {
+              "floating": "Floating",
+              "layoutTxt": "Layout",
+              "layout": {
+                "horizontal": "Horizontal",
+                "vertical": "Vertical"
+              },
+              "alignTxt": "Align",
+              "align": {
+                "left": "Left",
+                "center": "Center",
+                "right": "Right"
+              },
+              "verticalAlignTxt": "Vertical Align",
+              "verticalAlign": {
+                "top": "Top",
+                "middle": "Middle",
+                "bottom": "Bottom"
+              },
+              "backgroundcolor": "Backround Color",
+              "borderWidth": "Border Width",
+              "x": "Legend X",
+              "y": "Legend Y"
+            }
+          },
+          "tooltip": {
+            "head": "ToolTip",
+            "children": {
+              "enabled": "Enable",
+              "shared": "Shared",
+              "valuePrefix": "Prefix",
+              "valueSuffix": "Suffix"
+            }
+          }
+        },
+        "funnelchartsetting": {
+          "caption": "Caption",
+          "subcaption": "Sub-Caption",
+          "captionFontColor": "Caption Color",
+          "subCaptionFontColor": "Sub-Caption Color",
+          "captionFontSize": "CaptionFontSize",
+          "subCaptionFontSize": "SubCaptionFontSize",
+          "showPlotBorder": "Funnel Border",
+          "streamlinedData": "Data",
+          "showLegend": "Legend",
+          "is2D": "Type",
+          "isSliced": "Sliced",
+          "isHollow": "Funnel Slice",
+          "useSameSlantAngle": "Slant Angle",
+          "funnelYScale": "Funnel YScale"
+        },
+        "paretochartsetting": {
+          "caption": "Caption",
+          "subcaption": "Sub-Caption",
+          "showLabels": "Labels :   ",
+          "showValues": "Values :   ",
+          "captionFontSize": "CaptionFontSize",
+          "subCaptionFontSize": "SubCaptionFontSize",
+          "captionOnTop": "Caption :   ",
+          "captionFontColor": "Caption Color",
+          "subCaptionFontColor": "Sub-Caption Color",
+          "sYAxisName": "Secondary y-Axistitle",
+          "pYAxisName": "Primary y-Axistitle",
+          "pYAxisNameFontSize": "Primary Axis FontSize ",
+          "sYAxisNameFontSize": "Secondary Axis FontSize "
+        },
+        "datachartsetting": {
+          "head": "Chart Data",
+          "alpha": "Alpha",
+          "dashed": "Dashed",
+          "labelFontColor": "Font-Color",
+          "displayValue": "Display Value",
+          "borderColor": "Border Color",
+          "labelFontSize": "Font Size",
+          "toolText": "Display Tool-Text",
+          "isSliced": "Sliced",
+          "borderAlpha": "Border Opacity",
+          "showValue": "Value",
+          "groupname": "Group Name",
+          "primary": "Primary",
+          "secondary": "Secondary",
+          "renderAs": "Render As",
+          "render": {
+            "line": "Line",
+            "area": "Area",
+            "column": "Column",
+            "splinearea": "SP Line Area",
+            "spline": "SP Line"
+          }
+        },
+        "color": {
+          "heading": "Color Settings",
+          "head": "Color Range Object",
+          "to": "To",
+          "from": "From",
+          "thickness": "Thickness",
+          "code": "Color",
+          "maxValue": "Maximum Value",
+          "minValue": "Minimum Value"
+        },
+        "dial": {
+          "head": "Dial Object",
+          "baseWidth": "Base Width",
+          "radius": "Radius",
+          "bgColor": "Background Color",
+          "borderColor": "Border Color",
+          "borderThickness": "Border Thickness",
+          "rearExtension": "Rear Extension",
+          "showValue": "Value",
+          "baseRadius": "Base Radius"
+        },
+        "point": {
+          "markerRadius": "Marker Radius",
+          "markerBorderColor": "Marker Border Color",
+          "markerColor": "Marker Color",
+          "dashGap": "dashGap"
+        },
+        "charttypesingle": {
+          "column": "Column",
+          "bar": "Bar",
+          "cylinder": "Cylinder",
+          "funnel3d": "Funnel 3D",
+          "gauge": "Gauge",
+          "solidgauge": "Soild Gauge",
+          "pie": "Pie",
+          "groupedColumnoil": "Oil Temp Column",
+          "groupedColumnWinding": "Winding Temp Column",
+          "assetbubble": "Bubble",
+          "drillcolumn": "Drill By Column",
+          "variablepie": "Variable Pie",
+          "pyramid3d": "Pyramid 3D",
+          "area": "Area",
+          "areaspline": "Area Spline",
+          "line": "Line",
+          "spline": "Spline",
+          "donut": "Donut"
+        },
+        "charttypemulti": {
+          "mschart": "Chart",
+          "scatter": "Scatter",
+          "ivcurve": "IV Curve",
+          "agewise": "Age Wise",
+          "polar": "Polar",
+          "dualaxes": "Dual Axes",
+          "liveData": "Live Trend"
+        },
+        "chartmulti": {
+          "column": "Column",
+          "bar": "Bar",
+          "area": "Area",
+          "areaspline": "Area Spline",
+          "line": "Line",
+          "spline": "Spline",
+          "cylinder": "cylinder"
+        },
+        "dualchart": {
+          "Column": "Column",
+          "Bar": "Bar",
+          "Area": "Area",
+          "Areaspline": "Area Spline",
+          "Line": "Line",
+          "Spline": "Spline"
+        },
+        "idealcurve": {
+          "head": "Ideal Curve",
+          "index_x": "Index-x",
+          "index_y": "Index-y"
+        },
+        "panel": "Panel Only",
+        "objectgroupfunction": {
+          "object": "Object",
+          "grp_standard": "Standard",
+          "grp_average": "Group (Average)",
+          "grp_sum": "Group (Sum)",
+          "func_sum": "Sum",
+          "func_average": "Average",
+          "grp_alarmcount": "Alarm Count",
+          "grp_mntprogress": "Maintenance Progress",
+          "grp_mntdelay": "Maintenance Delayed",
+          "grp_mntptwactive": "Maintenance PTW Active",
+          "grp_mntptwrequest": "Maintenance PTW Request",
+          "grp_nbfrequested": "Maintenance NBF Requested",
+          "grp_nbfissued": "Maintenance NBF Issued",
+          "grp_nbfrequestreceived": "Maintenance NBF Request Recieved",
+          "grp_highalarmcount": "High Severity Alarm",
+          "grp_lowalarmcount": "Low Severity Alarm",
+          "grp_mediumalarmcount": "Medium Severity Alarm",
+          "grp_criticalalarmcount": "Critical Severity Alarm",
+          "grp_eventIccpCount": "Event Iccp Count"
+        },
+        "grouptypefunction": {
+          "none": "None",
+          "groupstandard": "Group Standard"
+        },
+        "objectstandardOperations": {
+          "none": "None",
+          "sum": "Standard (Sum)",
+          "average": "Standard (Average)"
+        },
+        "objectgroupfunction_grp_mnt_object": "Maintenance Object",
+        "objectgroupfunction_custom": "Custom",
+        "mapgroupfunction": {
+          "object": "Object"
+        },
+        "valuetype": {
+          "Actual": "Actual",
+          "Average": "Average",
+          "Minimum": "Minimum",
+          "Maximum": "Maximum",
+          "Range": "Range",
+          "Time_at_minimum": "Time At Minimum",
+          "Time_at_maximum": "Time At Maximum",
+          "Actual_range": "Actual Range",
+          "Instantaneous": "Instantaneous",
+          "Instantaneous_time": "Instantaneous Time",
+          "Reason": "Instantaneous Reason",
+          "FaultStart": "Fault Start Duration",
+          "FaultEnd": "Fault End Duration",
+          "FaultStartCount": "Fault Start Count",
+          "FaultEndCount": "Fault End Count"
+
+        },
+        "reasons": {
+          "ALL": "All",
+          "TRIPPING": "Tripping",
+          "BREAKDOWN": "Breakdown",
+          "INDICATIONS": "Indications",
+          "MAINTENANCE": "Maintenance",
+          "PRM": "PRM",
+          "MANUAL_OPERATIONS": "Manual Operations"
+        },
+        "offsetType": {
+          "Minutes": "Minutes",
+          "Hours": "Hours",
+          "Days": "Days",
+          "Months": "Months",
+          "Years": "Years",
+          "None": "None"
+        },
+        "oprOffsetType": {
+          "Minutes": "Minutes",
+          "Hours": "Hours",
+          "None": "None"
+        },
+        "grpoprResolutionType": {
+          "Shiftwise": "Shiftwise",
+          "Daily": "Daily"
+        },
+        "objectdlglables": {
+          "align": {
+            "header": "Header Align",
+            "body": "Body Align",
+            "headstart": "Headstart Align"
+          },
+          "colorsettings": {
+            "condition": "Condition",
+            "color": "Color",
+            "colsettingsheading": "Color Settings",
+            "colsettings": "Apply Color Settings",
+            "colortype": "Color Type",
+            "bgcolor": "Background Color",
+            "txtcolor": "Text Color",
+            "selcolor": "Select Color",
+            "convalue": "Conditional Value",
+            "headbg": "Header Background Color",
+            "headtxt": "Header Text Color",
+            "headstartbg": "Headstart Background Color",
+            "headstarttxt": "Headstart Text Color"
+          },
+          "showcol": "Show Column",
+          "colid": "Column ID",
+          "name": "Name",
+          "heading": "Heading",
+          "selectoption": "Select Option",
+          "pathtype": "Path Type",
+          "standardtype": "Standard Type",
+          "standardoperation": "Standard Operation",
+          "path": "Path",
+          "object": "Object",
+          "formula": "Formula",
+          "valuetype": "Value Type",
+          "reason": "Reason",
+          "offsettype": "Offset Type",
+          "offsetcount": "Offset Count",
+          "keep_offset_value": "Keep Offset Datetime",
+          "dataobject": "Chart Data Object",
+          "selectchart": "Select Chart",
+          "parameter1": "Parameter 1",
+          "parameter2": "Parameter 2",
+          "customformula": "Custom Formula",
+          "errorcustom": "Operand Column Should Be Before Result Column",
+          "condition": "Condition",
+          "conditionValue": "Condition Value",
+          "conditiontype": "Condition Type",
+          "grouptype": "Group Type",
+          "groupstandardtype": "Group Standard Type",
+          "comparisonOperators": {
+            "nocondition": "No Condition",
+            "equalTo": "Equals to['=']",
+            "greaterThan": "Greater than['>']",
+            "lessThan": "Less than['<']",
+            "greaterEqualTo": "Greater Equals to['>=']",
+            "lessEqualTo": "Less Equals to['<=']",
+            "notEqualsTo": "Not Equals to['<>']",
+            "custom": "Custom"
+          },
+          "comparisionOperatorsSymbol": {
+            "equalTo": "=",
+            "greaterThan": ">",
+            "lessThan": "<",
+            "greaterEqualTo": ">=",
+            "lessEqualTo": "<=",
+            "notEqualsTo": "<>"
+          },
+          "textalign": {
+            "left": "Align Left",
+            "center": "Align Center",
+            "right": "Align Right"
+          },
+          "conditionAggregation": "Condition Aggregation",
+          "aggregationTypes": {
+            "rowvalue": "Row Value",
+            "sum": "Sum",
+            "average": "Average",
+            "maximum": "Maximum",
+            "minimum": "Minimum"
+          },
+          "txtStdCompOps": {
+            "equalTo": "Equals to['=']",
+            "notEqualsTo": "Not Equals to['<>']",
+            "nocondition": "No Condition"
+          }
+        },
+        "automaticreportlglables": {
+          "heading": "Title",
+          "selectoption": "Select Option",
+          "servertype": "Series Type",
+          "recurrenceoption": "Re-Occurrence",
+          "intervalcount": "Re-Occurrence Count",
+          "path": "Path",
+          "directory": "Folder Name",
+          "object": "Object",
+          "formula": "Formula",
+          "dataobject": "Chart Data Object",
+          "selectchart": "Select Chart",
+          "parameter1": "Parameter 1",
+          "parameter2": "Parameter 2",
+          "self": "Self",
+          "servertypeerr": {}
+        },
+        "headcolor": "Heading Color",
+        "scorecard": "Score Card",
+        "cardcolor": "Value Color",
+        "headingfontsize": "Heading Font Size",
+        "headingfontcolor": "Heading Font Color",
+        "valuefontsize": "Value Font Size",
+        "dualchartvalue": "Dual Chart Value",
+        "valuefontcolor": "Value Font Color",
+        "objectdlgheading": {
+          "objectsettings": "Object Settings"
+        },
+        "pathtype": {
+          "Self": "Self",
+          "c1": "Children Group (c1)",
+          "c2": "Grand Children Group (c2)",
+          "c3": "Great Grand Children Group (c3)",
+          "p1/c1": "Sibling (p1/c1)",
+          "p1": "Parent (p1)",
+          "r": "Root (r)"
+        },
+        "tooltip": {
+          "editcons": "Edit Constant",
+          "editconsval": "Edit Constant Value",
+          "editelems": "Edit Element",
+          "editelemscons": "Edit Element Constant",
+          "addobject": "Add Object Settings",
+          "opendataobject": "Open Data Object",
+          "deleteobject": "Delete Object Settings",
+          "editobject": "Edit Object Settings",
+          "openobjectlist": "Open Object List",
+          "savetimesettings": "Update Time Settings",
+          "saveobjectsettings": "Save Object Settings",
+          "close": "Close",
+          "deletecons": "Delete Constant",
+          "deleteconsval": "Delete Constant Value",
+          "deleteelems": "Delete Element",
+          "deleteelemscons": "Delete Element Constant"
+        },
+        "message": {
+          "emptyfieldpath": "Please Enter Path !",
+          "emptyfielvaluetype": "Please Enter Value Type !",
+          "emptyfieldchart": "Please Enter Chart !",
+          "settings_saved": "Successfully Saved Settings"
+        },
+        "trippingReportHints": {
+          "title": "Formula Creation Hints",
+          "hints": [
+            {
+              "code": "p(k)",
+              "description": "→ Gives Value of kth Trip Parameter"
+            },
+            {
+              "code": "pn(k)",
+              "description": "→ Gives Name of kth Trip Parameter"
+            },
+            {
+              "code": "'(ObjectName)'",
+              "description": "→ Gives Value of the specified ObjectName"
+            },
+            {
+              "note": "k is an integer starting from 1 "
+            },
+            {
+              "note": "+, -, *, / are supported arithmetic operations "
+            }
+          ]
+        }
+      },
+      "addview": {
+        "myview": "My Views",
+        "usrviewAddSucc": "My View Added Successfully...",
+        "usrviewupdateSucc": "My View Upated Successfully...",
+        "usrviewdelSucc": "My View Deleted Successfully...",
+        "viewAddSucc": "Project View Added Successfully...",
+        "viewupdateSucc": "Project View Upated Successfully...",
+        "viewdelSucc": "Project View Deleted Successfully...",
+        "mylinkviewAddSucc": "Shortcut View Created Successfully...",
+        "mylinkviewUpdateSucc": "Shortcut View Updated Successfully...",
+        "groupselection": "Group Selection",
+        "nogrouplink": "No Group Link",
+        "selctgroup": "Select Group",
+        "viewheading": "Add Project View",
+        "editviewheading": "Edit Project View",
+        "defaultviewheading": "Add Default View",
+        "defaultvieweditheading": "Edit Default View",
+        "copymyviews": "Copy My View",
+        "copyProView": "Copy Project View",
+        "copyDefaultView": "Copy Default View",
+        "addmyview": "Add My View",
+        "editmyview": "Edit My View",
+        "viewname": "Name",
+        "geticon": "Icon",
+        "title": "Title",
+        "direction": "Direction",
+        "interval": "Interval(ms)",
+        "row": "Row",
+        "type": "Type",
+        "series": "Series",
+        "numberoftiles": "Number of Tiles",
+        "gutter": "Gutter",
+        "directionrow": "Row",
+        "directioncolumn": "Column",
+        "singleseries": "Single",
+        "multiseries": "Multi",
+        "objectfilter": "Object Filter",
+        "tripId": "Trip Id",
+        "ttype": "Trip Type",
+        "reversereport": "Reverse Report",
+        "startvalue": "Start Value",
+        "min_width": "Min Width",
+        "min_height": "Min Height",
+        "expansionpanel": "Expansion Panel",
+        "is_shift_close": "Shift Close",
+        "calendar_type": "Calendar Type",
+        "calendar_opt": {
+          "single": "Single",
+          "full": "Range"
+        },
+        "viewtype": {
+          "dashboard": "Dashboard",
+          "report": "Report",
+          "fault": "Fault Report",
+          "sequencestatus": "Sequence Status",
+          "oprdata": "Operational View",
+          "eventlog": "Event Log",
+          "logstartupvalue": "Log Startup Value",
+          "roasterview": "Roster Management",
+          "plan_maintenance": "Scheduled Maintenance Dashboard",
+          "maintenance_dashboard": "Maintenance Dashboard",
+          "completed_maintenance_dashboard": "Completed Maintenance Dashboard",
+          "mnt_opr_dashboard": "Operations & Maintenance Dashboard",
+          "grouporder": "Group Ordering",
+          "maintenance_report": "Maintenance Report"
+        },
+        "notoprView": {
+          "dashboard": "Dashboard",
+          "report": "Report",
+          "fault": "Fault Report",
+          "sequencestatus": "Sequence Status",
+          "iconlist": "Icon List",
+          "userdefine": "User Defined",
+          "materialicons": "Mat Icons"
+        },
+        "clonetypetxt": "Clone Type",
+        "colneType": {
+          "single": "Single",
+          "clnsib": "Clone to All Siblings",
+          "clnchild": "Clone to All Children"
+        },
+        "triptype": {
+          "start": "Start",
+          "end": "End",
+          "both": "Both"
+        },
+        "addIndirow": "Add Individual Parameter",
+        "editIndirow": "Update Individual Parameter",
+        "delIndirow": "Delete Individual Parameter",
+        "addAggrow": "Add Aggregate Parameter",
+        "editAggrow": "Update Aggregate Parameter",
+        "delAggrow": "Delete Aggregate Parameter"
+      },
+      "dashboard": {
+        "map_view": {
+          "sidebar": {
+            "linesTab": "Lines",
+            "substationTab": "Substations",
+            "search": "Search",
+            "search_bar_placeholder": {
+              "lines": "Search Lines",
+              "substations": "Search Substations"
+            },
+            "selectall": "Select All",
+            "clearall": "Clear All"
+          },
+          "place_holder": {
+            "address": "Enter Address"
+          },
+          "tootltip": {
+            "close_btn": "Close Filter",
+            "move_Down": "Collapse Up",
+            "move_Up": "Collapse Down",
+            "move_Left": "Collapse Left",
+            "move_Right": "Collapse Right",
+            "search": "Search",
+            "home": "Move To Home",
+            "clear": "Clear"
+          },
+          "filters": {},
+          "snackbars": {
+            "geojson_region_invalid": "Uploaded Geojson of Region  is Invalid!",
+            "geojson_region_not_present": "Geojson Of Region Is Not Present!"
+          }
+        },
+        "map_settings": {
+          "general": {
+            "corener1": "Corner 1",
+            "corener2": "Corner 2",
+            "lattitudeC1": "Latitude",
+            "longitudeC1": "Longitude",
+            "lattitudeC2": "Latitude",
+            "longitudeC2": "Longitude",
+            "current_path": "Current Path"
+          },
+          "defaultZoom": {
+            "defaultZoomText": "Zoom",
+            "maxZoom": "Maximum Zoom",
+            "minZoom": "Minimum Zoom"
+          },
+          "trline": {
+            "title": "Lines",
+            "tab": {
+              "table_name_column": "Name",
+              "table_line_code_column": "Line Code",
+              "mat_tooltip": {
+                "add_row": "Add Line",
+                "edit_row": "Edit Line",
+                "delete_row": "Delete Line",
+                "clear_search": "Clear Search",
+                "search_label": "Search"
+              },
+              "search_bar": {
+                "label": "Search Line",
+                "placeholder": "Enter Name or Line Code"
+              },
+              "snackbar": {
+                "line_added": "Transmission Line Added Successfully!",
+                "line_edited": "Transmission Line Updated Successfully!",
+                "line_deleted": "Transmission Line Deleted Successfully!"
+              }
+            },
+            "line_dlg": {
+              "line_title": "Line",
+              "line_code": "Line Code",
+              "line_name": "Line Name",
+              "target_path": "Navigation Path",
+              "target_view": "Navigation View",
+              "path": "Path of Line",
+              "voltage_level": "Voltage Level(kV)",
+              "division": "Division",
+              "nature_of_line": "Nature Of Line",
+              "line_owner": "Line Owner",
+              "tl_head": "TL Head",
+              "line_length": "Line Length",
+              "coordinates_type": {
+                "title": "Coordinates Type",
+                "lat_longs": "Latitude Longitude",
+                "overpass_ids": "Overpass Ids",
+                "serial_number": "S.No.",
+                "next_tower_no": "Next Tower No.",
+                "is_toff": "T-Off",
+                "toff_connected_tower_no": "T-Off Tower No."
+              },
+              "need_navigation": "Do you want Navigation?",
+              "tooltip_content_header": "Tooltip",
+              "tooltip": {
+                "add_overpassid": "Add Overpass-Id",
+                "add_latlng": "Add Latitude-Longitude",
+                "edit_overpass": "Edit Overpass-ID",
+                "edit_latlng": "Edit Lat-Long",
+                "delete_overpass": "Delete Overpass ID",
+                "delete_latlng": "Delete Lat-Long"
+              },
+              "mat_errors": {
+                "atleast_input": "Input should be of length atleast",
+                "is_required": "This field is required",
+                "line_code_should": "Line Code should have numbers & alphabets only, no other character allowed even space in-between",
+                "not_in_list": "This value is not in the list",
+                "add_range_filter": "Please add a range in Filter settings, before adding value here",
+                "number_in_btw": "Please enter a number between"
+              },
+              "snackbar": {
+                "line_code_exists": "Line Code Exists",
+                "line_name_exists": "Line Name Exists",
+                "atleast_one_overpassId_required": "Atleast 1 Overpass ID should be present",
+                "atleast_two_latlng_required": "Atleast 2 Lat-Longs should be present",
+                "line_code_required": "Please Enter Line Code",
+                "line_name_required": "Please Enter Line Name"
+              },
+              "placeholder": {
+                "select_name": "Select Line Name",
+                "select_division": "Select Division",
+                "select_voltage": "Select Voltage-Level",
+                "select_nature_of_line": "Select Nature of Line",
+                "select_tl_head": "Select TL-Head",
+                "select_line_owner": "Select Line Owner"
+              }
+            }
+          },
+          "coordinates_dlg": {
+            "snackbar": {
+              "latlng_exists": "Lat-Long already exists",
+              "tower_id_exists": "Given Tower ID already exists",
+              "tower_no_exists": "Given Tower No. already exists",
+              "tower_id_required": "Tower ID can't be empty",
+              "overpass_id_already_exist": "Overpass ID already exists",
+              "overpass_id_not_exist": "Overpass-ID doesn't exist in GeoJSON uploaded",
+              "given_next_tower_not_exists": "Given Next Tower doesn't exists in List of Towers",
+              "given_t_off_connected_tower_not_exists": "Given T-off connected tower doesn't exists in List of Towers"
+            },
+            "tooltip_content": {
+              "tower_id": "*Tower ID:*",
+              "tower_no": "*Tower No*:",
+              "design_type": "*Design Type*: ",
+              "tower_category": "*Tower Category :*",
+              "no_of_circuits": "*Number of Circuits :*",
+              "next_connected_tower_number": "*Next Connected Tower No. :*",
+              "extension": "*Extension:*",
+              "extension_yes": "Yes",
+              "extension_no": "No",
+              "extension_size": "*Extension Size:*",
+              "is_t_off": "*T-Off:*",
+              "t_off_yes": "Yes",
+              "t_off_no": "No",
+              "t_off_connected_tower_number": "*T-Off Connected Tower No.:*"
+            }
+          },
+          "substation": {
+            "title": "Substations",
+            "tab": {
+              "tab_name": "Substation",
+              "table_name_column": "Name",
+              "table_substation_code_column": "Substation Code",
+              "mat_tooltip": {
+                "add_row": "Add Substation",
+                "edit_row": "Edit Substation",
+                "delete_row": "Delete Substation",
+                "clear_search": "Clear Search",
+                "search_label": "Search"
+              },
+              "search_bar": {
+                "label": "Search Substation",
+                "placeholder": "Search Substation"
+              },
+              "snackbar": {
+                "substation_added": "Substation Added Successfully!",
+                "substation_edited": "Substation Updated Successfully!",
+                "substation_deleted": "Substation Deleted Successfully!"
+              }
+            },
+            "placeholders": {
+              "select_substation_name": "Select Substation Name",
+              "select_voltage": "Select Voltage Level",
+              "select_division": "Select Division",
+              "select_substation_owner": "Select Substation Owner",
+              "select_substation_type": "Select Substation Type",
+              "select_substation_head": "Select Substation Head"
+            },
+            "substation_dlg": {
+              "substation_title": "Substation",
+              "substation_code": "Substation Code",
+              "substation_name": "Substation Name",
+              "target_path": "Navigation Path",
+              "target_view": "Navigation View",
+              "path": "Path of Substation",
+              "voltage_level": "Voltage Level(kV)",
+              "division": "Division",
+              "substation_type": "Substation Type",
+              "substation_owner": "Substation Owner",
+              "substation_head": "Substation Head",
+              "year_of_commissioning": "Year Of Commissioning",
+              "coordinates_type": {
+                "title": "Coordinates Type",
+                "lat_longs": "Latitude Longitude",
+                "overpass_ids": "Overpass Ids",
+                "serial_number": "S.No."
+              },
+              "need_navigation": "Do you want Navigation?",
+              "tooltip_content_header": "Tooltip",
+              "tooltip": {
+                "add_overpassid": "Add Overpass-Id",
+                "add_latlng": "Add Latitude-Longitude",
+                "edit_overpass": "Edit Overpass-ID",
+                "edit_latlng": "Edit Lat-Long",
+                "delete_overpass": "Delete Overpass ID",
+                "delete_latlng": "Delete Lat-Long"
+              },
+              "snackbar": {
+                "substation_code_exists": "Substation Code Exists",
+                "substation_name_exists": "Substation Name Exists",
+                "atleast_one_overpassId_required": "Atleast 1 Overpass ID should be present",
+                "atleast_one_latlng_required": "Atleast 1 Lat-Long should be present",
+                "substation_name_required": "Please Enter Substation Name"
+              }
+            },
+            "mat_errors": {
+              "is_required": "This field is required",
+              "min_length": "Input should be length of atleast",
+              "max_length": "Input should be length smaller than",
+              "not_in_list": "This value is not in the list",
+              "add_range_in_filter_tab": "Please add a range in Filter tab, before adding value here",
+              "please_add_number_between": "Please enter a number between"
+            }
+          },
+          "filters": {
+            "title": "Filters",
+            "tab": {
+              "tab_name": "Filters",
+              "expansion_panels": {
+                "lines": {
+                  "title": "Lines",
+                  "expansion_panels": {
+                    "voltage_level": {
+                      "name": "Voltage-level(kV)"
+                    },
+                    "line_length": {
+                      "name": "Line Length(km)",
+                      "start": "Starting Number",
+                      "end": "Ending Number",
+                      "insert_at_top": "Insert At Top",
+                      "add_range_end": "Add Range At End"
+                    },
+                    "nature_of_lines": {
+                      "name": "Nature of lines"
+                    },
+                    "line_owner": {
+                      "name": "Line Owner"
+                    },
+                    "tl_head": {
+                      "name": "TL Head"
+                    }
+                  }
+                },
+                "substation": {
+                  "title": "Substation",
+                  "expansion_panels": {
+                    "voltage_level": {
+                      "name": "Voltage-level(kV)"
+                    },
+                    "year_of_commissioning": {
+                      "name": "Year of Commissioning",
+                      "start": "Starting Number",
+                      "end": "Ending Number",
+                      "insert_at_top": "Insert At Top",
+                      "add_range_end": "Add Range At End"
+                    },
+                    "substation_type": {
+                      "name": "Substation Type"
+                    },
+                    "substation_owner": {
+                      "name": "Substation Owner"
+                    },
+                    "substation_head": {
+                      "name": "Substation Head"
+                    }
+                  }
+                }
+              }
+            },
+            "mat-error": {
+              "start_smaller_than_end": "Start must be less than or equal to End."
+            },
+            "tooltip": {
+              "remove_voltage": "Remove Voltage",
+              "remove_line_length": "Remove Line Length",
+              "remove_nature_of_lines": "Remove Nature of line",
+              "remove_line_owner": "Remove Line Owner",
+              "remove_tl_head": "Remove TL Head",
+              "remove_year_of_commissioning": "Remove Year of Commissioning",
+              "remove_substation_type": "Remove Substation Type",
+              "remove_substation_owner": "Remove Substation Owner",
+              "remove_substation_head": "Remove Substation Head",
+              "add_range_below": "Add Range Below",
+              "delete_range": "Delete Range"
+            },
+            "snackbar": {
+              "already_exists": "This Value Already exists"
+            },
+            "placeholder": {
+              "add_voltage": "Add Voltage-level(kV)",
+              "add_line_length": "Add Line Length",
+              "add_nature_of_lines": "Add Nature of line",
+              "add_line_owner": "Add Line Owner",
+              "add_tl_head": "Add TL Head",
+              "add_year_of_commissioning": "Add Year of Commissioning",
+              "add_substation_type": "Add Substation Type",
+              "add_substation_owner": "Add Substation Owner",
+              "add_substation_head": "Add Substation Head"
+            }
+          },
+          "color_code": {
+            "title": "Color Codes",
+            "tab": {
+              "color_by_voltage": {
+                "title": "Color By Voltage",
+                "search_label": "Search",
+                "table": {
+                  "voltage_level": "Voltage level(kV)",
+                  "color": "Color"
+                }
+              },
+              "color_by_permission": {
+                "title": "Color By Permission",
+                "no_access": "If User has no access"
+              }
+            },
+            "dlg": {
+              "voltage_ip": "Voltage-Level(kV)",
+              "color_ip": "Color Code"
+            },
+            "mat_error": {
+              "field_required": "This field is required"
+            },
+            "tooltip": {
+              "add_voltage": "Add Color-Code",
+              "edit_voltage": "Edit Color-Code",
+              "delete_voltage": "Delete Color-Code"
+            },
+            "snackbar": {
+              "voltage_already_exists": "Voltage Level Already Exists",
+              "color_code_deleted": "Color Code Deleted",
+              "color_code_added": "Color Code Added Successfully",
+              "color_code_edited": "Color Code Edited"
+            },
+            "placeholder": {
+              "search_voltage": "Search Voltage..."
+            }
+          },
+          "data_with_images": {
+            "title": "Popup",
+            "tab": {
+              "tab_name": "Popup",
+              "table_name_column": "Title",
+              "mat_tooltip": {
+                "add_row": "Add Popup",
+                "edit_row": "Edit Popup",
+                "delete_row": "Delete Popup",
+                "clear_search": "Clear Search"
+              },
+              "search_bar": {
+                "label": "Search Popup"
+              },
+              "snackbar": {
+                "popup_added": "Popup Added Successfully!",
+                "popup_edited": "Popup Updated Successfully!",
+                "popup_deleted": "Popup Deleted Successfully!",
+                "popup_title_required": "Please Enter Popup Title"
+              }
+            },
+            "placeholders": {
+              "select_substation_name": "Select Popup Name"
+            },
+            "dlg": {
+              "popup_title": "Popup",
+              "title": "Title",
+              "posititon": "Position",
+              "latitude": {
+                "placeholder": "Enter Latitude",
+                "label": "Latitude"
+              },
+              "longitude": {
+                "placeholder": "Enter Longitude",
+                "label": "Longitude"
+              },
+              "thumbnail": {
+                "label": "Thumbnail",
+                "placeholder": "Select Thumbnail"
+              },
+              "images": {
+                "label": "Images",
+                "placeholder": "Select Unique Image",
+                "new_image": "Add Image"
+              },
+              "snackbar": {
+                "popup_title_exists": "Title Already Exists",
+                "img_present": "Image already Selected"
+              },
+              "tooltip": "Tooltip"
+            },
+            "mat_errors": {
+              "is_required": "This field is required",
+              "invalid_latitude": "Latitude must be between -90 and 90.",
+              "invalid_longitude": "Longitude must be between -180 and 180"
+            }
+          },
+          "geojson": {
+            "title": "GeoJSON",
+            "tab": {
+              "title": "GeoJSON",
+              "region": "Region",
+              "lines": "Lines",
+              "substations": "Substations"
+            },
+            "input": {
+              "upload": "Upload",
+              "download": "Download",
+              "remove": "Remove File"
+            },
+            "messages": {
+              "successfully_uploaded": "has been successfully uploaded",
+              "already_present": "File already present!"
+            },
+            "snackbar": {
+              "invalid_geojson": "Invalid GeoJSON Uploaded"
+            }
+          },
+          "ui_components": {
+            "rich_text_paste": {
+              "description": {
+                "bold_with": "Enclose word with: * for",
+                "italic_with": ",_ for",
+                "underline_with": ", ~ for"
+              },
+              "symbols": {
+                "bold": "B",
+                "italic": "I",
+                "underline": "U"
+              }
+            },
+            "range_based_input": {
+              "start": "Start",
+              "end": "End",
+              "mat_error": {
+                "start_less_than_end": "Start must be less than or equal to End."
+              },
+              "mat_tooltip": {
+                "delete_range": "Delete This Range",
+                "add_range": "Add New Range Below This Range"
+              },
+              "insert_top": "Insert at Top",
+              "add_end": "Add Range at End"
+            }
+          },
+          "openstreetmaplink": "Map",
+          "maptype": "Type",
+          "marker": {
+            "markername": "Markers",
+            "type": "Type",
+            "target": "Target/Group Navigation",
+            "targetView": "Target View",
+            "popup": "Pop Up/ToolTip",
+            "template": "Element Template",
+            "rotation": "Marker Rotation",
+            "lattitude": "Lattitude",
+            "longitude": "Longitude"
+          },
+          "markertype": "Marker Type",
+          "markertypeobj": {
+            "pointer": "Pointer",
+            "turbine": "Turbine"
+          },
+          "snackbar": {
+            "trlinedeleted": "Transmission Line Deleted Successfully",
+            "overpassiddeleted": "OverpassId deleted successfully",
+            "latlngdeleted": "Lat,Lng delted successfully",
+            "datawithimage": "Data with Image deleted successfully"
+          },
+          "confirmation": {
+            "delete": "Confirming will delete this permanently. Do you really want to delete?",
+            "deletetemplate": "This will delete the Template you have saved, Are you sure you want to delete this section?"
+          }
+        },
+        "mapview": {
+          "maps": "Map Configuration",
+          "markersettings": "Marker Settings",
+          "markerdetails": "Marker Details",
+          "savemapettings": "Save Map Settings",
+          "mapslist": {
+            "chhattisgarh": "Chhattisgarh"
+          },
+          "type": "ID",
+          "heading": "Heading",
+          "color": "Color",
+          "object": "Object Link",
+          "shortname": "Short Name",
+          "map": "Map",
+          "value": "Value",
+          "selection_type": "Type",
+          "selection_target": "Target"
+        },
+        "tilesettings": "Tile Settings",
+        "title": "Title",
+        "type": "Type",
+        "view": "View",
+        "grow": "Grow",
+        "interval": "Interval Count",
+        "tiletype": {
+          "hmi": "HMI",
+          "tiles": "Tiles",
+          "chart": "Chart",
+          "panel": "Panel",
+          "maps": "Map",
+          "noticeboard": "Notice Board",
+          "sequence": "Sequence Status",
+          "maintenance_device_information": "Maintenance Device Information",
+          "maintenance_report": "Maintenance Report",
+          "oprdata": "Operational Report",
+          "eventlog": "Event Log Report",
+          "fault": "Fault Report",
+          "eventview": "Events",
+          "ShiftClosereport": "Shift Close Report",
+          "usersinshift": "Users In Shift"
+        },
+        "viewtype": {
+          "merge": "Merge",
+          "card": "Card"
+        },
+        "savetilesettings": "Save Tile Settings",
+        "adddashtile": "Add Tile",
+        "editdashtile": "Edit Tile",
+        "deletedashtile": "Delete Tile",
+        "movedown": "Tile Move Down",
+        "moveup": "Tile Move Up",
+        "view_refference": "View Reference"
+      },
+      "hmisettings": {
+        "hmitype": {
+          "view": "View",
+          "custom_shape": "Custom Shape"
+        },
+        "hmisetting": "HMI Settings",
+        "importsvg": "Import SVG",
+        "exportsvg": "Export SVG",
+        "type": "Type",
+        "name": "Name",
+        "svgsaveSucc": "SVG Saved Successfully",
+        "svgsaveContinue": "Requires More shapes to be imported....",
+        "mainview": "Main View",
+        "popup": "Popup"
+      },
+      "toolbar": {
+        "rosterreport": "Export Roster Report",
+        "userreport": "Export User Report",
+        "downloding": "Downloading...",
+        "exitfullscreen": "Exit Full Screen",
+        "exportAs": "Export As",
+        "exportToCSV": "Download CSV",
+        "exportToBin": "Download Binary",
+        "exportToExcel": "Download Excel",
+        "exportToPDF": "Download PDF",
+        "exportToPNG": "Download PNG",
+        "exportToSVG": "Download SVG",
+        "recursiveExcel": "Recursive Excel",
+        "fullscreen": "Full Screen",
+        "print": "Print",
+        "menu": "Menu",
+        "pan": "Panning",
+        "reset": "Reset Zoom",
+        "selection": "Selection",
+        "selectionZoom": "Selection Zoom",
+        "zoomIn": "Zoom In",
+        "zoomOut": "Zoom Out",
+        "close": "Close",
+        "objectconfiguration": "Report Configuration",
+        "singlepage": "Single Page",
+        "multipage": "Multi Page",
+        "enablelegend": "Enable Legend",
+        "disblelegend": "Disable Legend"
+      },
+      "loadshedding": {
+        "errorcode": {
+          "sums": "Must have Atleast one logic condition",
+          "ranks": "Must have Atleast one Rank",
+          "paths": "Must have Atleast one Path in each Rank",
+          "name_repeat": "Logic name already exist",
+          "name_not_found": "Logic name not found",
+          "already_disabled": "Logic Already Disabled",
+          "already_enabled": "Logic Already Enabled",
+          "linkedObject": "Kindly Select Linked Object"
+        },
+        "objectlink": "Object Link",
+        "value": "Value",
+        "addrank": "Add Rank",
+        "lstitle": "Load Shedding",
+        "addsum": "Add Sum",
+        "addpro": "Add Product",
+        "updatebtn": "Update",
+        "delbtn": "Delete",
+        "rightparmtxt": "Right Parameter",
+        "rightparmtypetxt": "Right Parameter Type",
+        "consttxt": "Constant",
+        "paramtxt": "Parameter",
+        "conditiontxt": "Left Parameter 2",
+        "leftcontype": "Left Condition Type",
+        "leftparam2": "Left Parameter 2 Type",
+        "single": "Individual",
+        "sum": "Sum",
+        "difference": "Difference",
+        "percent": "Percent",
+        "treehead": "Logic SOP",
+        "paramhead": "Parameters",
+        "updateselect": "No Product Selected for Updation",
+        "delselect": "No Product Selected for Deletion",
+        "trippingtype": "Tripping Type",
+        "blockcount": "Block Count",
+        "activation": "Activation",
+        "startdelay": "Start Delay(Min.)",
+        "interranktype": "Inter Rank Type",
+        "logicrepeat": "Logic Repeat Delay(Min.)",
+        "resettimer": "Reset Timer(Min.)",
+        "srno": "S.No.",
+        "rank": "Rank",
+        "block": "Block",
+        "step": "Step",
+        "name": "Logic Name",
+        "status": "Status",
+        "EnDisls": "Enable / Disable",
+        "logicstatusindex": {
+          "1": "Normal",
+          "3": "Active",
+          "4": "Active(Wait)",
+          "18": "Deactivated",
+          "20": "Disabled"
+        },
+        "tripList": [
+          "All (Rank Wise)",
+          "Sequential(One at a time)"
+        ],
+        "checkBlockList": [
+          "None",
+          "15(Min.)",
+          "30(Min.)",
+          "Hourly"
+        ],
+        "activationList": {
+          "Always": "Always",
+          "Daily": "Daily"
+        },
+        "interRankTypeList": [
+          "Daily",
+          "Fixed",
+          "DailyRotation"
+        ],
+        "interrank": "Inter Rank(Min.)",
+        "endblock": "End Block",
+        "checkblock": "Check Block",
+        "always": "Always",
+        "daily": "Daily",
+        "enable": "Enable/Disable Logic",
+        "enabled": "Logic Enabled",
+        "disable": "Logic Disabled",
+        "addlogic": "Add Logic",
+        "editlogic": "Edit Logic",
+        "deletelogic": "Delete Logic",
+        "updatelogic": "Update Logic",
+        "dellogic": "Are You Sure..! Do you want to Delete logic",
+        "confirmEnableLS": "Are You Sure..! Do you want to Enable Logic",
+        "confirmDisabcleLS": "Are You Sure..! Do you want to Disable Logic",
+        "logicAddSucc": "Logic Added Successfully...",
+        "logicupdateSucc": "Logic Update Successfully...",
+        "logicDelSucc": "Logic Delete Successfully...",
+        "logicEnabSucc": "Logic Enabled Successfully...",
+        "logicDisSucc": "Logic Disabled Successfully...",
+        "gridnormal": "Grid Normal",
+        "selectobjtitle": "Select Object",
+        "gncommandtitle": "Select Load Shedding",
+        "gnparampath": "Add Parameter Path",
+        "gnaddcmd": "Add GridNormal Command",
+        "cancel": "Cancel",
+        "save": "Save",
+        "select": "Select",
+        "remove": "Remove",
+        "moverowup": "Move Root Up",
+        "moverowdown": "Move Root Down",
+        "deletecmd": "Delete GridCommand",
+        "movedown": "Move Down",
+        "moveup": "Move Up",
+        "delfdr": "Delete Feeder",
+        "logicParamSucc": "LoadShedding Command Save Successfully...",
+        "reporttitle": "Report",
+        "columload": "Load",
+        "columloadshed": "Load Shed",
+        "columName": "Load Shedding Logic Name",
+        "linkedobjtxt": "Linked Object",
+        "edittiles": "Edit Titles",
+        "logicondition": "Logic Condition",
+        "fdrlst": "Steps",
+        "paramList": {
+          "constant": "Constant",
+          "object": "Object"
+        },
+        "acttimertype": {
+          "None": "None",
+          "Block": "Block",
+          "Sleep": "Sleep",
+          "NextBlock": "Next Block"
+        },
+        "blocktime": {
+          "1min": "1(Min.)",
+          "5min": "5(Min.)",
+          "10min": "10(Min.)",
+          "15min": "15(Min.)",
+          "30min": "30(Min.)",
+          "60min": "60(Min.)",
+          "daily": "Daily"
+        },
+        "stepType": {
+          "stop": "Stop",
+          "command": "Command",
+          "goToBlock": "Go To Block",
+          "wait": "Wait"
+        },
+        "ondesatisfyList": {
+          "Execute": "Execute",
+          "Stop": "Stop",
+          "Ignore": "Ignore"
+        },
+        "blockOffset": {
+          "Clock": "Clock"
+        }
+      },
+      "statusview": {
+        "datetime": "Date / Time",
+        "objectId": "Object Id",
+        "statusview": "Status",
+        "tagname": "Tag Name",
+        "quality": "Quality",
+        "status": "Status",
+        "value": "Value",
+        "unit": "Unit",
+        "input": "Input",
+        "alarmInhibit": "Alarm Inhibit",
+        "alarm_off": "Alarm Off",
+        "inhibitconfirm": "Are you Sure..! Do you want to Inhibit?",
+        "inhibit": {
+          "unable_to_set_alarminhibit": "Unable to Set Alarm Inhibit!",
+          "unable_to_set_scaninhibit": "Unable to Set Scan Inhibit!",
+          "unable_to_set_substitute": "Unable to Set Substitute Value!",
+          "unable_to_set_controlinhibit": "Unable to Set Control Inhibit!",
+          "substitutetxt": "Substitute",
+          "scanInhibittxt": "Scan Inhibit",
+          "forcVal": "Force Value",
+          "succForce": "Value Forced Successfully!",
+          "succSubti": "Value Substituted Successfully!",
+          "alarmsucc": "Alarm Inhibit Successfully!",
+          "controlsuccEnable": "Control Inhibit Enabled Successfully!",
+          "controlsuccDisable": "Control Inhibit Disabled Successfully!",
+          "inhibitreason": "Inhibit Reason",
+          "wantAlamInhibit": "Do you want to Alarm Inhibit?",
+          "selectdatetime": "Select Date/Time",
+          "alarminhibit": "Alarm Inhibit",
+          "others": "Others",
+          "selectinhibit": "Select Inhibit",
+          "ontrue": "On (True)",
+          "offfalse": "Off (False)",
+          "hashcodewarning": "Value Should be start with # and range between A-F and 0-9"
+        },
+        "controlInhibit": {
+          "controlInhibittxt": "Control Inhibit",
+          "wantControlInhibit": "Do you want to Control Inhibit?",
+          "tag": "Tag",
+          "remarks": "Remarks"
+        },
+        "scanoptions": {
+          "stop": "Stop",
+          "on": "On",
+          "off": "Off"
+        },
+        "selectOption": [
+          "On",
+          "Off"
+        ]
+      },
+      "pvhistory": {
+        "history": "History",
+        "txtmsg": "Text Message",
+        "time": "Date / Time",
+        "alarmseverity": "Alarm Severity",
+        "category": "History Type",
+        "user": "User Actions",
+        "timeout": "Timeout",
+        "device_disconnected": "Device Disconnected",
+        "communication_err": "Communication Error",
+        "category_select": "History Type",
+        "severity": "Severity",
+        "originator": "Originator",
+        "category_lst": {
+          "control": "Control",
+          "alarm": "Alarm",
+          "user": "User",
+          "scaninhibit": "Scan Inhibit",
+          "substitute": "Substitute",
+          "controlinhibit": "Control Inhibit"
+        },
+        "category_all_login": {
+          "all": "All",
+          "login": "Log In"
+        },
+        "category_lst_hvpnl": {
+          "alarm": "Alarm",
+          "user": "User Actions",
+          "substitute": "Log Sheet Parameter"
+        },
+        "errorcode": {
+          "Timeout": "Timeout",
+          "Comm": "Communication Error"
+        },
+        "text": {
+          "alarm_ack": "%p - Acknowledged",
+          "alarm_del": "%p - Deleted",
+          "alarm_reset": "%p - Reset to %t",
+          "alarm_set": "%p - Set - %t",
+          "alarm_inhibit": "%p - Alarm Inhibit - %t",
+          "alarm_uninhibit": "%p - Alarm UnInhibit - %t",
+          "ctrl_cancel": "%p - Cancelled",
+          "ctrl_cancel_req": "%p - Cancel Request  Sent",
+          "ctrl_cancel_req_txt": "%p - Cancel Request Sent - %t",
+          "ctrl_err": "%p - Command Error - %c",
+          "ctrl_execution": "%p - Executed",
+          "ctrl_execution_req": "%p - Execution Sent",
+          "ctrl_execution_req_txt": "%p - Execution Sent - %t",
+          "ctrl_inputok": "%p - Input Received",
+          "ctrl_selected": "%p - Selected",
+          "ctrl_selected_req": "%p - Selection Sent",
+          "ctrl_selected_req_txt": "%p - Selection Sent - %t",
+          "ctrl_terminate": "%p - Termination Ok",
+          "scaninhibit": "%p - Scan Inhibit - %t",
+          "scanuninhibit": "%p - Scan UnInhibit - %t",
+          "controlinhibit": "%p - Control Inhibit - %t",
+          "controluninhibit": "%p - Control UnInhibit - %t",
+          "substitute": "%p - Substitute - %t",
+          "logedin": "Logged In",
+          "logout": "Log Out",
+          "generic": "Generic",
+          "deviceenable": "%p - Device Enabled - %t",
+          "devicedisable": "%p - Device Disabled - %t"
+        },
+        "category_text": {
+          "alarm": "Alarm",
+          "del": "Delete",
+          "reset": "Reset",
+          "set": "Set",
+          "control": "Control",
+          "login": "Log In",
+          "generic": "Generic",
+          "scan": "Scan Inhibit",
+          "substitution": "Log Sheet Parameter",
+          "controlinhi": "Control Inhibit",
+          "devicecontrol": "Device Control"
+        }
+      },
+      "projectsettings": {
+        "moveup": "Move Up",
+        "movedown": "Move Down",
+        "automaticreport": "Automatic Report",
+        "shiftset": "Shift Set",
+        "createsift": "Create Shift",
+        "rostertab": "Roster Management",
+        "usrSaveSucc": "User Role Saved Successfully",
+        "usrPosSaveSucc": "User Position Added Succesfully",
+        "usrPosUpdateSucc": "User Position Updated Succesfully",
+        "usrPosDeletionSucc": "User Position Deleted Successfully",
+        "settings": "Settings",
+        "projectsetting": "Project Settings",
+        "basic": "Basic",
+        "event": "Event",
+        "alarm": "Alarm",
+        "image": "Image",
+        "sound": "Sound",
+        "map": "Map",
+        "usergrouprights": "User Roles",
+        "userposition": "User Positions",
+        "userroles": "User Assignments",
+        "projectgroup": "Project Groups",
+        "group": "Group",
+        "right": "Right",
+        "select": "Export Logo",
+        "selectright": "Select Right",
+        "selectuser": "Select User",
+        "selectgroup": "Select Group/Partitions",
+        "editright": "Edit Right",
+        "deleterow": "Delete Row",
+        "language": "Language",
+        "element": "Element",
+        "basicsettingupdate": "Basic Settings Updated Successfully",
+        "reopendialog": "Kindly reopen dialog after some time...",
+        "addalarmsetting": "Add Alarm Settings",
+        "addeventsetting": "Add Event Settings",
+        "updatealarmsetting": "Update Alarm Settings",
+        "updateeventsetting": "Update Event Settings",
+        "cot": "COT",
+        "category": "Category",
+        "applied": "Applied On",
+        "severity": "Severity",
+        "backcolor": "Background Color",
+        "textcolor": "Text Color",
+        "blinking": "Blinking",
+        "blinkcolor": "Blink Color",
+        "afterAck": "After Acknowledgement:",
+        "lockEvent": "Lock Views",
+        "backupdb": "Backup DB",
+        "backtodashboard": "Back to Dashboard",
+        "userright": {
+          "SMS": {
+            "view": "View",
+            "alarm_acknowledge": "Alarm Acknowledge",
+            "alarm_delete": "Alarm Delete",
+            "substitute": "Substitute",
+            "scan_inhibit": "Scan Inhibit",
+            "alarm_inhibit": "Alarm Inhibit",
+            "control_inhibit": "Control Inhibit",
+            "interlock_bypass": "Interlock Bypass",
+            "synccheck_bypass": "Synch Check Bypass",
+            "control": "Control",
+            "admin": "Admin"
+          },
+          "Operations": {
+            "view_operations": "View Operations",
+            "view_shift": "View Shift",
+            "view_roster": "View Roster",
+            "roster": "Roster",
+            "manual_logging": "Manual Logging",
+            "set_sld": "Set SLD",
+            "close_shift": "Close Shift",
+            "create_edit_operations": "Create & Edit Operations View",
+            "create_edit_roster": "Create & Edit Roster",
+            "create_shift": "Create Shift",
+            "edit_shift": "Edit & Delete Shift"
+          },
+          "Maintenance": {
+            "start_unscheduled_maintenance": "Start Unscheduled Maintenance",
+            "create_scheduled_maintenance": "Schedule Bay/Equipment Maintenance",
+            "create_conditional_maintenance": "Schedule Conditional Maintenance",
+            "conditional_maintenance_event_log": "Conditional Maintenance Event Log",
+            "sldc_issue_request": "SLDC code Issue/Request",
+            "sldc_approve_reject": "SLDC Code Approve/Reject",
+            "ptw_approve_reject": "Can Approve & Reject PTW",
+            "xen_approve_reject": "XEN Approve Reject Button",
+            "maintenance_date": "Change Maintenance Planned Date",
+            "approve_maintenance": "Approve Maintenance Button",
+            "cancel_maintenance": "Cancel Maintenance Button",
+            "sldc_charging_code": "SLDC Charging Code Access",
+            "issue_sldc_code": "SLDC Code Issue Button",
+            "rqst_ptw_Button": "Request PTW Button",
+            "rqst_ptw_cancel_button": "Request PTW Cancel Button",
+            "issue_ptw_button": "PTW Issue Button",
+            "cancel_ptw_button": "Cancel PTW Button",
+            "other_ptw_tab_action": "Other PTW Action",
+            "maintenence_parameter_approve_revert": "Maintenance Parameter Approve/Revert Button",
+            "maintenence_input_save_submit": "Maintenance Parameter Edit/Save/Submit Button",
+            "mnp_input_save_submit": "M&P Parameter Edit/Save/Submit Button",
+            "observation_list_tab_view": "Observation List Tab View",
+            "create_manual_observation_button": "Create Manual Observation Button",
+            "observation_start_maintenance_input": "Observation Start Maintenance Button",
+            "hotline_input_save_submit": "Hotline Parameter Edit/Save/Submit Button",
+            "hotline_observation_close": "Hotline Observation Close",
+            "hotline_observation_tab_view": "Hotline Observation Maintenance Tab",
+            "schedule_tl_maintenance": "Plan TL Maintenance",
+            "tl_patrolling_input": "TL Patrolling Edit",
+            "tl_maintenance_parameter_input_save_submit": "TL Maintenance Parameter Edit/Save/Submit",
+            "tl_maintenance_parameter_approve_revert": "TL Maintenance Parameter Approve/Revert",
+            "tl_patrolling_complete_maintenance_button": "TL Patrolling Maintenance Complete Button",
+            "sub_bay_eqp_tab_view": "Substation Bay Equipment Dashboard Tab View",
+            "substation_tab_view": "Substation Dashboard Tab View",
+            "bay_tab_view": "Bay Dashboard Tab View",
+            "equipment_tab_view": "Equipment Dashboard Tab View",
+            "hotline_tab_view": "HotLine Dashboard Tab View",
+            "tl_tab_view": "TL Dashboard Tab View",
+            "conditional_maintenance_tab_view": "Conditional Maintenance Dashboard Tab View",
+            "other_ptw_tab_view": "Other PTW Dashboard Tab View",
+            "xen_approval_request_tab_view": "XEN Approval Request Dashboard Tab View",
+            "xen_approved_request_tab_view": "XEN Approved Request Dashboard Tab View",
+            "sldc_code_request_tab_view": "SLDC Code Request Dashboard Tab View",
+            "all_maintenance_tab_view": "All Maintenance Planned Dashboard Tab View",
+            "backfeeding_request_tab_view": "Backfeeding Request Dashboard Tab View",
+            "scheduled_sub_bay_eqp_tab_view": "Scheduled Dashboard Bay/Equipment Tab View",
+            "scheduled_tl_tab_view": "Scheduled Dashboard TL Tab View",
+            "connected_bay_for_substation_maintenance_tab_view": "Connected Bay For Substation Maintenance Tab View",
+            "connected_bay_for_tl_maintenance_tab_view": "Connected Bay For TL Tab View",
+            "connnected_bay_for_tl_maintenance_tab_view": "Connected Bay For TL Maintenance Tab View",
+            "connected_tl_tab_view": "Connected TL For Substation Tab View",
+            "scheduled_observation_tl_tab_view": "Scheduled Dashboard Observation TL Tab View",
+            "scheduled_connected_tl_for_bay_tab_view": "Scheduled Dashboard Connected TL For Bay Tab View",
+            "scheduled_connected_bay_for_substation_tab_view": "Scheduled Dashboard Connected Bay For Substation Tab View",
+            "scheduled_connected_bay_for_tl_tab_view": "Scheduled Dashboard Connected Bay For TL Tab View",
+            "scheduled_shutdown_request_tab_view": "Scheduled Dashboard Shutdown Request Tab View"
+          }
+        },
+        "lockEventView": "Hide Event View",
+        "lockAlarmView": "Hide Alarm View",
+        "lockStatusView": "Hide Status View",
+        "lockHistoryView": "Hide History View",
+        "userrank": "User Rank",
+        "maxseverity": "Max Alarm Severity",
+        "dateformatlst": {
+          "dd/mm/yyyy": "dd/mm/yyyy",
+          "mm/dd/yyyy": "mm/dd/yyyy",
+          "yyyy/mm/dd": "yyyy/mm/dd"
+        },
+        "blinkinglst": {
+          "None": "None",
+          "toggle": "Toggle",
+          "text": "Text",
+          "back": "Back"
+        },
+        "usrlst": "Users List",
+        "severityupto": "Severity Upto",
+        "selectoption": "Select option",
+        "ack_backcolor": "Back Color",
+        "ack_textcolor": "Text Color",
+        "blink": "Blink",
+        "ack_blinkcolor": "Blink Color",
+        "ackseverity": "After ACK Severity Upto",
+        "ackbackcolor": "After ACK Back Color",
+        "acktxtcolor": "After ACK Text Color",
+        "ackblink": "After ACK Blink",
+        "ackblinkcolor": "After ACK Blink Color",
+        "addeventrow": "Add Event Template",
+        "editeventrow": "Edit Event Template",
+        "deleventrow": "Delete Event Template",
+        "upeventrow": "Move row upward",
+        "downeventrow": "Move row downward",
+        "addrow": "Add Alarm Template",
+        "editrow": "Edit Alarm Template",
+        "delrow": "Delete Alarm Template",
+        "onreset": "On Reset",
+        "default": "Default",
+        "before_ack": "Before Acknowledgement",
+        "cotexist": "This COT already exists....",
+        "categoryexist": "This Category already exists....",
+        "severityexist": "Severity Upto already exists...",
+        "alarmsettingupated": "Alarm Settings Updated Successfully...",
+        "deleteimageask": "Are you sure.. Do you really want to delete image?",
+        "deleteviewask": "Are you sure.. Do you really want to delete view?",
+        "choosefile": "Choose File",
+        "actual": "Actual",
+        "stretched": "Stretched",
+        "add": "Add",
+        "update": "Update",
+        "addnew": "<--New-->",
+        "imagealreadyexists": "Image name already exists..",
+        "imageaddsuccess": "Image Added Successfully...",
+        "imageupdatesuccess": "Image Updated Successfully...",
+        "imagedeletesuccess": "Image Deleted Successfully...",
+        "soundalreadyexists": "Sound name already exists..",
+        "soundaddsuccess": "Sound Added Successfully...",
+        "soundupdatesuccess": "Sound Updated Successfully...",
+        "sounddeletesuccess": "Sound Deleted Successfully...",
+        "deletesoundask": "Are you sure.. Do you really want to delete sound",
+        "saveviewask": "Are you sure.. Do you really want to save file",
+        "clearviewask": "Do you want to open a new file? This will also erase you undo history!",
+        "soundname": "Sound Name",
+        "imagename": "Image Name",
+        "selectsound": "Select Sound",
+        "noalarm": "<-- No Alarm -->",
+        "nosound": "No sound",
+        "selectnewsound": "Select New sound",
+        "selectimage": "Select Image",
+        "nologo": "<-- No Image -->",
+        "noimage": "No image",
+        "selectnewimage": "Select New image",
+        "usrRoleConnectedTemplateDeletion": "This role cannot be deleted as it is currently connected to a position",
+        "usrPosConnectedTemplateDeletion": "This position cannot be deleted as it is currently connected to a user/roaster",
+        "usrconfirmDeletion": "Confirming will delete this permanently. Do you really want to delete?",
+        "roster": {
+          "title": "Roster Management",
+          "daterange": "Date Range",
+          "sdate": "Start Date",
+          "edate": "End Date",
+          "shiftset": "Shift Set",
+          "rosterdetails": "Roster Details",
+          "shiftname": "Shift Name",
+          "shifttime": "Shift Time",
+          "opr": "Name of Operators",
+          "remarks": "Remarks",
+          "add": "Add Roster Settings",
+          "edit": "Edit Roster Settings",
+          "delete": "Delete Roster Settings",
+          "deleteroster": "Are you sure... Do you really want to delete this Roster?",
+          "rostersaved": "Roster Saved Successfully...!",
+          "nodataupdate": "No Data to Update...",
+          "nodatareset": "No Roster to Reset...",
+          "nodatasave": "No Roster to Save...",
+          "contactITAdmin": "Kindly contact IT Admin...",
+          "interlock_permission": {
+            "not_detected": "No changes detected in",
+            "sld_set": "SLD Set",
+            "and": "and",
+            "sub_info": "Substation Info",
+            "not_allowed": ". Hence, not allowed to do changes"
+          }
+        },
+        "sound_temp": {
+          "addsound": "Add Sound",
+          "updatesound": "Update Sound",
+          "deletesound": "Delete Sound"
+        },
+        "event_temp": {
+          "eventsettingupated": "Event Settings Updated Successfully..."
+        },
+        "element_temp": {
+          "addelementrow": "Add Element Template",
+          "addconstant": "Add Constant",
+          "addconstantvalue": "Add Constant Value",
+          "addelemconstant": "Add Element Constant",
+          "upadteelementrow": "Update Element Template",
+          "delelementrow": "Delete Element Template",
+          "resulttype": {
+            "String": "String",
+            "Color": "Color"
+          },
+          "keyexist": "Link Name already exists...",
+          "conditionlst": {
+            "quality": "Quality",
+            "value": "Value",
+            "alarm": "Alarm"
+          },
+          "condition": "Condition",
+          "key": "Link Name",
+          "value": "Value",
+          "operator": "Operator",
+          "operand": "Operand",
+          "result": "Result",
+          "operandradio": "Operand: ",
+          "named": "Named",
+          "name": "Name",
+          "addeleTempVal": "Add Element Template Value",
+          "updateeleTempVal": "Update Element Template Value",
+          "deleleTempVal": "Delete Element Template Value",
+          "resulttypeLbl": "Result Type",
+          "defaultval": "Default Value",
+          "elesettingupated": "Element Settings Updated Successfully...",
+          "namevalue": "Name / Value/ Severity",
+          "qualityVals": "Quality Value",
+          "qualityValsLst": {
+            "good": "Good",
+            "bad": "Bad",
+            "unknown": "Unknown",
+            "remote_forced": "Remote Forced",
+            "local_forced": "Local Forced",
+            "remote_subsituted": "Remote Subsituted",
+            "local_subsituted": "Local Subsituted",
+            "alarm_inhibit": "Alarm Inhibit",
+            "control_inhibit": "Control Inhibit",
+            "blocked": "Blocked",
+            "invalid": "Invalid",
+            "remote_overflow": "Remote Overflow",
+            "local_overflow": "Local Overflow",
+            "previous_value": "Previous Value",
+            "non_topical": "Non Topical",
+            "estimated": "Estimated",
+            "remote_blocked": "Remote Blocked",
+            "transient": "Transient",
+            "occilatory": "Occilatory",
+            "calculated": "Calculated",
+            "entered": "Entered",
+            "command_selected": "Command Selected",
+            "not_good": "Not Good",
+            "test": "Test",
+            "none": "None"
+          }
+        },
+        "userSiftManagement": {
+          "addsiftset": "Add Shift Set",
+          "upadtesifttrow": "Update Shift Set",
+          "delsifttrow": "Delete Shift Set",
+          "siftexist": "Shift Set Name Already Exists...",
+          "shiftexist": "Shift Name Already Exists...",
+          "link": "Shift Set Name",
+          "createsift": "Create Shift",
+          "updatesift": "Update Shift",
+          "deletesift": "Delete Shift",
+          "siftsettingupated": "Shift Settings Updated Successfully...",
+          "deletesetask": "This will delete all the shifts within this shiftset, Are you sure... Do you really want to delete this Shift Set?",
+          "shiftset": "Shift Set",
+          "addshiftdetails": "Add Shift Details",
+          "updateshiftdetails": "Update Shift Details",
+          "shiftname": "Shift Name",
+          "starttime": "Start Time",
+          "endtime": "End Time",
+          "noofoptr": "No Of Operator",
+          "remarks": "Remarks",
+          "morning": "Morning",
+          "update_shift_assign_warning": "This ShiftSet has been assigned to a Roster & cannot be updated, please contact your Administrator or create a new ShiftSet!",
+          "delete_shift_assign_warning": "This ShiftSet has been assigned to a Roster & cannot be deleted, please contact your Administrator!",
+          "delete_shift_rootuser_warning": "You are not a Root User, please contact your Administrator!"
+        },
+        "usergrouprightssettings": {
+          "adduser": "Add User Role",
+          "updateuser": "Update User Role",
+          "deleteuser": "Delete User Role",
+          "name": "Role Name",
+          "rights": "Rights",
+          "addorupdaterights": "Add/Update Roles",
+          "selectrights": "Select Rights"
+        },
+        "userpositionsettings": {
+          "name": "Designation Name",
+          "assigngroup": "Assign Groups",
+          "rolesandgroups": "Roles & Groups",
+          "groupRightName": "Role Name",
+          "path": "Path",
+          "updatetype": "Update User Postion",
+          "deletetype": "Delete User Position",
+          "addtype": "Add User Postion",
+          "roles": "Roles",
+          "towerrange": "Tower Range",
+          "addorupdaterolesandgroups": "Add/Update Roles & Groups",
+          "deleterolesandgroups": "Delete Roles & Groups"
+        }
+      },
+      "databasemapping": {
+        "unsavedorderchanges": "Unsaved order changes",
+        "saveorder": "Save Order",
+        "discardchanges": "Discard Changes",
+        "addparameter": "Add Parameter",
+        "editparameter": "Edit Parameter",
+        "deleteparameter": "Delete Parameter",
+        "addparametertemplate": "Add Database Mapping Template",
+        "parameteradded": "Parameter Added",
+        "parameterremoved": "Parameter Removed",
+        "parametermodified": "Parameter Modified",
+        "bayadded": "Bay Added",
+        "bayremoved": "Bay Removed",
+        "substationadded": "Substation Added",
+        "tladded": "Transmission Line Added",
+        "alarmconditions": {
+          "parameterbased": "Parameter Based Value",
+          "constantvalue": "Constant Value",
+          "calculations": "Calculations"
+        },
+        "actualvalue": "Actual Value",
+        "percentage": "Percentage",
+        "formularequired": "Formula is required",
+        "minformulapercentagerequired": "Min formula percentage is required",
+        "maxformulapercentagerequired": "Max formula percentage is required",
+        "isrequired": "is required",
+        "parameter": "Object",
+        "srch": "Search",
+        "alarmconditionsTitles": {
+          "alarmdetails": "Alarm Details",
+          "mindetails": "Min Details",
+          "maxdetails": "Max Details",
+          "minvaluetype": "Min Value Type",
+          "maxvaluetype": "Max Value Type",
+          "min": "Min",
+          "max": "Max",
+          "minnominalvalue": "Min Nominal Value",
+          "maxnominalvalue": "Max Nominal Value",
+          "minpercentagetype": "Min Percentage Type",
+          "maxpercentagetype": "Max Percentage Type",
+          "minpercentage": "Min Percentage",
+          "maxpercentage": "Max Percentage",
+          "minformula": "Min Formula",
+          "maxformula": "Max Formula",
+          "minoperand": "Min Operand",
+          "maxoperand": "Max Operand",
+          "minformulapercentagetype": "Min Formula Percentage Type",
+          "maxformulapercentagetype": "Max Formula Percentage Type",
+          "minformulapercentage": "Min Formula Percentage",
+          "maxformulapercentage": "Max Formula Percentage",
+          "close": "Close"
+        },
+        "substationSavedIntro": "Substation saved, but the following bay types are not mapped:",
+        "pleaseMapThem": "Please map them and update the substation.",
+        "noobjbaytype": " NO Parameter are created for this Bay type",
+        "applymapping": "Apply Mapping",
+        "selsubtoviewbay": " Please select a substation to view its bays",
+        "selbaytoaddiccp": "Please Select a Bay to Add or Delete ICCP Linking",
+        "selectsub": "Select Substation",
+        "selobjmapping": "Select Parameters for Mapping:",
+        "category": "Category",
+        "configuration": "Apply Changes",
+        "addbaytype": "Add a new bay type to get started",
+        "nobaytype": "No bay types found",
+        "objectname": "Object Name",
+        "objnamerequired": "Object name is required",
+        "stdrequired": " Standard value is required",
+        "minval": "Min Value",
+        "maxval": "Max Value",
+        "maxvalrequired": "Max value is required",
+        "minvalrequired": " Min value is required",
+        "onlynumber": "Must be a number",
+        "parameterexist": "This baytype parameters already exist",
+        "changeserror": "Error in saving in changes document",
+        "substationsavingerror": "Error Occurs in Mapping",
+        "baytypedocerror": "something error in saving in baytype doc",
+        "mappingsuccess": "Mapping applied successfully",
+        "nomapchanges": "No changes in mapping",
+        "nobayssub": "No Bays Under this Substation",
+        "objdelted": "Object Deleted Sucessfully",
+        "mapiccp": "Map with ICCP",
+        "addTripParameter": "Add as Trip Parameter",
+        "allowComment": "Allow Comment",
+        "updateobjalreadyexist": "Updated Parameter name already exists",
+        "patherror": "Path List not Found",
+        "fetchsubstationerror": "Error in fetching substation data",
+        "fetchbaylistindexerror": "Error in fetching bay list indexes",
+        "deletedsuccess": "Baytype and its Parameters Deleted Sucesfully",
+        "savesuccessful": "Baytype and its Parameters saved sucessfully",
+        "percentagerequired": "Percentage is required",
+        "percentagelimit": "Percentage must be between 0 and 100",
+        "addobject": "Added Object",
+        "nme": "Name",
+        "objectdetails": "Object Details",
+        "baytype": "Bay Types",
+        "stndrd": "Standard",
+        "objselrequired": "  Object selection is required",
+        "valuetype": "Value Type",
+        "selectedobj": "Selected Object",
+        "min": "Min",
+        "max": "Max",
+        "maphourlylog": "Map with Hourly Log",
+        "mapshiftdata": "Map with Shift Data",
+        "mapdailyLog": "Map with Energy Log",
+        "iccpmapping": "ICCP Mapping",
+        "hourlylogmapping": "Hourly Log",
+        "shiftdatamapping": "Shift Data",
+        "dailylogmapping": "Energy Log",
+        "tripparammapping": "Trip Parameters",
+        "action": "Actions",
+        "noexistingobj": " No objects added yet. Add objects using the form above",
+        "mapeventlog": "Map with Event Log",
+        "mapsld_set": "Map with SLD SET",
+        "eventlogmapping": "Event Log",
+        "sld_setdatamapping": "SLD SET",
+        "is_trip_Param": "Trip Parameter",
+        "tripParameters": "Trip Parameter Details",
+        "voltageLevels": [
+          "11kV",
+          "33kV",
+          "66kV",
+          "132kV",
+          "220kV",
+          "400kV"
+        ],
+        "voltagelevel": "Voltage Level",
+        "voltagereq": "Voltage Level is required",
+        "selectbaytype": "Select Bay Type",
+        "objects": "Objects",
+        "parameters": "Parameters",
+        "parameterdetails": "Parameter Details",
+        "parametername": "Parameter Name",
+        "parameternamerequired": "Parameter name is required",
+        "parameternamepattern": "Parameter name format is not correct",
+        "wanttodeleteparam": "Do you want to Delete this Parameter?",
+        "wantapplychanges": "Do you really want to Apply these Changes?",
+        "deleteparam": "Delete Parameter",
+        "yes": "Yes"
+      },
+      "maintenancesettings": {
+        "mnttype": "Maintenance Type",
+        "includeequipmenttemplates": "Include Equipment Templates",
+        "description": "Description",
+        "head_start_label": "Head Start Group Label",
+        "noparameteradded": " No Parameter added",
+        "remarks": "Remarks",
+        "addupdatedb": {
+          "heading": "Database Master",
+          "transmissionline": "Transmission Line",
+          "substation": "Substation",
+          "transmissionupdatedsuccess": "Transmission Updated Successfully",
+          "transmissionaddedsuccess": "Transmission Added Successfully",
+          "substationupdatedsuccess": "Substation Updated Successfully",
+          "substationaddedsuccessfully": "Substation Added Successfully",
+          "fetchsuccess": ": Device details fetched Successfully!",
+          "fetcherror": ": No Data Available for this Device code",
+          "fetcherrorserver": "Error fetching data from Server!",
+          "updatesuccess": "Data updated Successfully"
+        },
+        "parametertypes": {
+          "Number": "Number",
+          "Float": "Float",
+          "String": "String",
+          "SelectionList": "Selection List"
+        },
+        "units": {
+          "None": "<--None-->",
+          "kv": "KV",
+          "ml": "ML",
+          "wt": "WT",
+          "v": "V"
+        },
+        "type": "Type",
+        "unit": "Unit of Measurement",
+        "maintenancedlgtabs": {
+          "mntinfo": "Maintenance Info",
+          "ml": "ML",
+          "mntname": "Maintenance Name:",
+          "schdate": "Scheduled Date:",
+          "timerqrd": "Shutdown Duration (In Hours/Days):",
+          "plnddate": "Planned Date: ",
+          "plndby": "Planned By:",
+          "hrs": "Hours",
+          "dys": "Days",
+          "shtdwn": "SLDC Shutdown Code: ",
+          "chrdwn": "SLDC Charging Code: ",
+          "entrshtdwn": "Enter SLDC Shutdown Code",
+          "entrchrgdwn": "Enter SLDC Charging Code",
+          "shutdown_code": "SLDC Shutdown Code",
+          "charging_code": "SLDC Charging Code",
+          "cancelreason": "Cancellation Reason",
+          "completereason": "Complete Reason",
+          "ptwremarks": "PTW Remarks",
+          "dialog_heading": {
+            "sldc_details": "SLDC Details",
+            "ptw_details": "PTW Details",
+            "maintenance_parameter": "Maintenance Parameter",
+            "hotline_parameter": "Hotline Parameter",
+            "tl_maintenance_parameter": "TL Maintenance Parameter",
+            "mnp_parameter": "M & P Parameter",
+            "observations_list": "Observations List",
+            "patrolling_info": "Patrolling Info",
+            "pending_observations_list": "Pending Observations"
+          }
+        },
+        "None": "None",
+        "require_schedule": "Require Schedule",
+        "hotline": "Hotline",
+        "assign_full_range": "Assign Full Range",
+        "notavailable": "N/A",
+        "all": "All",
+        "maintenance": "O & M Master",
+        "managedby": "Managed By",
+        "minmax": "Min - Max Value",
+        "mnttemp": "Maintenance Template",
+        "frqnc": "Frequency",
+        "actp": "Parameter List",
+        "actpmap": "Equipment Type Min_Max Defination",
+        "tlmnt": "Transmission Line",
+        "ssmnt": "Substation",
+        "hmnt": "Hotline",
+        "baymnt": "Bay",
+        "eqmnt": "Equipment",
+        "cutoff": "Cutoff Schedule",
+        "add_update_device": "Add/Update DB",
+        "database_mapping": "Operation Mapping",
+        "commissioning_value": "Commissioning Value",
+        "manual_doc": "Manage Manual Doc",
+        "mdulogs": "MDU Logs",
+        "default_views": "Default Views",
+        "planmnt": "Plan Maintenace",
+        "name": "Name",
+        "min": "Min Setting",
+        "createobserv": "Create Observation",
+        "max": "Max Setting",
+        "freq": "Frequency",
+        "freqname": "Frequency Name",
+        "slctfreq": "Select Frequency",
+        "recurrence": "Reoccurrence",
+        "eqtype": "Equipment Type",
+        "baytype": "Bay Type",
+        "sstype": "Substation Type",
+        "mntname": "Maintenance Name",
+        "obsource": "Observation Source :",
+        "obManual": "Manual",
+        "obAlarm": "Alarm",
+        "path": "Path",
+        "value": "Value",
+        "scheduleddate": "Scheduled Date",
+        "cutoffdate": "Scheduled Date",
+        "plandate": "Select Planning Date",
+        "seleqtype": "Select Equipment Type",
+        "selactivityparameter": "Select Parameter",
+        "selbaytype": "Select Bay Type",
+        "selsstype": "Select Substation Type",
+        "actparams": "Activity Parameters",
+        "addactparams": "Add Activity Parameters",
+        "masterdata": "Master Data",
+        "templatetype": "Template Type",
+        "scheduleandPlan": "Scheduling & Planning",
+        "templatenotapplied": "***NOTE: This template is not applied***",
+        "patrollingnotsubmitted": "***NOTE: No Towers has been assigned***",
+        "maintenance_basedon": {
+          "scheduleddate": "Reoccurrence Based On Scheduled Date",
+          "activity": "Reoccurrence Based On Activity"
+        },
+        "scheduled_patrolling": {
+          "scheduled": "Scheduled Maintenance",
+          "patrolling": "Patrolling Maintenance"
+        },
+        "errorcode": {
+          "invalid_input": "Please fill all parameters before submitting"
+        },
+        "actiondlg": {
+          "observation": {
+            "id": "ID",
+            "time": "Time",
+            "description": "Description",
+            "observation": "Observation",
+            "remarks": "Remarks",
+            "status": "Status",
+            "newremarks": "New Remarks",
+            "newstatus": "New Status",
+            "select_observation": "Select Observation",
+            "select_equipment": "Select Equipment",
+            "tower": "Tower",
+            "inter_tower": "Inter Tower",
+            "select_tower_number": "Select Tower Number",
+            "select_tower_range": "Select Tower Range",
+            "start_maintenance": "Start Maintenance",
+            "maintenance_info": "Maintenance Info",
+            "table_row": {
+              "description": "Description",
+              "observation": "Observation",
+              "raisedby": "Observed By",
+              "remarks": "Remarks",
+              "status": "Status",
+              "lineno": "Tower or Span"
+            }
+          },
+          "heading": {
+            "observationslist": "Observations List",
+            "ptwcertificate": "PTW Certificate",
+            "ptwcancellation": "PTW Cancellation Certificate",
+            "issuesldccode": "Issue SLDC Code",
+            "issuesldcchargingcode": "Issue SLDC Charging Code",
+            "backcharging": "Backcharging Certificate",
+            "backchargingcancellation": "Backcharging Cancellation Certificate",
+            "addobservation": "Add Observation",
+            "updateobservation": "Update Observation",
+            "detailsobservation": "Observation Details"
+          },
+          "inputfields": {
+            "ptwno": "PTW No.",
+            "entercode": "Enter Code",
+            "takenby": "Taken By",
+            "requestedby": "Requested By",
+            "devicename": "Device Name",
+            "connecteddevicename": "Connected Device Name",
+            "work": "Purpose of Work",
+            "opr": "Operation done by Operator",
+            "operatedby": "Operated by",
+            "datetime": "Date & Time",
+            "issuetime": "Issue Time",
+            "canceltime": "Cancel Time",
+            "selectnewje": "Select New JE",
+            "remarks": "Remarks",
+            "workcompleted": "Work Completed",
+            "workincomplete": "Work Incomplete",
+            "parameterpending": "Work Completed Parameters Pending",
+            "backchargingid": "Backcharging ID.",
+            "issuedto": "Requested By",
+            "issuedby": "Issued By",
+            "selectbay": "Select Bay Template",
+            "ssename": "Planned By",
+            "operatorname": "Operator Name",
+            "jeename": "JEE Name",
+            "substation": "Substation Name",
+            "bay": "Bay Name",
+            "equipment": "Equipment Name",
+            "connected_line_bay": "Connected Line Bay",
+            "connected_line": "Connected Line"
+          }
+        },
+        "heading": {
+          "permittype": "Permit Type",
+          "value": "Value",
+          "description": "Description",
+          "datatype": "Data Type",
+          "user": "User",
+          "datetime": "Date Time",
+          "remarks": "Remarks",
+          "deviceType": "Device Type",
+          "maintenance_type": "Maintenance Type",
+          "addfrequency": "Add Frequency Type",
+          "requestptwtransfer": "Request PTW Transfer",
+          "updatefrequency": "Update Frequency Type",
+          "addparameter": "Add Parameter",
+          "updateparameter": "Update Parameter",
+          "addtransmission": "Add Transmission Line Maintenance Template",
+          "updatetransmission": "Update Transmission Line Maintenance Template",
+          "addsubstation": "Add Substation Maintenance Template",
+          "updatesubstation": "Update Substation Maintenance Template",
+          "addhotline": "Add Hotline Maintenance Template",
+          "updatehotline": "Update Hotline Maintenance Template",
+          "addbay": "Add Bay Maintenance Template",
+          "updatebay": "Update Bay Maintenance Template",
+          "addequipment": "Add Equipment Maintenance Template",
+          "updateequipment": "Update Equipment Maintenance Template",
+          "workcompletionstatus": "Work Completion Status",
+          "zone": "Zone",
+          "circle": "Circle",
+          "division": "Division",
+          "substation": "Substation",
+          "hotline": "Hotline",
+          "transmission": "TL",
+          "sc_transmission": "Scheduled TL",
+          "pt_transmission": "Patrolling TL",
+          "transmission_observation": "Observation TL",
+          "line_name": "Line Name",
+          "mnt_on_tower_or_range": "Tower/Range",
+          "device_name": "Device Name",
+          "tower_range": "Tower Range",
+          "last_patrolling_date": "Last Patrolling Date",
+          "last_maintenance_date": "Last Maintenance Date",
+          "line_no": "Tower/Span",
+          "mnttype": "Maintenance Type",
+          "schDate": "Scheduled Date",
+          "planDate": "Planned Date",
+          "planDateDuration": "Planned Date & Duration",
+          "shutdown_duration": "Shutdown Duration",
+          "status": "Status",
+          "action": "Action",
+          "bay": "Bay",
+          "baytype": "Bay Type",
+          "eqp": "Equipment",
+          "eqptype": "Equipment Type",
+          "reason": "Reason",
+          "planmnt": "Plan Maintenance",
+          "viewDetails": "View Details",
+          "selzone": "Select Zone",
+          "selcircle": "Select Circle",
+          "seldivision": "Select Division",
+          "selsubstation": "Select Substation",
+          "selbay": "Select Bay",
+          "seleq": "Select Equipment",
+          "obs": "Observation",
+          "obsData": "Select Observation",
+          "filter": "Filter",
+          "search": "Search",
+          "mntstatus": "Maintenance Status",
+          "observation_type": "Observed By",
+          "conditionalmaintenance": "Breakdown Maintenance",
+          "otherPermits": "Other Permits",
+          "obslst": "Observations List",
+          "obsdetails": "Observation Details",
+          "backfeedingrqst": "Backfeeding Requests",
+          "coderqst": "Shutdown/Charging Code Request",
+          "mntPlanned": "Maintenance Planned",
+          "xenapproverqst": "XEN Approve Requests",
+          "xenapprove": "XEN Approved",
+          "obsmaintenance": "Observation Maintenance",
+          "hotline_observation": "Hotline Observation Maintenance",
+          "towerstart": "Tower Start",
+          "towerend": "Tower End",
+          "patrollingteamname": "Patrolling Team Name ",
+          "category": "Category",
+          "issueDate": "Issue Date",
+          "issued_to": "Issued To",
+          "cancellation_heading": "Cancellation Remarks",
+          "revert_heading": "Revert Remarks",
+          "bay_select": "Bay Selection",
+          "connected_bay": "Connected Bays",
+          "hotline_substation": "Hotline Substation",
+          "hotline_tl": "Hotline TL",
+          "connected_tl_tab": "Asst. Mnt. Elmnt",
+          "connected_tl": "Connected TL",
+          "sldc_mnt": "SLDC Maintenance",
+          "shutdown_request": "Shutdown Request",
+          "name": "Name",
+          "settings": "View Settings",
+          "deleteView": "Delete View"
+        },
+        "allequipments": "All Equipments",
+        "allbays": "All Bays",
+        "category": "Category",
+        "confirmation": {
+          "observationdelete": "This will delete the Observation you have saved, Are you sure you want to delete this section?",
+          "delete": "Confirming will delete this permanently. Do you really want to delete?",
+          "deletetemplate": "This will delete the Template you have saved, Are you sure you want to delete this section?"
+        },
+        "templatedeletewarning": "This template cannot be deleted as it is currently connected to maintenance template",
+        "deleteTemplate": "Delete Template",
+        "deleteFrequency": "Delete Frequency",
+        "deleteParameter": "Delete Parameter",
+        "deleteParameterMap": "Delete Mapped Parameter",
+        "activityparameterdeletewarning": "This template cannot be deleted as it is currently connected to activity parameter map",
+        "snackbar": {
+          "scheduled": "Scheduled Successfully",
+          "templatedeleted": "Template Deleted Successfully",
+          "frequencyadded": "Frequency Template Added Successfully",
+          "frequencyexist": "Frequency Template Already Exists...",
+          "frequencyupdated": "Frequency Template Template Updated",
+          "parameteradded": "Parameter Template Added Successfully",
+          "parameterexist": "Parameter Template  Already Exists...",
+          "parameterupdated": "Parameter Template Updated",
+          "equipmentadded": "Equipment Template Added Successfully",
+          "equipmentexist": "Equipment Template Already Exists...",
+          "equipmentupdated": "Equipment Template Updated",
+          "bayadded": "Bay Template Added Successfully",
+          "bayexist": "Bay Template Already Exists...",
+          "bayupdated": "Bay Template Updated",
+          "transmissionlineadded": "Transmission Line Template Added Successfully",
+          "transmissionlineexist": "Transmission Line Template Already Exists...",
+          "transmissionlineupdated": "Transmission Line Template Updated",
+          "substationadded": "Substation Template Successfully",
+          "hotlineupdated": "Hotline Template Updated",
+          "hotlineadded": "Hotline Template Added Successfully",
+          "hotlinetemplateapplied": "Hotline Template Applied to Substations and TLs",
+          "substationexist": "Substation Template Already Exists...",
+          "substationupdated": "Substation Template Updated",
+          "sldcshutdowncodeissued": "SLDC Shutdown Code Issued",
+          "sldcchargingcodeissued": "SLDC Charging Code Issued",
+          "sldcchargingcoderequest": "SLDC Charging Code Requested Successfully",
+          "substationtemplateapplied": "Maintenance template applied to Substations",
+          "substationtemplatenotapplied": "Unable to apply template to Substations",
+          "equipmenttemplateapplied": "Maintenance template applied to Equipments",
+          "equipmenttemplatenotapplied": "Unable to apply template to Equipments",
+          "baytemplateapplied": "Maintenance template applied to Bays",
+          "baytemplatenotapplied": "Unable to apply template to Bays",
+          "transmissiontemplateapplied": "Maintenance template applied to Transmission lines",
+          "transmissisontemplatenotapplied": "Unable to apply template to Transmission lines",
+          "observationadded": "Observation Added Successfully",
+          "observationupdated": "Observation Updated Successfully",
+          "validationmessage": "Please fill out the required fields",
+          "planned": "Planned Activity is added to Dashboard",
+          "erroroccured": "Error occurred during saving",
+          "patrollingsaved": "Patrolling Info Saved Successfully",
+          "updatesuccess": "Updated Successfully",
+          "maintenancestarted": "Maintenance Has Started",
+          "patrollingstarted": "Patrolling Has Started",
+          "maintenancerescheduled": "Maintenance Rescheduled",
+          "maintenancecompleted": "Maintenance Completed Successfully",
+          "patrollingcompleted": "Patrolling Completed Successfully",
+          "maintenancecancelled": "Maintenance Cancelled Successfully",
+          "towerendsmallervalidate": "Tower End can not be smaller than Tower Start",
+          "towerminvalidate": "Minimum value is 1 for Tower Start",
+          "towerexistingrange": "Tower Start/ Tower End has a conflict with an existing range",
+          "ptwexists": "PTW Id Already Exists",
+          "ptwrequestsuccess": "PTW Requested Successfully",
+          "ptwissuesuccess": "PTW Successfully Issued",
+          "ptwcancelsuccess": "PTW Cancellation Successfully Issued",
+          "restorationsuccess": "Restoration Completed Successfully",
+          "eventlogsuccess": "Event Logged Successfully",
+          "noptwassociated": "No PTW Associated To Request Cancel!",
+          "bcrequestsuccess": "Backfeeding Requested Successfully",
+          "bccancelsuccess": "Backcharging Cancellation Certificate Requested Successfully",
+          "parametersaved": "Activity Parameter Saved",
+          "parametercancel": "Activity Parameter Cancelled",
+          "parameterapprove": "Activity Parameter Approved",
+          "ptwcancellationrequest": "PTW Cancellation Requested"
+        },
+        "types": {
+          "float": "Float",
+          "digital": "Digital",
+          "str": "String",
+          "date": "Date",
+          "list": "List (comma separated)",
+          "num": "Number",
+          "enum": "Enum"
+        },
+        "patrollingstatus": {
+          "inprogress": "In Progress",
+          "completed": "Completed"
+        },
+        "observationstatus": {
+          "open": "Open",
+          "close": "Close",
+          "fixed": "Fixed",
+          "requireshutdown": "Require Shutdown",
+          "inprogress": "Inprogress"
+        },
+        "observation_device_name": {
+          "Bay": "Bay Name",
+          "Equipment": "Equipment Name",
+          "TL": "TL Name",
+          "Substation": "Substation Name"
+        },
+        "observation_schedule_status": {
+          "NA": "NA",
+          "planned": "Planned",
+          "scheduled": "Scheduled"
+        },
+        "observation_Type": {
+          "NA": "NA",
+          "je": "JE",
+          "mnp": "MNP",
+          "je_tl": "JETL",
+          "hotline": "Hotline JE"
+        },
+        "maintenancenotes": {
+          "bcissue": "This office is not aware of any back-feeding arrangement and will not be responsible for any back-feeding due to this",
+          "bccancel": "Certified that all men and material, temp, earth have been removed from the site and the line is clear for energization. Please cancel my Backcharging No.",
+          "ptwcancel": "Certified that all men and material, temp, earth have been removed from the site and the line is clear for energization. Please cancel my PTW No."
+        },
+        "maintenancestatus": {
+          "planned": "Planned",
+          "inprogress": "Inprogress",
+          "shutdownrequested": "Shutdown Requested",
+          "sldccoderequested": "SLDC Code Requested",
+          "sldccodeissued": "SLDC Code Issued",
+          "ptwrequested": "PTW Requested",
+          "ptwissued": "PTW Issued",
+          "nobackchargingrequested": "No Backcharging Certificate Requested",
+          "nobackchargingissued": "No Backcharging Certificate Issued",
+          "ptwcancelled": "PTW Cancelled",
+          "ptwcancellationrequested": "PTW Cancellation Requested",
+          "ptwcancellationissued": "PTW Cancellation Issued",
+          "restorationcomplete": "Restoration Completed",
+          "parameterspending": "Parameters Pending",
+          "approvalpending": "Approval Pending",
+          "reverted": "Reverted",
+          "start": "Start",
+          "requestptw": "Request PTW",
+          "requestsldccode": "Request SLDC Code",
+          "stepper": {
+            "maintenanceplanned": "Maintenance Planned",
+            "sldcshutdowncoderequested": "SLDC Shutdown Code Requested",
+            "sldcshutdowncodeissued": "SLDC Shutdown Code Issued",
+            "ptwrequested": "PTW Requested",
+            "backchargingrequested": "Backcharging Certificate Requested",
+            "backchargingissued": "Backcharging Certificate Issued",
+            "ptwissued": "PTW Issued",
+            "ptwcancellationrequested": "PTW Cancellation Requested",
+            "nobackchargingrequested": "No Backcharging Certificate Requested",
+            "nobackchargingissued": "No Backcharging Certificate Issued",
+            "ptwcancellationissued": "PTW Cancellation Issued",
+            "sldcchargingcoderequested": "SLDC Charging Code Requested",
+            "sldcchargingcodeissued": "SLDC Charging Code Issued",
+            "maintenancecomplete": "Maintenance Completed"
+          }
+        },
+        "maintenancebutton": {
+          "completemaintenance": "Complete Maintenance",
+          "viewptw": "View PTW",
+          "planmnt": "Plan Maintenace",
+          "observations": "Observations",
+          "pending_observations": "Pending Observations",
+          "revert_history": "Revert History",
+          "hideobservations": "Hide Observations",
+          "requestptw": "Request PTW",
+          "requestsldccode": "Request SLDC Shutdown Code",
+          "acceptptw": "Accept PTW",
+          "transferptw": "Transfer PTW",
+          "cancelptw": "Cancel PTW",
+          "ptwdetails": "PTW Details",
+          "issueptw": "Issue PTW",
+          "rejectptw": "Reject PTW",
+          "sendrequest": "Send Request",
+          "eventlog": "Event Log",
+          "requestbackcharging": "Request Backcharging Certificate",
+          "confirmbackcharging": "Confirm Backcharging",
+          "issuebackcharging": "Issue Backcharging Certificate",
+          "cancelbackcharging": "Cancel Backcharging Certificate",
+          "start": "Start",
+          "cancelbtn": "Once Submitted Cannot be Changed After, Kindly Reevaluate Cancellation, Do You Want to Cancel",
+          "issueptwbtn": "Once Submitted Cannot be Changed After, Kindly Reevaluate All The Inputs, Do You Want to Confirm",
+          "requestsldcchargingcode": "Request SLDC Charging Code",
+          "issuesldcchargingcode": "Issue SLDC Charging Code",
+          "approve": "Approve",
+          "revert": "Revert",
+          "prepareptw": "Prepare PTW",
+          "requestbackchargingcancel": "Request Backcharging Cancel",
+          "issuebackchargingcancel": "Issue Backcharging Cancel",
+          "issuenobackcharging": "Issue No backcharging Certificate",
+          "issuesldccode": "Issue SLDC Code",
+          "issuecode": "Issue Code",
+          "cancelrequest": "Cancel Request",
+          "sendcancellationrequest": "Send Cancellation Request",
+          "sendtransferrequest": "Send Transfer Request",
+          "requestptwcancellation": "Request PTW Cancellation",
+          "issueptwcancellation": "Issue PTW Cancellation",
+          "save": "Save",
+          "submit": "Submit",
+          "approveMaintenance": "Approve & Request SLDC Code",
+          "cancelbuttons": {
+            "cancelissuecoderequest": "Cancel Shutdown Code Request",
+            "requestsldcchargingcode": "Cancel Charging Code Request",
+            "cancelbackchargingrequest": "Cancel Backcharging Request",
+            "cancelMaintenance": "Cancel Maintenance"
+          },
+          "create_other_ptw": "Create Other PTW",
+          "request_ptw_by_qr_code": "Request PTW by QR code",
+          "request_clearance_by_qr_code": "Request Clearance Certificate by QR code",
+          "qr_generation_failed": "QR generation failed",
+          "start_maintenance": "Start Maintenance",
+          "start_patrolling": "Start Patrolling",
+          "reschedule_patrolling": "Reschedule Patrolling",
+          "complete_patrolling": "Complete Patrolling",
+          "complete_maintenance": "Complete Maintenance",
+          "apply_changes": "Apply Changes"
+        },
+        "maintenancestepper": {
+          "planned": "Maintenance Planned",
+          "xen_maintainance_approved": "Maintenance Approved",
+          "sldc_shutdown_code_requested": "SLDC Shutdown Code Requested",
+          "sldc_shutdown_code_issued": "SLDC Shutdown Code Issued",
+          "ptw_requested": "PTW Requested",
+          "backcharging_requested": "Backcharging Certificate Requested",
+          "backcharging_issued": "Backcharging Certificate Issued",
+          "ptw_issued": "PTW Issued",
+          "in_progress": "In Progress",
+          "patrolling_done": "Patrolling Done",
+          "patrolling_completed": "Patrolling Completed",
+          "maintenance_parameter": "Maintenance Parameter",
+          "hotline_parameter": "Hotline Parameter",
+          "mnp_parameter": "M & P Parameter",
+          "ptw_cancellation_requested": "PTW Cancellation Requested",
+          "backcharging_cancel_requested": "Backcharging Cancellation Requested",
+          "backcharging_cancel_issued": "Backcharging Cancelled",
+          "ptw_cancellation_issued": "PTW Cancelled",
+          "sldc_charging_code_requested": "SLDC Charging Code Requested",
+          "sldc_charging_code_issued": "SLDC Charging Code Issued",
+          "restoration_completed": "Restoration",
+          "parameter_approval": "Parameter Approved",
+          "maintenance_complete": "Maintenance Completed",
+          "maintenance_rescheduled": "Maintenance Rescheduled",
+          "maintainance_cancelled": "Cancelled By "
+        },
+        "OtherPermits": {
+          "otherPTW": {
+            "other_ptw_request_qr_title": "Request PTW by QR code",
+            "other_ptw_cancel_qr_title": "Cancel PTW by QR code",
+            "other_ptw_request_form_title": "Request PTW",
+            "other_ptw_cancel_form_title": "Cancel PTW"
+          },
+          "clearanceCertificate": {
+            "clearance_request_qr_title": "Request Clearance Certificate by QR code",
+            "clearance_request_form_title": "Submit Clearance Certificate"
+          },
+          "messages_and_labels": {
+            "fill_form_and_submit": "Fill the form and submit. One-time use link.",
+            "fill_work_and_submit": "Enter work done and submit to request PTW cancellation. One-time use link.",
+            "clearance_submit_button": "Submit Clearance Certficate",
+            "other_ptw_submit_button": "Submit PTW Request",
+            "other_ptw_cancel_submit_button": "Submit Cancellation Request",
+            "clearance_success_msg": "Clearance Certificate submitted successfully.",
+            "other_ptw_req_success_msg": "PTW Request submitted successfully.",
+            "other_ptw_cancel_req_success_msg": "Cancellation requested successfully. The operator will confirm the cancellation.",
+            "invalid_link_msg": "Invalid or missing link. Please scan the QR code again.",
+            "expired_link_msg": "This link has expired or is invalid."
+          }
+        },
+        "patrolling_heading": "Assign Patrolling Team  |  No Of Towers ",
+        "tl_info_heading": "TL Information",
+        "sub_info": "Substation Information",
+        "bay_info": "Bay Information",
+        "eq_info": "Equipment Information",
+        "mngby": "Managed By",
+        "includewtbay": "Include along with Bay Maintenance",
+        "shutreq": "Shutdown Required",
+        "minmaxreq": "Min Max Required",
+        "mnpreq": "M & P Required",
+        "mntbasedschedule": "Maintenance Based On Scheduled Date",
+        "mntbasedact": "Maintenance Based On Activity",
+        "viewob": "View Observation",
+        "updateob": "Update Observaton",
+        "deleteob": "Delete Observation",
+        "deletetype": "Delete",
+        "updatetype": "Update",
+        "applytype": "Apply",
+        "addtype": "Add",
+        "enumvalues": "Enum Values",
+        "conditionalmnt": "Conditional Maintenance",
+        "schedulemnt": "Scheduled Maintenance",
+        "saveschedule": "Save Schedule Changes",
+        "clearCutOff": "Clear all maintenance from Cut-Off schedule"
+      },
+      "eventlogview": {
+        "title": "Event Log",
+        "paramname": "Parameter Name",
+        "starttime": "Open Time",
+        "endtime": "Close Time",
+        "duration": "Duration",
+        "action": "Action",
+        "remarks": "Remarks",
+        "alertselectobject": "Please Select Bay",
+        "addeventlog": "Add Event Log",
+        "selectbay": "Select Bay",
+        "selectobj": "Select Object",
+        "alertenterstatus": "Please Enter Status",
+        "savesuccess": "Event Log Saved Successfully",
+        "statusvalue": "Status Value",
+        "alertunselect": "Please Resolve Event by Unselecting Reasons",
+        "alertselect": "Please Select Atleast One Reason",
+        "openCB": "CB STATUS should be OPEN(0) to Oprerate Protection",
+        "clearProtection": "Please clear all the Protection before closing the breaker",
+        "selectProtection": "Please set Associated Event Protection",
+        "reason": "Reason",
+        "user": "User",
+        "event": "Event",
+        "startup": "Startup",
+        "STARTUP": "Startup",
+        "USER_INPUT": "Manual Entry",
+        "manual": null,
+        "EVENT": "Event",
+        "manualentry": "Manual Entry",
+        "tripping": "Tripping",
+        "TRIPPING": "Tripping",
+        "INDICATIONS": "Indications",
+        "INTERROGATION": "Interrogation",
+        "interogation": "Interrogation",
+        "DISCONNECTION": "Disconnection",
+        "disconnection": "Disconnection",
+        "PRM": "PRM",
+        "restorereason": "Circuit Breaker Open Status : ",
+        "MANUAL_OPERATIONS": "Manual Operations",
+        "BREAKDOWN": "Breakdown",
+        "MAINTENANCE": "Maintenance",
+        "backcharging": "Backcharging",
+        "breakdown": "Breakdown",
+        "indications": "Indications",
+        "maintenance": "Maintenance",
+        "status": "Status",
+        "prm": "PRM",
+        "ptwid": "PTW ID",
+        "bchrgid": "Backcharging ID",
+        "backfeedingid": "Backfeeding ID",
+        "alertmanual_ptw": "Please Enter PTW ID",
+        "alertmanual_bc": "Please Enter Backcharging ID",
+        "manualopertions": "Manual Operations",
+        "note": "Note : Highlighted feeders or groups indicate pending command changes to apply on save"
+      },
+      "sequence": {
+        "stepstitle": "Steps Title",
+        "logicConditionTitle": "Logic Condition Title",
+        "reportTitle": "Report Title",
+        "sequencestatus": "Sequence Status",
+        "sequenceevents": "Sequence Events"
+      },
+      "noticeboard": {
+        "urgenttitle": "Type ! at end for urgent messages",
+        "allnotices": "All Notices",
+        "nomoremessages": "No more messages",
+        "mentions": "Mentions:",
+        "mynotices": "My Notices",
+        "cancel": "cancel",
+        "noticeplaceholder": "Type a Notice",
+        "users": "Users",
+        "groups": "Groups",
+        "send": "send"
+      }
+    },
+    "controlError": {
+      "standard_error_code": {
+        "01": "Command Cancel Timeout",
+        "02": "Internal Cancel Command Timeout",
+        "05": "Selection Protocol Timeout",
+        "06": "Execution Protocol Timeout",
+        "08": "Selection Timeout",
+        "09": "Executed Input Status Timeout",
+        "0A": "Execution Timeout",
+        "0B": "Cancel Timeout",
+        "0C": "Cancel Process Device Disconnected Timeout",
+        "0D": "Cancel Internal Device Disconnected Timeout",
+        "11": "Cancel Process Device Disconnected",
+        "12": "Cancel Internal Device Disconnected",
+        "21": "Invalid Linking"
+      },
+      "850": {
+        "s_error_code": {
+          "0": "Transaction Success",
+          "1": "Transaction Stopped",
+          "2": "Timeout Occurred",
+          "3": "Error in Sending",
+          "4": "Confirmed Error Received",
+          "5": "Reject Received",
+          "6": "Invalid Response Received",
+          "7": "Data Set Elements Mismatch",
+          "8": "Data Access Error Received",
+          "9": "Last Application Error Received",
+          "10": "Internal Control Error"
+        },
+        "data_access_err_msg": "Data Access Error ",
+        "last_app_err_msg": "Last App Error ",
+        "last_app_err_cause_msg": "Last App Error Cause",
+        "internal_err_msg": "Internal Error",
+        "last_app_error": {
+          "0": "No Error",
+          "1": "Unknown Error",
+          "2": "Timeout Test Not OK",
+          "3": "Operator Test Not OK"
+        },
+        "last_app_cause": {
+          "0": "Unknown",
+          "1": "Not Supported",
+          "2": "Blocked by Switching Hierarchy",
+          "3": "Select Failed",
+          "4": "Invalid Position",
+          "5": "Position Reached",
+          "6": "Parameter Change in Execution",
+          "7": "Step Limit",
+          "8": "Blocked by Mode",
+          "9": "Blocked by Process",
+          "10": "Blocked by Interlocking",
+          "11": "Blocked by Synchrocheck",
+          "12": "Command Already in Execution",
+          "13": "Blocked by Health",
+          "14": "1-of-N Control",
+          "15": "Abortion by Cancel",
+          "16": "Time Limit Over",
+          "17": "Abortion by Trip",
+          "18": "Object Not Selected",
+          "19": "Object Already Selected",
+          "20": "No Access Authority",
+          "21": "Ended with Overshoot",
+          "22": "Abortion due to Deviation",
+          "23": "Abortion by Communication Loss",
+          "24": "Blocked by Command",
+          "25": "None",
+          "26": "Inconsistent Parameters",
+          "27": "Locked by Other Client"
+        },
+        "data_access_error_code": {
+          "0": "Object Invalidated",
+          "1": "Hardware Fault",
+          "2": "Temporarily Unavailable",
+          "3": "Object Access Denied",
+          "4": "Object Undefined",
+          "5": "Invalid Address",
+          "6": "Type Unsupported",
+          "7": "Type Inconsistent",
+          "8": "Object Attribute Inconsistent",
+          "9": "Object Access Unsupported",
+          "10": "Object Non-existent",
+          "11": "Object Value Invalid"
+        }
+      }
+    }
+  },
+  "name": "en-US"
+}

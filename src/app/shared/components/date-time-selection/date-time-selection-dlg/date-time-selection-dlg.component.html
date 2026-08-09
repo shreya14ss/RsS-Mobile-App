@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{ locale_service.Locale.language.project.timesettings.selectionhead }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+
+  <!-- Mode toggle: Single Date vs Date Range (hidden for planning flows) -->
+  <ion-segment *ngIf="showRange" [value]="mode" (ionChange)="onModeChange($event.detail.value)">
+    <ion-segment-button value="single">
+      <ion-label>Single Date</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="range">
+      <ion-label>Date Range</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+
+  <!-- Quick presets (always visible) -->
+  <div class="preset-row">
+    <ion-button fill="outline" size="small"
+                [color]="selectedPreset === 'today' ? 'primary' : 'medium'"
+                (click)="selectToday()">
+      Today
+    </ion-button>
+    <ion-button *ngIf="!restrictPastDate" fill="outline" size="small"
+                [color]="selectedPreset === 'yesterday' ? 'primary' : 'medium'"
+                (click)="selectYesterday()">
+      Yesterday
+    </ion-button>
+  </div>
+
+
+  <!-- Start Date/Time -->
+  <ion-item>
+    <ion-label position="stacked">{{ mode === 'single' ? 'Date' : 'Start' }}</ion-label>
+    <ion-datetime *ngIf="datetimeReady && startISO"
+      presentation="date-time"
+      [min]="minISO || undefined"
+      max="2050-12-31T23:59:59"
+      [value]="startISO"
+      (ionChange)="startISO = $any($event).detail.value">
+    </ion-datetime>
+  </ion-item>
+
+
+  <!-- End Date/Time — only shown in range mode -->
+  <ion-item *ngIf="mode === 'range'">
+    <ion-label position="stacked">End</ion-label>
+    <ion-datetime *ngIf="datetimeReady && endISO"
+      presentation="date-time"
+      [min]="minISO || undefined"
+      max="2050-12-31T23:59:59"
+      [value]="endISO"
+      (ionChange)="endISO = $any($event).detail.value">
+    </ion-datetime>
+  </ion-item>
+
+  <!-- Range validation error: shown when start is not strictly before end -->
+  <ion-text color="danger" class="range-error" *ngIf="isRangeInvalid">
+    End date/time must be after the start date/time.
+  </ion-text>
+
+  <!-- Past-date validation error: shown when planning flow picks a past date -->
+  <ion-text color="danger" class="range-error" *ngIf="isPastDateInvalid">
+    Back-dated planning is not allowed. Please pick today or a future date.
+  </ion-text>
+
+
+  <!-- Actions -->
+  <div class="actions">
+    <ion-button expand="block" fill="outline" (click)="close()">
+      Cancel
+    </ion-button>
+    <ion-button expand="block" (click)="apply()" [disabled]="isRangeInvalid || isPastDateInvalid">
+      Apply
+    </ion-button>
+  </div>
+
+</ion-content>

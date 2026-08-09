@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Select Project</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div *ngIf="loading" class="selector-loading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Loading...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Tenant selector (only shown when multiple tenants exist) -->
+    <ion-item *ngIf="tenants?.length > 1" lines="full">
+      <ion-label position="floating">Tenant</ion-label>
+      <ion-select
+        [(ngModel)]="selectedTenantId"
+        (ionChange)="onTenantChange()"
+        interface="action-sheet"
+        placeholder="Select Tenant">
+        <ion-select-option *ngFor="let t of tenants" [value]="t._id">
+          {{ t.name || t._id }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Project selector -->
+    <ion-item lines="full" [disabled]="!selectedTenantId && tenants?.length > 1">
+      <ion-label position="floating">Project</ion-label>
+      <ion-select
+        [(ngModel)]="selectedProjectId"
+        interface="action-sheet"
+        placeholder="Select Project">
+        <ion-select-option *ngFor="let p of projects" [value]="p._id">
+          {{ p.title || p.name || p._id }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div style="margin-top: 24px;">
+      <ion-button
+        expand="block"
+        color="primary"
+        [disabled]="!selectedProjectId"
+        (click)="selectProject()">
+        <ion-icon name="folder-open-outline" slot="start"></ion-icon>
+        Open Project
+      </ion-button>
+    </div>
+
+  </ng-container>
+
+</ion-content>

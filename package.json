@@ -1,0 +1,60 @@
+{
+  "name": "rss-mobile",
+  "version": "6.2.3",
+  "resolutions": {
+    "caniuse-lite": "1.0.30001550",
+    "browserslist": "4.21.10",
+    "ajv-keywords": "3.5.2",
+    "ajv": "6.12.6"
+  },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "ionic:build": "node -r dotenv/config ./node_modules/@angular/cli/bin/ng build",
+    "ionic:serve": "ng serve",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~13.1.0",
+    "@angular/cdk": "^13.3.9",
+    "@angular/common": "~13.1.0",
+    "@angular/compiler": "~13.1.0",
+    "@angular/core": "~13.1.0",
+    "@angular/forms": "~13.1.0",
+    "@angular/material": "^13.3.9",
+    "@angular/platform-browser": "~13.1.0",
+    "@angular/platform-browser-dynamic": "~13.1.0",
+    "@angular/router": "~13.1.0",
+    "@capacitor/android": "^4.8.2",
+    "@capacitor/app": "^4.0.0",
+    "@capacitor/core": "^4.8.2",
+    "@capacitor/haptics": "^4.0.0",
+    "@capacitor/ios": "^4.0.0",
+    "@capacitor/keyboard": "^4.0.0",
+    "@capacitor/preferences": "^4.0.0",
+    "@capacitor/push-notifications": "^4.1.2",
+    "@capacitor/splash-screen": "^4.0.0",
+    "@capacitor/status-bar": "^4.0.0",
+    "@ionic/angular": "^6.0.0",
+    "@microsoft/signalr": "^6.0.1",
+    "moment": "^2.30.1",
+    "rxjs": "~7.4.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~13.1.0",
+    "@angular/cli": "~13.1.0",
+    "@angular/compiler-cli": "~13.1.0",
+    "@capacitor/cli": "^4.0.0",
+    "@ionic/angular-toolkit": "^6.0.0",
+    "@types/estree": "^0.0.51",
+    "@types/node": "^12.11.1",
+    "browserslist": "^4.21.10",
+    "caniuse-lite": "^1.0.30001550",
+    "dotenv": "^17.4.0",
+    "typescript": "~4.5.2"
+  }
+}

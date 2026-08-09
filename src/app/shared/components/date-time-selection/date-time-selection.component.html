@@ -1,0 +1,53 @@
+<!-- Date Selection -->
+<ion-item class="date-item" *ngIf="_time_settings?.rangeselection || _time_settings?.rangeselection == 'mnt_db'">
+
+  <ion-label position="stacked">
+    {{ label ? label : locale_service.Locale.language.project.timesettings.selectdate }}
+  </ion-label>
+
+  <ion-input [value]="selected_daterange" readonly (click)="dateClicked()">
+  </ion-input>
+
+  <ion-button fill="clear" slot="end" (click)="dateClicked()">
+    <ion-icon name="calendar-outline"></ion-icon>
+  </ion-button>
+</ion-item>
+
+
+<!-- Resolution -->
+<ion-item *ngIf="_time_settings?.resolution && !ishourlyLogReport && !hasShiftCloseReport">
+  <ion-label>
+    {{ view_detail_type == 'mnt_opr_dashboard'
+    ? locale_service.Locale.language.project.timesettings.range_type
+    : locale_service.Locale.language.project.timesettings.resolutionlbl }}
+  </ion-label>
+
+  <ion-select interface="popover" [(ngModel)]="opt_resolution" (ionChange)="resolutionChanged($event)">
+
+    <ng-container
+      *ngFor="let reso of locale_service.Locale.language.project.timesettings.resolutions | keyvalue : keepOrder">
+
+      <ion-select-option *ngIf="checkreso(reso.key)" [value]="reso.key">
+        {{ reso.value }}
+      </ion-select-option>
+
+    </ng-container>
+
+  </ion-select>
+</ion-item>
+
+
+<!-- Shift -->
+<ion-item *ngIf="opt_resolution == 'shift' && shift_list.length > 1">
+  <ion-label>
+    {{ locale_service.Locale.language.project.timesettings.shift_name }}
+  </ion-label>
+
+  <ion-select interface="popover" [(ngModel)]="resolution_shift" (ionChange)="resolutionShiftChanged($event)">
+
+    <ion-select-option *ngFor="let reso of shift_list" [value]="reso">
+      {{ reso }}
+    </ion-select-option>
+
+  </ion-select>
+</ion-item>

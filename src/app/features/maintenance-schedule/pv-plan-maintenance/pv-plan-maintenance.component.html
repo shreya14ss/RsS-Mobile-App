@@ -1,0 +1,900 @@
+<div class="loading-shade" *ngIf="saving">
+  <ion-spinner name="crescent" color="secondary"></ion-spinner>
+</div>
+
+<!-- Page header — matching maintenance-dashboard -->
+<div class="view-header">
+  <ion-icon name="construct-outline" class="view-icon"></ion-icon>
+  <span class="view-title">{{viewData.detail.title}}</span>
+  <ion-spinner *ngIf="saving" name="crescent" class="header-spinner"></ion-spinner>
+</div>
+
+<!-- mat-tab-group header hidden via CSS; tab navigation handled by bottom-tab-bar -->
+<mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange($event)" #tabGroup [(selectedIndex)]="selectedTabIndex">
+
+  <!-- ═══════════════════════ SUBSTATION TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.substation">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="subFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #subFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !subDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No active substation maintenance</p>
+        </div>
+        <div *ngFor="let item of subDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.substation }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="card-action-row">
+            <ion-button size="small" (click)="openPlanDlg(item,'sstn')">
+              {{locale_service.Locale.language.project.maintenancesettings.heading.planmnt}}
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- ═══════════════════════ BAY TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.bay">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="bayFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #bayFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !bayDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No active bay maintenance</p>
+        </div>
+        <div *ngFor="let item of bayDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <span class="baytype-chip" *ngIf="item.baytype">{{ item.baytype }}</span>
+          <div class="meta-row">
+            <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.plannedDatestr">
+            <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+            <span class="meta-date-label">Planned</span>
+            <span class="meta-date-val">{{ item.plannedDatestr }}</span>
+          </div>
+          <div class="shutdown-tag" *ngIf="item.reqshutdown">
+            <ion-icon name="flash-outline"></ion-icon> Shutdown Required
+          </div>
+          <div class="card-action-row">
+            <ion-button size="small"
+                        [disabled]="(!resolver.MaintenanceAccessRights.create_scheduled_maintenance && !resolver.MaintenanceAccessRights.schedule_tl_maintenance) || item.mntlst.mnt_source!=null"
+                        (click)="openPlanDlg(item,'bay')">
+              {{locale_service.Locale.language.project.maintenancesettings.heading.planmnt}}
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- ═══════════════════════ EQUIPMENT TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.eqp">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="eqpFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #eqpFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !eqpDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No active equipment maintenance</p>
+        </div>
+        <div *ngFor="let item of eqpDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <span class="baytype-chip" *ngIf="item.eqptype">{{ item.eqptype }}</span>
+          <div class="meta-row">
+            <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}{{ item.eqp ? ' / ' + item.eqp : '' }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.plannedDatestr">
+            <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+            <span class="meta-date-label">Planned</span>
+            <span class="meta-date-val">{{ item.plannedDatestr }}</span>
+          </div>
+          <div class="card-action-row">
+            <ion-button size="small"
+                        [disabled]="!resolver.MaintenanceAccessRights.create_scheduled_maintenance && !resolver.MaintenanceAccessRights.schedule_tl_maintenance"
+                        (click)="openPlanDlg(item,'eqp')">
+              {{locale_service.Locale.language.project.maintenancesettings.heading.planmnt}}
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- ═══════════════════════ TRANSMISSION TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_tl_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.transmission">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="tlFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #tlFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !tlDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No active transmission line maintenance</p>
+        </div>
+        <div *ngFor="let item of tlDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="flash-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.line_name }}{{ item.tower_range ? ' — ' + item.tower_range : '' }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.plannedDatestr">
+            <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+            <span class="meta-date-label">Planned</span>
+            <span class="meta-date-val">{{ item.plannedDatestr }}</span>
+          </div>
+          <div class="shutdown-tag" *ngIf="item.mntlst?.template?.reqshutdown">
+            <ion-icon name="flash-outline"></ion-icon> Shutdown Required
+          </div>
+          <div class="card-action-row">
+            <ng-container *ngIf="!item.mntlst.template.reqshutdown">
+              <ion-button size="small"
+                          [disabled]="!resolver.MaintenanceAccessRights.create_scheduled_maintenance && !resolver.MaintenanceAccessRights.schedule_tl_maintenance"
+                          (click)="openPlanDlg(item,'tl')">
+                {{locale_service.Locale.language.project.maintenancesettings.heading.planmnt}}
+              </ion-button>
+            </ng-container>
+            <ng-container *ngIf="item.mntlst.template.reqshutdown">
+              <ion-button size="small"
+                          [disabled]="(!resolver.MaintenanceAccessRights.create_scheduled_maintenance && !resolver.MaintenanceAccessRights.schedule_tl_maintenance) || (isBaySelected[item.path + '/' + item._id + '|' + item.mnt + '|' + item.tower_range])"
+                          (click)="openBaySelectionDlg(item)">
+                {{locale_service.Locale.language.project.maintenancesettings.heading.planmnt}}
+              </ion-button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- ═══════════════════════ OBSERVATION TL TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_observation_tl_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.transmission_observation">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="obtlFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)" [disabled]="true">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #obtlFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !obtlDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No active observation TL maintenance</p>
+        </div>
+        <div *ngFor="let item of obtlDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.mntlst?.connected_line || item.line_name">
+            <ion-icon name="flash-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.mntlst?.connected_line ?? item.line_name }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.mntlst?.tower_range || item.tower_range">
+            <ion-icon name="git-branch-outline" class="meta-icon"></ion-icon>
+            <span class="meta-date-label">Tower Range</span>
+            <span>{{ item.mntlst?.tower_range ?? item.tower_range }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.bay_path">
+            <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.bay_path }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.plannedDatestr">
+            <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+            <span class="meta-date-label">Planned</span>
+            <span class="meta-date-val">{{ item.plannedDatestr }}</span>
+          </div>
+          <div class="card-action-row">
+            <ion-button size="small"
+                        [disabled]="(!resolver.MaintenanceAccessRights.create_scheduled_maintenance && !resolver.MaintenanceAccessRights.schedule_tl_maintenance) || !item.mntlst.maintenance_on_bay"
+                        (click)="openPlanDlg(item,'ob_tl')">
+              {{locale_service.Locale.language.project.maintenancesettings.heading.planmnt}}
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- ═══════════════════════ TL CONNECTED BAY TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_connected_tl_for_bay_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.connected_bay">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="tlConnFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #tlConnFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !tlConnectedBayDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No connected bay maintenance</p>
+        </div>
+        <div *ngFor="let item of tlConnectedBayDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card read-only-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <span class="baytype-chip" *ngIf="item.baytype">{{ item.baytype }}</span>
+          <div class="meta-row">
+            <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.plannedDatestr">
+            <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+            <span class="meta-date-label">Planned</span>
+            <span class="meta-date-val">{{ item.plannedDatestr }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- ═══════════════════════ BAY CONNECTED TL TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_connected_bay_for_tl_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.connected_tl">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="bayConnTLFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #bayConnTLFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !bayConnectedTLDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No connected TL maintenance</p>
+        </div>
+        <div *ngFor="let item of bayConnectedTLDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card read-only-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="flash-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.line_name }}{{ item.tower_range ? ' — ' + item.tower_range : '' }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.plannedDatestr">
+            <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+            <span class="meta-date-label">Planned</span>
+            <span class="meta-date-val">{{ item.plannedDatestr }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- ═══════════════════════ BAY CONNECTED BAY TAB ═══════════════════════ -->
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_connected_bay_for_substation_tab_view"
+           [label]="locale_service.Locale.language.project.maintenancesettings.heading.connected_bay">
+
+    <div class="tab-body">
+      <app-search-filter-bar
+          [searchText]="dashboardSearchText"
+          (searchTextChange)="onDashboardSearch($event)"
+          placeholder="Search substation, bay, TL…"
+          [time_settings]="time_settings"
+          [shiftList]="shiftList"
+          view_type="mnt_db"
+          [isShowRange]="null"
+          (dateChange)="dateTimeChanged($event)"
+          (clearDate)="clearAllSelections()">
+        <ion-button fill="solid" shape="round" size="small"
+                    [matMenuTriggerFor]="bayConnBayFilterMenu"
+                    (click)="getFilterDetails(selectedTabLabel)">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </app-search-filter-bar>
+
+      <mat-menu #bayConnBayFilterMenu class="filter-menu" panelClass="custom-dashboard-filter" [hasBackdrop]="true">
+        <div class="filter-container" (click)="$event.stopPropagation()">
+          <div class="filter-header">
+            <h4>Filters</h4>
+            <ion-button fill="clear" size="small" (click)="clearAllFilters()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let category of filter_dashboard[selectedTabLabel] | keyvalue" [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ category.value.name }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <ion-searchbar class="filter-search"
+                             mode="md"
+                             [value]="filter_search_text[category.key] || ''"
+                             (ionInput)="filter_search_text[category.key] = $event.target.value"
+                             (click)="$event.stopPropagation()"
+                             placeholder="Search"
+                             debounce="100"
+                             showClearButton="focus"></ion-searchbar>
+              <div class="checkbox-group">
+                <mat-checkbox *ngFor="let option of filteredCategoryOptions(category.key, category.value.options)"
+                              [checked]="category.value.selected[option] === '1'"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckboxChange(option, category.value.selected)">
+                  {{ option }}
+                </mat-checkbox>
+                <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
+                  No matches
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-menu>
+
+      <div class="card-list">
+        <ng-container *ngIf="saving">
+          <div *ngFor="let s of [1,2,3]" class="mnt-card skeleton-card">
+            <ion-skeleton-text animated class="skel skel-title"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skel skel-meta"></ion-skeleton-text>
+            <div class="skel-divider"></div>
+            <ion-skeleton-text animated class="skel skel-bar"></ion-skeleton-text>
+          </div>
+        </ng-container>
+        <div class="empty-state" *ngIf="!saving && !bayConnectedBayDatasource?.filteredData?.length">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>No connected bay maintenance</p>
+        </div>
+        <div *ngFor="let item of bayConnectedBayDatasource?.filteredData; trackBy: trackByMntCard" class="mnt-card read-only-card"
+             [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">
+          <div class="card-title-row">
+            <span class="card-title">{{ item.mnttype }}</span>
+            <span class="status-pill" [attr.data-status]="item.status?.toLowerCase()?.split(' ')?.join('')">{{ item.status }}</span>
+          </div>
+          <span class="baytype-chip" *ngIf="item.baytype">{{ item.baytype }}</span>
+          <div class="meta-row">
+            <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
+            <span>{{ item.substation }}{{ item.bay ? ' / ' + item.bay : '' }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.zone || item.circle || item.division">
+            <ion-icon name="map-outline" class="meta-icon"></ion-icon>
+            <span>{{ item.zone }}{{ item.circle ? ' › ' + item.circle : '' }}{{ item.division ? ' › ' + item.division : '' }}</span>
+          </div>
+          <div class="meta-row">
+            <ion-icon name="calendar-outline" class="meta-icon date-icon"></ion-icon>
+            <span class="meta-date-label">Scheduled</span>
+            <span class="meta-date-val">{{ item.cutoffstr }}</span>
+          </div>
+          <div class="meta-row" *ngIf="item.plannedDatestr">
+            <ion-icon name="time-outline" class="meta-icon time-icon"></ion-icon>
+            <span class="meta-date-label">Planned</span>
+            <span class="meta-date-val">{{ item.plannedDatestr }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+</mat-tab-group>
+
+<!-- Bottom tab bar — matching maintenance-dashboard -->
+<div class="bottom-tab-bar">
+  <button *ngFor="let tab of allLables; let i = index" class="bottom-tab-btn"
+    [class.active]="i === selectedTabIndex"
+    (click)="tabGroup.selectedIndex = i">
+    <ng-container [ngSwitch]="tab.index">
+      <ion-icon *ngSwitchCase="1" name="business-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="2" name="layers-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="3" name="hardware-chip-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="4" name="flash-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="5" name="eye-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="6" name="git-branch-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="7" name="git-branch-outline"></ion-icon>
+      <ion-icon *ngSwitchCase="8" name="git-network-outline"></ion-icon>
+      <ion-icon *ngSwitchDefault name="grid-outline"></ion-icon>
+    </ng-container>
+    <span class="bottom-tab-label">{{ tab.label }}</span>
+    <ion-badge *ngIf="getTabCount(tab) > 0" class="bottom-tab-badge">{{ getTabCount(tab) }}</ion-badge>
+  </button>
+</div>

@@ -1,0 +1,212 @@
+<!-- ── Side menu ──────────────────────────────────────────────────────────── -->
+<ion-menu contentId="pvmain-content" menuId="pvmain-menu" side="start" type="overlay" [swipeGesture]="true">
+
+  <!-- Profile header -->
+  <ion-header>
+    <ion-toolbar class="menu-profile-toolbar">
+      <div class="menu-profile-wrap">
+        <div class="menu-app-label">{{ viewData?.cfg?.title || productName }}</div>
+        <div class="menu-profile">
+          <div class="menu-avatar">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <div class="menu-user-info">
+            <span class="menu-username">{{ appservice.getUserName() }}</span>
+            <span class="menu-app-name">{{ viewData?.cfg?.title || productName }}</span>
+          </div>
+        </div>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Views from backend -->
+  <ion-content>
+    <ion-list lines="none" *ngIf="viewData">
+
+      <!-- ── My Views (user views) ─────────────────────────────── -->
+      <ng-container *ngIf="viewData.menu?.userViews?.length">
+        <ion-list-header class="section-header">
+          <ion-icon name="person-circle-outline" class="section-icon"></ion-icon>
+          <ion-label>My Views</ion-label>
+        </ion-list-header>
+        <ion-item button detail="false" *ngFor="let view of viewData.menu.userViews"
+          [class.active-item]="viewData.view === 'U' + view.name" menuClose [routerLink]="myParentPath"
+          [queryParams]="{view: 'U' + view.name}">
+          <ion-icon [name]="view.view_icon || 'home-outline'" slot="start"></ion-icon>
+          <ion-label>{{ view.name }}</ion-label>
+        </ion-item>
+      </ng-container>
+
+      <!-- ── Project Views (ungrouped) ────────────────────────── -->
+      <ng-container *ngIf="ungroupedProjectViews?.length">
+        <ion-list-header class="section-header">
+          <ion-icon name="stats-chart-outline" class="section-icon"></ion-icon>
+          <ion-label>Views</ion-label>
+        </ion-list-header>
+        <ion-item button detail="false" *ngFor="let view of ungroupedProjectViews"
+          [class.active-item]="viewData.view === 'P' + view.name" menuClose [routerLink]="myParentPath"
+          [queryParams]="{view: 'P' + view.name}">
+          <ion-icon [name]="view.view_icon || 'layers-outline'" slot="start"></ion-icon>
+          <ion-label>{{ view.name }}</ion-label>
+        </ion-item>
+        <!-- System views (Events / Alarm / Status / History) -->
+        <ion-item button detail="false" *ngIf="viewData.access?.role?.lockViews == false"
+          [class.active-item]="viewData.view === '_PE'" menuClose [routerLink]="myParentPath"
+          [queryParams]="{view: '_PE'}">
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-label>Events</ion-label>
+        </ion-item>
+        <ion-item button detail="false" *ngIf="viewData.access?.role?.lockAlarm == false"
+          [class.active-item]="viewData.view === '_PA'" menuClose [routerLink]="myParentPath"
+          [queryParams]="{view: '_PA'}">
+          <ion-icon name="notifications-outline" slot="start"></ion-icon>
+          <ion-label>Alarms</ion-label>
+        </ion-item>
+        <ion-item button detail="false" *ngIf="viewData.access?.role?.lockStatus == false"
+          [class.active-item]="viewData.view === '_PS'" menuClose [routerLink]="myParentPath"
+          [queryParams]="{view: '_PS'}">
+          <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+          <ion-label>Status</ion-label>
+        </ion-item>
+        <ion-item button detail="false" *ngIf="viewData.access?.role?.lockHistory == false"
+          [class.active-item]="viewData.view === '_PH'" menuClose [routerLink]="myParentPath"
+          [queryParams]="{view: '_PH'}">
+          <ion-icon name="time-outline" slot="start"></ion-icon>
+          <ion-label>History</ion-label>
+        </ion-item>
+      </ng-container>
+
+      <!-- ── View Groups (non-shortcut, from validViewGroups) ── -->
+      <ng-container *ngIf="validViewGroups?.length">
+        <ng-container *ngFor="let group of validViewGroups">
+          <ng-container *ngIf="group.viewlist?.length">
+            <ion-list-header class="section-header">
+              <ion-icon name="lock-closed-outline" class="section-icon"></ion-icon>
+              <ion-label>{{ group.name }}</ion-label>
+            </ion-list-header>
+            <ion-item button detail="false" *ngFor="let view of group.viewlist"
+              [class.active-item]="viewData.view === 'P' + view.name" menuClose [routerLink]="myParentPath"
+              [queryParams]="{view: 'P' + view.name}">
+              <ion-icon [name]="view.view_icon || 'layers-outline'" slot="start"></ion-icon>
+              <ion-label>{{ view.name }}</ion-label>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- ── Shortcut Groups (isshortcut=true) ─────────────────── -->
+      <ng-container *ngIf="viewData.viewgroups?.length">
+        <ng-container *ngFor="let group of viewData.viewgroups">
+          <ng-container *ngIf="group.isshortcut && group.links?.length">
+            <ion-list-header class="section-header">
+              <ion-icon name="list-outline" class="section-icon"></ion-icon>
+              <ion-label>{{ group.name }}</ion-label>
+            </ion-list-header>
+            <ion-item button detail="false" *ngFor="let link of group.links"
+              [class.active-item]="viewData?.viewData?._id === link.params?.view_id" menuClose
+              [routerLink]="myParentPath" [queryParams]="{view: 'P' + link.name}">
+              <ion-icon [name]="link.params?.view_icon || 'bookmark-outline'" slot="start"></ion-icon>
+              <ion-label>{{ link.name }}</ion-label>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- ── Empty state ────────────────────────────────────────── -->
+      <ion-item
+        *ngIf="!viewData.menu?.userViews?.length && !ungroupedProjectViews?.length && !validViewGroups?.length">
+        <ion-label color="medium" style="font-size:13px;">No views available</ion-label>
+      </ion-item>
+
+    </ion-list>
+  </ion-content>
+
+  <!-- About + Logout pinned to bottom -->
+  <ion-footer>
+    <ion-toolbar class="menu-footer-toolbar">
+      <ion-item button detail="false" lines="none" class="about-item" (click)="openAbout()">
+        <ion-icon name="information-circle-outline" slot="start" class="about-icon"></ion-icon>
+        <ion-label>{{ locale_service.Locale.language.common.abtConfig }}</ion-label>
+      </ion-item>
+    </ion-toolbar>
+    <ion-toolbar class="menu-footer-toolbar">
+      <ion-item button detail="false" lines="none" class="logout-item" (click)="confirmsignout()">
+        <ion-icon name="power-outline" slot="start" class="logout-icon"></ion-icon>
+        <ion-label>Logout</ion-label>
+      </ion-item>
+    </ion-toolbar>
+  </ion-footer>
+</ion-menu>
+
+<!-- ── Main page ─────────────────────────────────────────────────────────── -->
+<div id="pvmain-content" class="ion-page">
+
+  <!-- <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button menu="pvmain-menu"></ion-menu-button>
+      </ion-buttons>
+      <img class="header-logo" src="assets/images/rss.svg" width="32" height="32" />
+      <ion-title>{{ viewData?.cfg?.title || productName }}</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+
+  <ion-header>
+    <ion-toolbar color="primary">
+
+      <!-- LEFT MENU -->
+      <ion-buttons slot="start">
+        <ion-menu-button menu="pvmain-menu"></ion-menu-button>
+      </ion-buttons>
+
+      <!-- CENTER CONTENT -->
+      <div class="header-center">
+        <img *ngIf="projectLogo; else defaultLogo" class="header-logo" [src]="projectLogo" />
+        <ng-template #defaultLogo>
+          <img class="header-logo" src="assets/images/rss.svg" />
+        </ng-template> <span class="header-title-text">
+          {{ viewData?.cfg?.title || productName }}
+        </span>
+      </div>
+    </ion-toolbar>
+    <ion-toolbar class="bc-toolbar" *ngIf="viewData?.menu?.breadCrumbSelection?.length">
+      <app-breadcrumb [Selection]="viewData.menu.breadCrumbSelection" [queryParams]="queryParams">
+      </app-breadcrumb>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- dynamic content -->
+  <div [ngClass]="{'disabledProgress': appservice.InProgress, 'main': true}">
+    <ng-template class="test" appDynamicView></ng-template>
+
+    <div *ngIf="viewData && !hasRenderableView" class="empty-view-state">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <p class="title">No maintenance views at this level</p>
+      <p class="hint">Select a substation or division from the breadcrumb to view maintenance details.</p>
+    </div>
+  </div>
+
+  <div class="notification-fabs">
+    <div class="fab-wrapper">
+      <ion-fab-button class="notification-fab" (click)="openNotifications('non-actionable')">
+        <ion-icon name="notifications"></ion-icon>
+      </ion-fab-button>
+      <ion-badge class="fab-badge" *ngIf="(unreadCount$ | async) as count" [hidden]="count <= 0">
+        {{ count }}
+      </ion-badge>
+    </div>
+
+    <div class="fab-wrapper">
+      <ion-fab-button class="notification-fab actionable" (click)="openNotifications('actionable')">
+        <ion-icon name="warning"></ion-icon>
+      </ion-fab-button>
+      <ion-badge color="danger" class="fab-badge" *ngIf="(actionableUnreadCount$ | async) as count" [hidden]="count <= 0">
+        {{ count }}
+      </ion-badge>
+    </div>
+  </div>
+
+  <!-- Notification Panel -->
+  <app-message-alert-dlg *ngIf="showUrgent" [selectedType]="selectedNotificationType">
+  </app-message-alert-dlg>
+</div>

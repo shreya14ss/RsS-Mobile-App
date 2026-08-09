@@ -1,0 +1,253 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$app-primary: mat.define-palette(mat.$indigo-palette);
+$app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$app-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$app-theme: mat.define-light-theme((color: (primary: $app-primary,
+        accent: $app-accent,
+        warn: $app-warn,
+      )));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($app-theme);
+
+// http://ionicframework.com/docs/theming/
+@import "~@ionic/angular/css/core.css";
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+// Global custom styles
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: #ffffff;
+}
+
+ion-tab-bar {
+  --background: var(--ion-color-primary);
+  --color: rgba(255, 255, 255, 0.6);
+  --color-selected: #ffffff;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+ion-card {
+  border-radius: 12px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.status-planned {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-in_progress {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.status-maintenance_complete {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-maintainance_cancelled {
+  background: #fce4ec;
+  color: #c62828;
+}
+
+.status-ptw_issued {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.status-default {
+  background: #f5f5f5;
+  color: #424242;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* ───── Action Sheet (Force Login) ───── */
+
+.force-login-sheet .action-sheet-group {
+  border-radius: 16px 16px 0 0;
+}
+
+.force-login-sheet .action-sheet-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.force-login-sheet .action-sheet-sub-title {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.force-login-sheet .action-sheet-destructive {
+  color: var(--ion-color-danger);
+  font-weight: 500;
+}
+
+.force-login-sheet .action-sheet-button {
+  font-size: 15px;
+}
+
+.custom-footer {
+  padding: 12px;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.action-btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.common-bottom-btn {
+  width: 100%;
+  height: 52px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;
+}
+
+/* Primary button (like COMPLETE PATROLLING) */
+.primary-btn {
+  --background: #1e3a5f;
+  --border-radius: 10px;
+  height: 48px;
+  font-weight: 600
+}
+
+/* ───── Bottom-Tab Badge ─────
+   Shared counter badge on custom bottom-tab buttons across multiple
+   dashboards. Keep it in one place so any font/size/color change
+   applies everywhere the class is used. */
+.bottom-tab-badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 15px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  --background: var(--ion-color-primary);
+  --color: #ffffff;
+}
+
+/* ───── Wrap long mat-checkbox labels ─────
+   Angular Material 13 sets `.mat-checkbox-layout` to `inline-flex` with
+   `white-space: nowrap`, so long option names like "AIS Power Transformer
+   HV Bay" clip instead of wrapping. Flip the layout to block-flex and let
+   the label span shrink below its intrinsic width (`min-width: 0`) so text
+   wraps to a second line. Applied globally — wrap is safe for every
+   mat-checkbox in the app, and this avoids depending on mat-menu panelClass
+   scoping (which doesn't always reach content ported into the CDK overlay). */
+.mat-checkbox {
+  .mat-checkbox-layout {
+    display: flex !important;
+    align-items: flex-start !important;
+    white-space: normal !important;
+    max-width: 100%;
+  }
+
+  .mat-checkbox-inner-container {
+    flex: 0 0 auto;
+    margin-top: 3px;
+  }
+
+  .mat-checkbox-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+  }
+}
+
+// ion-select opened as an alert (interface="alert") truncates each option with
+// an ellipsis by default. For selectors that carry long slash-separated device
+// paths (e.g. "HVPNL/Panchkula/TS Karnal/...") the truncation hides the part
+// that actually differentiates one option from another. Opt in per-select by
+// attaching cssClass "wrap-alert" via [interfaceOptions] and set the class
+// "wrap-select" on the <ion-select> itself so the closed-state field can wrap
+// the selected label too.
+.wrap-alert {
+  .alert-radio-label,
+  .alert-checkbox-label,
+  .alert-tappable {
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+    height: auto !important;
+    contain: none !important;
+  }
+}
+
+ion-select.wrap-select::part(text) {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+}
+
+/* Required-field asterisk emitted by rs-input (and any other component that
+   wants to reuse the marker). Global so it applies inside ion-label without
+   Shadow DOM style-encapsulation issues. Mirrors Material Design's automatic
+   "*" that mat-label shows in the ClientApp for required fields. */
+.rs-required-mark {
+  color: var(--ion-color-danger, #eb445a);
+  font-weight: 600;
+}

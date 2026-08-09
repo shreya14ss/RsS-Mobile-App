@@ -1,0 +1,45 @@
+.preset-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+ion-item {
+  margin-bottom: 10px;
+
+  ion-datetime {
+    display: block !important;
+    width: 100% !important;
+    min-height: 380px !important;
+    background: #fff;
+    --background: #fff;
+  }
+}
+
+// ion-item's default row layout puts child elements in a flex row and
+// caps their height to the row. ion-datetime's inline calendar needs the
+// full 380px card height, so force ion-item's inner slot to lay children
+// out in a column and stretch instead.
+:host ::ng-deep ion-item.item .item-native .item-inner {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+:host ::ng-deep ion-item.item .item-native {
+  align-items: stretch;
+}
+
+.range-error {
+  display: block;
+  font-size: 12px;
+  padding: 0 4px 8px;
+}
+
+.actions {
+  margin-top: 20px;
+
+  ion-button {
+    margin-top: 10px;
+  }
+}

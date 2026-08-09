@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /*align-content: stretch;*/
+  justify-content:space-between;
+  /*align-items: stretch;*/
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.rbh_title.draggable {
+  cursor: move;
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  margin-left: 16px;
+}
+
+.radiobtns
+{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    height:100%;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content:space-evenly;
+  height:100%;
+}
+
+.rbh_title.draggable {
+  cursor: move;
+}
