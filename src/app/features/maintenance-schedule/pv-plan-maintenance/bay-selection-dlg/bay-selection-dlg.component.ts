@@ -233,7 +233,8 @@ export class BaySelectionDlgComponent implements OnInit, OnDestroy {
             { id: this.appService.getLoginID(), name: this.appService.getUserName(), loginId: this.appService.getLoginID() },
             receivingUsers,
             [],
-            `${this.appService.unescapedName(`[MT_SPTLBS] Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.maintenance_list.connected_line}. Please review and proceed as per schedule.`)}`,
+            `${this.appService.unescapedName(`Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.maintenance_list.connected_line}. Please review and proceed as per schedule.`)}`,
+            'MT_SPTLBS',
             MaintenanceStatus.Planned,
             {
               maintenance_id: plan_mnt._id,

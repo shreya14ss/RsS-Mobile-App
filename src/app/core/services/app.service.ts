@@ -45,6 +45,7 @@ export interface Notice {
   receivingUsers: UserInfo[];
   receivingGroups: string[];
   messageText: string;
+  uniqueCode?: string;
   timestamp: number;
   isUrgent: boolean;
   readBy: string[];
@@ -307,6 +308,11 @@ export class AppService {
     // visible until explicitly dismissed. Without this the user would keep
     // seeing the cached dialog and think they're still logged in.
     this.dismissAllModals().catch(e => console.error('[Modal] dismiss on logout failed', e));
+    // Wipe in-memory maintenance-dashboard state so a saved tab from the
+    // previous session doesn't leak into the next login on this device.
+    this.pendingMaintenanceTab = null;
+    this.pendingMaintenanceId = null;
+    this.currentMaintenanceTab = '';
     this.TokenInit();
   }
 
@@ -316,8 +322,20 @@ export class AppService {
     // getTop() returns the top-most open modal, or undefined when none remain.
     // Loop so nested modals also close.
     let top = await modalCtrl.getTop();
-    while (top) {
-      await top.dismiss().catch(() => { /* ignore */ });
+    let safety = 10;
+    while (top && safety-- > 0) {
+      // Race dismiss() against a timeout. On real devices resuming from Doze
+      // the modal's animation runtime can be dead — dismiss() then never
+      // resolves and we'd hang forever. If the timeout wins, tear the
+      // element out of the DOM directly so the user isn't trapped.
+      const el = top;
+      const dismissed = await Promise.race([
+        el.dismiss().then(() => true).catch(() => false),
+        new Promise<boolean>(r => setTimeout(() => r(false), 800))
+      ]);
+      if (!dismissed) {
+        try { el.remove(); } catch { /* already detached */ }
+      }
       top = await modalCtrl.getTop();
     }
   }
@@ -1700,15 +1718,15 @@ export class AppService {
         .catch(reject);
     });
   }
-  sendNotificationDetails(data: any, msg: string, connected_substations: string[], receivingUsers: UserInfo[]) {
+  sendNotificationDetails(data: any, msg: string, connected_substations: string[], receivingUsers: UserInfo[], uniqueCode: string = '') {
     const line_bay_or_tl_mnt = data.shutdown_required && data.maintenance_type == "Bay" && data.backcharging_id;
     if (!line_bay_or_tl_mnt)
       return;
     const substation = data.device_name.split("/")[4];
 
-    this.sendNotification({ id: null, name: substation, loginId: null }, receivingUsers, connected_substations, msg);
+    this.sendNotification({ id: null, name: substation, loginId: null }, receivingUsers, connected_substations, msg, uniqueCode);
   }
-  sendNotification(sender: UserInfo, receivingUsers: UserInfo[], receivingGroups: string[], msg: string) {
+  sendNotification(sender: UserInfo, receivingUsers: UserInfo[], receivingGroups: string[], msg: string, uniqueCode: string = '') {
 
     const notification_msg: Notice = {
       _id: null,
@@ -1717,6 +1735,7 @@ export class AppService {
       receivingUsers: receivingUsers ?? [],
       receivingGroups: receivingGroups ?? [],
       messageText: msg,
+      uniqueCode: uniqueCode,
       timestamp: new Date().getMilliseconds(),                      // new Date().toISOString(),
       isUrgent: true,
       readBy: [],
@@ -1733,6 +1752,7 @@ export class AppService {
     receivingUsers: UserInfo[],
     receivingGroups: string[],
     messageText: string,
+    uniqueCode: string,
     actionType: string,
     actionMetadata: {
       maintenance_id?: string,
@@ -1752,6 +1772,7 @@ export class AppService {
       receivingUsers: receivingUsers ?? [],
       receivingGroups: receivingGroups ?? [],
       messageText: messageText,
+      uniqueCode: uniqueCode,
       timestamp: new Date().getMilliseconds(),
       isUrgent: true,
       readBy: [],

@@ -323,7 +323,11 @@ export class ObservationActionDlgComponent implements OnInit, OnDestroy {
 
   getDescriptionById(id: string): string {
     const observation = this.filteredObservationDatasource.find(obs => obs._id === id);
-    return observation ? observation.description : '';
+    if (!observation) return '';
+    // Mirror the multi-select option label — description is free-text and often
+    // empty; the observation name is the semantic identifier that must never
+    // render blank on the chip.
+    return observation.observations || observation.description || 'Observation';
   }
 
   remove(name: string) {
@@ -537,7 +541,7 @@ export class ObservationActionDlgComponent implements OnInit, OnDestroy {
             const maintenanceName = plan_mnt.maintenance_list?.template?.maintenancename || "Maintenance";
 
             const message = this.appservice.unescapedName(
-              `${this.appservice.unescapedName(`[MT_SATPM] Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.device_name.split("/")[4]} ${plan_mnt.device_name.split("/").pop()}. Please review and proceed as per schedule.`)}`,
+              `${this.appservice.unescapedName(`Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.device_name.split("/")[4]} ${plan_mnt.device_name.split("/").pop()}. Please review and proceed as per schedule.`)}`,
             );
 
             await this.appservice.sendActionableNotification(
@@ -549,6 +553,7 @@ export class ObservationActionDlgComponent implements OnInit, OnDestroy {
               receiving_users,
               [],
               message,
+              'MT_SATPM',
               MaintenanceStatus.Planned,
               {
                 maintenance_id: plan_mnt._id,

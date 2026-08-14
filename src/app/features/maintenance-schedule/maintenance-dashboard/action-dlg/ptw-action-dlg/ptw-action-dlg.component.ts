@@ -352,6 +352,13 @@ export class PtwActionDlgComponent implements OnInit, OnChanges {
             { duration: 4000 });
         } else {
           this.ptwDataSource = data;
+          // Populate dialogData.ptwDetails so downstream flows (cancelPTW
+          // notification at line 1148/1175) can read ptw_id. Without this,
+          // an operator who opens the dialog fresh — dialogData from the
+          // parent template never includes ptwDetails — would send a
+          // "PTW Cancelled Alert: The issued PTW undefined has been
+          // cancelled" notification.
+          this.dialogData.ptwDetails = data;
           this.patchFormWithPTWData(data);
         }
       });
@@ -596,7 +603,8 @@ export class PtwActionDlgComponent implements OnInit, OnChanges {
             { id: this.appservice.getLoginID(), name: this.appservice.getUserName(), loginId:this.appservice.getLoginID() },
             recieving_users,
             [], // No groups needed
-            `${this.appservice.unescapedName(`[MT_JRP] PTW Requested for ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.maintenance_list.template.maintenancename} by ${this.getUserNameWithID()}`)}`,
+            `${this.appservice.unescapedName(`PTW Requested for ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.maintenance_list.template.maintenancename} by ${this.getUserNameWithID()}`)}`,
+            'MT_JRP',
             MaintenanceStatus.PTWRequested,
             {
               maintenance_id: plan_mnt._id,
@@ -692,7 +700,8 @@ export class PtwActionDlgComponent implements OnInit, OnChanges {
             { id: this.appservice.getLoginID(), name: this.appservice.getUserName(), loginId:this.appservice.getLoginID() },
             recieving_users,
             [], // No groups needed
-            `${this.appservice.unescapedName(`[MT_ORN] No Back Feeding Requested By ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.device_name.split("/").pop()}`)}`,
+            `${this.appservice.unescapedName(`No Back Feeding Requested By ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.device_name.split("/").pop()}`)}`,
+            'MT_ORN',
             MaintenanceStatus.BCCertificateRequested,
             {
               maintenance_id: plan_mnt._id,
@@ -769,7 +778,8 @@ export class PtwActionDlgComponent implements OnInit, OnChanges {
             { id: this.appservice.getLoginID(), name: this.appservice.getUserName(), loginId:this.appservice.getLoginID() },
             recieving_users,
             [], // No groups needed
-            `${this.appservice.unescapedName(`[MT_ORNC] No Back Feeding Cancel Requested By ${plan_mnt.device_name.split("/").pop()} - ${substation}`)}`,
+            `${this.appservice.unescapedName(`No Back Feeding Cancel Requested By ${plan_mnt.device_name.split("/").pop()} - ${substation}`)}`,
+            'MT_ORNC',
             MaintenanceStatus.BCCancelCertificateRequested,
             {
               maintenance_id: plan_mnt._id,
@@ -947,7 +957,8 @@ export class PtwActionDlgComponent implements OnInit, OnChanges {
             { id: this.appservice.getLoginID(), name: this.appservice.getUserName(), loginId:this.appservice.getLoginID() },
             recieving_users,
             [], // No groups needed
-            `${this.appservice.unescapedName(`[MT_OIP] PTW Issued for ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.maintenance_list.template.maintenancename}`)}`,
+            `${this.appservice.unescapedName(`PTW Issued for ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.maintenance_list.template.maintenancename}`)}`,
+            'MT_OIP',
             MaintenanceStatus.PTWIssued,
             {
               maintenance_id: plan_mnt._id,
@@ -1022,7 +1033,8 @@ export class PtwActionDlgComponent implements OnInit, OnChanges {
         { id: this.appservice.getLoginID(), name: this.appservice.getUserName(), loginId:this.appservice.getLoginID() },
         recieving_users,
         [],
-        `${this.appservice.unescapedName(`[MT_JRPC] PTW Cancel Requested for ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.maintenance_list.template.maintenancename}`)}`,
+        `${this.appservice.unescapedName(`PTW Cancel Requested for ${plan_mnt.device_name.split("/").pop()} - ${plan_mnt.maintenance_list.template.maintenancename}`)}`,
+        'MT_JRPC',
         MaintenanceStatus.PTWCancelRequested,
         {
           maintenance_id: plan_mnt._id,
@@ -1109,6 +1121,77 @@ export class PtwActionDlgComponent implements OnInit, OnChanges {
             console.error("Error while deleting actionable notices:", result.code);
           }
         });
+
+        // Send "PTW Cancelled Alert" actionable notification to users with
+        // rqst_ptw_Button rights on the relevant path (TL path for line
+        // maintenance, substation path for non-TL). Mirrors ClientApp
+        // ptw-action-dlg.component.ts:1229-1295 — was omitted on the mobile
+        // port, which is why cancel-PTW notifications never fired for mobile
+        // users.
+        if (plan_mnt.maintenance_list.tower_range) {
+          // TL flow — filter by tower range within the line's jurisdiction.
+          const tlPath = plan_mnt.maintenance_list.connected_line_path;
+          const mntTowerRange = (plan_mnt.maintenance_list.tower_range || '').trim().toLowerCase();
+          let recieving_users = [];
+          try {
+            recieving_users = await this.appservice.GetUserIdsFromRight('rqst_ptw_Button', tlPath);
+          } catch (err) {
+            console.error(err);
+          }
+
+          if (mntTowerRange) {
+            recieving_users = recieving_users.filter((user: any) => {
+              const userRange = (user.tower_range || '').trim().toLowerCase();
+              // Include users with no specific tower range (entire TL) or an
+              // exact match with the maintenance's tower range.
+              return !userRange || userRange === mntTowerRange;
+            });
+          }
+
+          this.appservice.sendActionableNotification(
+            { id: this.appservice.getLoginID(), name: this.appservice.getUserName(), loginId: this.appservice.getLoginID() },
+            recieving_users,
+            [], // No groups needed
+            `${this.appservice.unescapedName(`PTW Cancelled Alert: The issued PTW ${this.dialogData?.ptwDetails?.ptw_id} has been cancelled. Please ensure the Maintenance Entry in the System.`)}`,
+            'MT_OCP',
+            MaintenanceStatus.PTWCancelRequested,
+            {
+              maintenance_id: plan_mnt._id,
+              target_view: 'Maintenance Dashboard',
+              target_tab: 'Scheduled TL',
+              expectedCompletionStatus: MaintenanceStatus.PTWCancellationIssued,
+              currentStatus: MaintenanceStatus.PTWCancelRequested
+            },
+            'Cancel PTW'
+          );
+        } else {
+          // Non-TL (JE) flow — target users positioned at the substation path.
+          const devicePath = plan_mnt.device_name.split('/');
+          const substationPath = devicePath.slice(0, 5).join('/');
+          let recieving_users = [];
+          try {
+            recieving_users = await this.appservice.GetUserIdsFromRight('rqst_ptw_Button', substationPath);
+          } catch (error) {
+            console.error(error?.code ?? error);
+          }
+
+          this.appservice.sendActionableNotification(
+            { id: this.appservice.getLoginID(), name: this.appservice.getUserName(), loginId: this.appservice.getLoginID() },
+            recieving_users,
+            [], // No groups needed
+            `${this.appservice.unescapedName(`PTW Cancelled Alert: The issued PTW ${this.dialogData?.ptwDetails?.ptw_id} has been cancelled. Please ensure the Maintenance Entry in the System.`)}`,
+            'MT_OCP',
+            MaintenanceStatus.PTWCancelRequested,
+            {
+              maintenance_id: plan_mnt._id,
+              target_view: 'Maintenance Dashboard',
+              target_tab: 'Bay',
+              expectedCompletionStatus: MaintenanceStatus.PTWCancellationIssued,
+              currentStatus: MaintenanceStatus.PTWCancelRequested
+            },
+            'Cancel PTW'
+          );
+        }
 
         if (!this.maintenanceSkipXENSLDCStep) {
           let res_mnt = await this.mntservice.GetPlanMntByIds([...this.dialogData.mnt_on_same_bay.map(mnt => mnt._id), this.dialogData.maintenanceDetails._id]);

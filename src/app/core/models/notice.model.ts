@@ -5,6 +5,7 @@ export interface Notice {
   receivingUsers: UserInfo[];
   receivingGroups: string[];
   messageText: string;
+  uniqueCode?: string;
   timestamp: number;
   isUrgent: boolean;
   readBy: string[];

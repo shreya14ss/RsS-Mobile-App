@@ -158,6 +158,7 @@ export class MessageAlertDlgComponent implements OnInit, OnDestroy, OnChanges {
             receivingUsers: message.receivingUsers,
             receivingGroups: message.receivingGroups,
             messageText: message.messageText,
+            uniqueCode: message.uniqueCode,
             timestamp: message.timestamp,
             isUrgent: message.isUrgent,
             readBy: message.readBy,

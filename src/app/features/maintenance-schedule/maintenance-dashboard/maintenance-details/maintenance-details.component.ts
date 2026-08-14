@@ -61,6 +61,12 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
     return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
   }
 
+  // Mirrors ClientApp canStartPatrlling (maintenance-details-dlg.component.ts:
+  // 1101-1115): patrolling can be planned for today or any future date, but
+  // NOT for a past date. A past-planned patrolling means the scheduled day
+  // has slipped — user must reschedule to today or later via Apply Changes
+  // before START PATROLLING enables. When the user does click Start the
+  // Maintenance Start Date is recorded separately from the Planned Date.
   get isPatrollingDateInPast(): boolean {
     const val = this.form?.value?.plannedDate;
     if (!val) return false;
@@ -1015,7 +1021,11 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
       : (this.dialogData?.mnt_on_same_bay?.filter(bay => bay.requests_approves_datetime.ptw_issued_datetime > 0 && bay.ptw_ids.length > 0 && bay.ptw_ids[0] == this.maintenanceDetails.ptw_ids[0]).every(bay => bay.requests_approves_datetime.ptw_cancellation_requested_datetime > 0))
     this.mnt_to_be_restored_exists = this.dialogData?.mnt_on_same_bay.filter(bay =>
       bay.sldcchargingcode && bay.requests_approves_datetime.restoration_completed_datetime == 0 && this.maintenanceDetails.device_name == bay.device_name)?.length > 0;
-    //this.AddObservationButtonStatus();
+    // Compute the Add-Observation button flags now that form + requests_approves
+    // are populated. Without this, the flag stays at its default (enabled) until
+    // the user switches tabs — so a user landing directly on the Observations
+    // List tab after patrolling was submitted would see a stale-enabled + button.
+    this.AddObservationButtonStatus();
     //this.computeParamButtonColors();
     //this.getAllPendingObservations();
     if (maintenanceDetails.maintenance_list.template.maintenancename == "Observation Maintenance" || maintenanceDetails.maintenance_list.template._id.startsWith("conditional"))
@@ -1403,7 +1413,12 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
       }
     });
 
-    const message = data.code ? this.locale_service.Locale.language.errorcode.maintenance[data.code] : this.locale_service.Locale.language.project.maintenancesettings.snackbar.patrollingstarted;
+    // Always report "Maintenance Has Started" from startMaintenance, matching
+    // ClientApp maintenance-details-dlg.component.ts:1520. The previous use of
+    // snackbar.patrollingstarted misfired for Observation/Scheduled TL flows
+    // (any non-pure-patrolling maintenance) — the button toast should reflect
+    // the generic maintenance action, not the specific TL patrolling variant.
+    const message = data.code ? this.locale_service.Locale.language.errorcode.maintenance[data.code] : this.locale_service.Locale.language.project.maintenancesettings.snackbar.maintenancestarted;
     this.InProgress = false;
     this.isMainPending = false;
     if (!(data.code && data.code != null))
@@ -3284,6 +3299,11 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
       });
 
       this.isPatrollingSubmitDisabled = false;
+      // Recompute so the stale "No Towers has been assigned" text (from the
+      // initial empty-list computation) is replaced by the current
+      // unassigned-range summary. Without this the warning only refreshes on
+      // SUBMIT via savePatrolling.
+      this.patrolling_warning = this.mntservice.unassignedTLTowers(this.patrolling_details, tower_range);
 
       this.cdr.detectChanges(); // important for mobile
     }
@@ -3322,6 +3342,8 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
         patrolling_details: this.patrolling_details
       });
       this.isPatrollingSubmitDisabled = false;
+      // Keep the warning in sync with the just-edited list — see addPatrollingRow.
+      this.patrolling_warning = this.mntservice.unassignedTLTowers(this.patrolling_details, tower_range);
 
       this.cdr.detectChanges();
     }
@@ -3344,6 +3366,11 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
       this.patrolling_details.splice(index, 1);
       this.patrolling_details = this.patrolling_details.slice().sort((a, b) => a.tower_start - b.tower_start);
       this.isPatrollingSubmitDisabled = false;
+      // Keep the warning in sync with the shrunken list — see addPatrollingRow.
+      const tower_range = this.form.value.maintenance_list?.tower_range;
+      if (tower_range) {
+        this.patrolling_warning = this.mntservice.unassignedTLTowers(this.patrolling_details, tower_range);
+      }
     }
   }
 
@@ -3414,7 +3441,22 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
         } else {
           this.form.patchValue({ current_status: data.current_status, requests_approves: data.requests_approves });
           this.currentStatusIndex(data.current_status);
-          this.showToast(this.locale_service.Locale.language.project.maintenancesettings.snackbar.patrollingcompleted, this.locale_service.Locale.language.common.ok,
+          // Sync isCompleteDashboard with the new status so downstream checks
+          // (isAddObservationBtndisabled, edit-observation gates, etc.) see the
+          // completion immediately without a tab switch.
+          if (data.current_status === MaintenanceStatus.Complete
+              || data.current_status === MaintenanceStatus.Cancel
+              || data.current_status === MaintenanceStatus.TLPartiallyComplete) {
+            this.isCompleteDashboard = true;
+          }
+          this.AddObservationButtonStatus();
+          // manualCompleteMaintenance sets status to MaintenanceStatus.Complete for
+          // any maintenance type (bay/substation/equipment/TL). The correct toast
+          // is `maintenancecompleted`; the previous use of `patrollingcompleted`
+          // was a copy-paste from savePatrolling and produced "Patrolling
+          // Completed Successfully" even for non-patrolling maintenance. Matches
+          // ClientApp maintenance-details-dlg.component.ts:4187.
+          this.showToast(this.locale_service.Locale.language.project.maintenancesettings.snackbar.maintenancecompleted, this.locale_service.Locale.language.common.ok,
             {
               duration: 4000
             });
@@ -3454,6 +3496,11 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
             this.isObservationAndCompleteAccess = true;
           this.currentStatusIndex(data.current_status);
           this.isPatrollingSubmitDisabled = true;
+          // Recompute the Add-Observation button states now that current_status
+          // may have flipped to PatrollingCompleted. Without this the flag only
+          // refreshes on the next tab switch, so a user sitting on the Patrolling
+          // tab would see a stale-enabled Add button on Observations List.
+          this.AddObservationButtonStatus();
           this.patrolling_warning = this.mntservice.unassignedTLTowers(data.patrolling_details, data.maintenance_list.tower_range);
           if (data.current_status == MaintenanceStatus.Complete) {
             this.showToast(this.locale_service.Locale.language.project.maintenancesettings.snackbar.maintenancecompleted, this.locale_service.Locale.language.common.ok,
@@ -3887,9 +3934,16 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
       status === MaintenanceStatus.Planned || status === MaintenanceStatus.RequestPTW ||
       status === MaintenanceStatus.XenApprovalRequested;
     const isCompleteOrCancel = status === MaintenanceStatus.Complete || status === MaintenanceStatus.Cancel;
+    // The workflow has two similar-sounding steps:
+    //   "Patrolling Done"      → status PatrollingCompleted (patrolling_completed_datetime set)
+    //   "Patrolling Completed" → status Complete           (maintenance_complete_datetime set)
+    // Observations should stay addable at "Patrolling Done" and only close off
+    // at the true completion step, which is already covered by isCompleteDashboard
+    // (Complete/Cancel/TLPartiallyComplete — see line 531). No extra
+    // patrolling_completed_datetime gate here.
     const isDashboardComplete = this.isCompleteDashboard;
     //const isPendingObservation = this.clicked_device_type === 'observation_filter';
-    const isConnectedBay = this.maintenanceOnConnectedBay; //normal bay maintenance 
+    const isConnectedBay = this.maintenanceOnConnectedBay; //normal bay maintenance
     const isJE = this.resolver.MaintenanceAccessRights.maintenence_input_save_submit;
     const isHL = this.resolver.MaintenanceAccessRights.hotline_input_save_submit;
     const isMNP = this.resolver.MaintenanceAccessRights.mnp_input_save_submit;
@@ -3912,10 +3966,14 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
       return isPlannedOrApproval || isDashboardComplete || !isHL || this.isCompleteDashboard
     }
     else if (tabName == 'obs') {
-      return isPlannedOrApproval || this.isCompleteDashboard || !(isJEorJETL || isMNP)
+      // Read the live form status alongside the isCompleteDashboard flag —
+      // the flag is only computed once at ngOnInit from dialogData and stays
+      // stale after the user clicks Complete Patrolling from within this
+      // dialog. isCompleteOrCancel closes that gap (see line 3922).
+      return isPlannedOrApproval || this.isCompleteDashboard || isCompleteOrCancel || !(isJEorJETL || isMNP)
     }
     else if (tabName == 'tl') {
-      return this.isCompleteDashboard || isPlannedOrApproval || !isJEorJETL
+      return this.isCompleteDashboard || isCompleteOrCancel || isPlannedOrApproval || !isJEorJETL
     }
 
   }

@@ -284,7 +284,7 @@ export class PlanMaintenanceDlgComponent implements OnInit {
             const ssNames = connected_ss.map(ss => ss.split('/').slice(-1)[0]).join(', ');
             const tlName = tl_path?.split('/').slice(-1)[0];
             const msg = `Scheduled Maintenance Alert: Maintenance has been planned on ${deviceName}. Connected elements include TL: ${tlName} and Substations: ${ssNames}. Please review and plan accordingly.`;
-            this.appService.sendNotificationDetails(response, msg, [], recieving_users);
+            this.appService.sendNotificationDetails(response, msg, [], recieving_users, 'MT_SCMA');
           }
 
           const plan_mnt = response;
@@ -298,7 +298,8 @@ export class PlanMaintenanceDlgComponent implements OnInit {
               { id: this.appService.getLoginID(), name: this.appService.getUserName(), loginId: this.appService.getLoginID() },
               recieving_users,
               [],
-              `${this.appService.unescapedName(`[MT_SATPM] Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.device_name.split("/")[4]} ${plan_mnt.device_name.split("/").pop()}. Please review and proceed as per schedule.`)}`,
+              `${this.appService.unescapedName(`Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.device_name.split("/")[4]} ${plan_mnt.device_name.split("/").pop()}. Please review and proceed as per schedule.`)}`,
+              'MT_SATPM',
               MaintenanceStatus.Planned,
               { maintenance_id: plan_mnt._id, target_view: 'Maintenance Dashboard', target_tab: plan_mnt.maintenance_type, expectedCompletionStatus: MaintenanceStatus.PTWRequested, currentStatus: MaintenanceStatus.Planned },
               'Request for PTW'
@@ -308,7 +309,8 @@ export class PlanMaintenanceDlgComponent implements OnInit {
               { id: this.appService.getLoginID(), name: this.appService.getUserName(), loginId: this.appService.getLoginID() },
               recieving_users,
               [],
-              `${this.appService.unescapedName(`[MT_SATPM] Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.device_name.split("/")[4]} ${plan_mnt.device_name.split("/").pop()}. Please review and proceed as per schedule.`)}`,
+              `${this.appService.unescapedName(`Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${plan_mnt.device_name.split("/")[4]} ${plan_mnt.device_name.split("/").pop()}. Please review and proceed as per schedule.`)}`,
+              'MT_SATPM',
               MaintenanceStatus.Planned,
               { maintenance_id: plan_mnt._id, target_view: 'Maintenance Dashboard', target_tab: plan_mnt.maintenance_type, expectedCompletionStatus: MaintenanceStatus.InProgress, currentStatus: MaintenanceStatus.Planned },
               'Start Maintenance'

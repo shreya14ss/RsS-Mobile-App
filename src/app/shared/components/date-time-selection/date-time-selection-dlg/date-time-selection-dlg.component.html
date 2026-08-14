@@ -46,7 +46,7 @@
     <ion-datetime *ngIf="datetimeReady && startISO"
       presentation="date-time"
       [min]="minISO || undefined"
-      max="2050-12-31T23:59:59"
+      [max]="maxISO || undefined"
       [value]="startISO"
       (ionChange)="startISO = $any($event).detail.value">
     </ion-datetime>
@@ -59,7 +59,7 @@
     <ion-datetime *ngIf="datetimeReady && endISO"
       presentation="date-time"
       [min]="minISO || undefined"
-      max="2050-12-31T23:59:59"
+      [max]="maxISO || undefined"
       [value]="endISO"
       (ionChange)="endISO = $any($event).detail.value">
     </ion-datetime>
@@ -75,13 +75,18 @@
     Back-dated planning is not allowed. Please pick today or a future date.
   </ion-text>
 
+  <!-- Future-date validation error: shown when the caller restricts future dates -->
+  <ion-text color="danger" class="range-error" *ngIf="isFutureDateInvalid">
+    Future dates are not allowed. Please pick today or a past date.
+  </ion-text>
+
 
   <!-- Actions -->
   <div class="actions">
     <ion-button expand="block" fill="outline" (click)="close()">
       Cancel
     </ion-button>
-    <ion-button expand="block" (click)="apply()" [disabled]="isRangeInvalid || isPastDateInvalid">
+    <ion-button expand="block" (click)="apply()" [disabled]="isRangeInvalid || isPastDateInvalid || isFutureDateInvalid">
       Apply
     </ion-button>
   </div>

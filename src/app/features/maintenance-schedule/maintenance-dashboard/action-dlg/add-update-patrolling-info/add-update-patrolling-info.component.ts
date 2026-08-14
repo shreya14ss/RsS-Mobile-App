@@ -27,11 +27,11 @@ export class AddUpdatePatrollingInfoComponent implements OnInit {
     this.form = this.formBuilder.group({
       tower_start: [
         this.dialogData.obj ? this.dialogData.obj.tower_start : '',
-        [Validators.min(this.dialogData.min), Validators.max(this.dialogData.max)]
+        [Validators.required, Validators.min(this.dialogData.min), Validators.max(this.dialogData.max)]
       ],
       tower_end: [
         this.dialogData.obj ? this.dialogData.obj.tower_end : '',
-        [Validators.min(this.dialogData.min), Validators.max(this.dialogData.max)]
+        [Validators.required, Validators.min(this.dialogData.min), Validators.max(this.dialogData.max)]
       ],
       name: [
         this.dialogData.obj ? this.dialogData.obj.name : '',

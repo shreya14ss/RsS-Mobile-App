@@ -308,7 +308,7 @@ export class ConditionalMaintenanceSetupDlgComponent implements OnInit {
         if (!receiving_users || receiving_users.length === 0) continue;
 
         const message = this.appservice.unescapedName(
-          `[MT_SATPM] Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${devicePath[4]} ${devicePath.pop()}. Please review and proceed as per schedule.`
+          `Maintenance Plan Alert: A maintenance activity has been planned by ${plan_mnt.sse} on ${devicePath[4]} ${devicePath.pop()}. Please review and proceed as per schedule.`
         );
 
         await this.appservice.sendActionableNotification(
@@ -320,6 +320,7 @@ export class ConditionalMaintenanceSetupDlgComponent implements OnInit {
           receiving_users,
           [],
           message,
+          'MT_SATPM',
           MaintenanceStatus.Planned,
           {
             maintenance_id: plan_mnt._id,

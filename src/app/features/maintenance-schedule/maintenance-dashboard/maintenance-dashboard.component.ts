@@ -843,7 +843,16 @@ export class MaintenanceDashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    // Clean up callback when component destroys
+    // Preserve the selected tab across component recreation. pvmain.resolve()
+    // destroys and re-creates this component on every SignalR reconnect
+    // (fires after screen-unlock past the 60s threshold) — without this the
+    // new instance ngOnInit finds no pending tab and defaults to index 0,
+    // bouncing the user from Bay/Equipment/etc. back to Substation ~1s after
+    // the resume modal-dismiss. Consumed by consumePendingMaintenanceTab()
+    // in ngOnInit.
+    if (this.selectedTabLabel) {
+      this.appservice.setPendingMaintenanceTab(this.selectedTabLabel);
+    }
     this.appservice.switchMaintenanceTab = null;
     this.appservice.resetMaintenanceTabState();
     this.bayLockSubscription?.unsubscribe();
@@ -2863,21 +2872,65 @@ export class MaintenanceDashboardComponent implements OnInit, AfterViewInit {
   }
 
   createPredicate(visibleColumns: string[]) {
-    // Auto map mismatched column names
+    // The mat-table `visibleColumns` are the columns rendered on desktop, but
+    // on mobile the same data source drives a card layout that surfaces a
+    // slightly different (and often broader) set of fields — observationtype
+    // rendered as "JETL", substation as the location line, mnttype as the
+    // title fallback, formatted date via appservice.dateToString, etc.
+    // Searching only the mat-table columns therefore misses fields the user
+    // can actually see on the card. Widen the searchable set with the fields
+    // referenced in the card templates, and additionally scan all primitive
+    // (string/number) row values as a catch-all so the search behaves the way
+    // users expect on a card view: "what I see is what I can search."
     const keyMap: any = {
       maintenancetype: 'mnttype',
       status: 'current_status'
     };
 
     const normalized = visibleColumns.map(col => keyMap[col] || col);
+    // Fields visible on the mobile cards that aren't always present in the
+    // mat-table column list. Kept explicit so the search predicate is
+    // predictable — the catch-all below still covers anything else.
+    const cardFields = [
+      'ob_line_name', 'mnttype', 'device_type', 'device_name',
+      'description', 'observations', 'observationtype', 'remarks',
+      'substation', 'bay', 'lineno', 'line_name',
+      'mnt_device_type', 'equipment_name', 'scheduled_status',
+      'status', 'current_status',
+      'zone', 'circle', 'division',
+    ];
+
+    // Also expose the human-readable observation user type ("JE", "JETL",
+    // "MNP", "Hotline JE", ...) so typing what the user sees on the card
+    // matches. Mirrors getObservationUserTypeLabel().
+    const obsUserTypeMap: Record<string, string> = {
+      je: 'JE', mnp: 'MNP', je_tl: 'JETL',
+      hotline: 'Hotline JE', alarm: 'Alarm', na: 'NA',
+    };
 
     return (row: any, filter: string) => {
       const term = filter.trim().toLowerCase();
+      if (!term) return true;
 
-      return normalized
-        .map(col => (row[col] ?? '').toString().toLowerCase())
-        .join(' ')
-        .includes(term);
+      // 1. Explicit column set (existing behaviour).
+      const primary = normalized.map(col => (row[col] ?? '').toString().toLowerCase());
+      // 2. Card-visible fields.
+      const cards = cardFields.map(col => (row[col] ?? '').toString().toLowerCase());
+      // 3. Observation user type label (raw value maps to what's rendered).
+      const rawObsType = (row['observationtype'] ?? '').toString().toLowerCase();
+      const obsLabel = (obsUserTypeMap[rawObsType] ?? '').toLowerCase();
+      // 4. Catch-all — any other primitive value on the row.
+      const catchAll: string[] = [];
+      for (const k in row) {
+        const v = row[k];
+        if (v == null) continue;
+        const t = typeof v;
+        if (t === 'string' || t === 'number' || t === 'boolean') {
+          catchAll.push(String(v).toLowerCase());
+        }
+      }
+
+      return [...primary, ...cards, obsLabel, ...catchAll].join(' ').includes(term);
     };
   }
 
@@ -2956,6 +3009,20 @@ export class MaintenanceDashboardComponent implements OnInit, AfterViewInit {
       scheduled: 'Scheduled',
     };
     return map[status?.toLowerCase()] ?? status ?? '';
+  }
+
+  // Mirrors ClientApp's OBSERVATION_USER_TYPE_OPTIONS mapping so the mobile
+  // card renders "JE" (not raw "je"), "MNP" (not "mnp"), etc.
+  getObservationUserTypeLabel(type: string): string {
+    const map: Record<string, string> = {
+      je: 'JE',
+      mnp: 'MNP',
+      je_tl: 'JETL',
+      hotline: 'Hotline JE',
+      alarm: 'Alarm',
+      na: 'NA',
+    };
+    return map[type?.toLowerCase()] ?? type ?? '';
   }
 
   async openObservationDetails(item: any) {

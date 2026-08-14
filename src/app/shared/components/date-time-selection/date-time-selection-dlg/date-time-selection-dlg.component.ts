@@ -36,10 +36,18 @@ export class DateTimeSelectionDlgComponent implements OnInit, AfterViewInit {
   // rejects a start that lands before today.
   restrictPastDate: boolean = false;
 
+  // When true (retro-dating / start-maintenance flows), the picker refuses any
+  // date after today — the datetime `max` is bound and apply() rejects a
+  // start that lands after today. Mutually independent from restrictPastDate;
+  // callers can enable neither, either, or (rarely) both to lock the picker
+  // to today only.
+  restrictFutureDate: boolean = false;
+
   // ISO strings for ion-datetime (ion-datetime does not accept Unix timestamps)
   startISO: string = '';
   endISO: string = '';
   minISO: string | null = null;
+  maxISO: string | null = null;
 
   constructor(
     private modalCtrl: ModalController,
@@ -60,6 +68,7 @@ export class DateTimeSelectionDlgComponent implements OnInit, AfterViewInit {
       // search flows leave it null/undefined so the toggle stays visible.
       this.showRange = this.dialogData.isShowRange !== false;
       this.restrictPastDate = this.dialogData.restrictPastDate === true;
+      this.restrictFutureDate = this.dialogData.restrictFutureDate === true;
     }
 
     // Default dialog mode based on incoming selection_type
@@ -84,6 +93,23 @@ export class DateTimeSelectionDlgComponent implements OnInit, AfterViewInit {
         this.startISO = this.minISO;
         if (new Date(this.endISO).getTime() < today.getTime()) {
           this.endISO = this.minISO;
+        }
+      }
+    }
+
+    // Symmetric to restrictPastDate: bind ion-datetime's `max` to the end of
+    // today so the wheel/calendar refuses to scroll into future days. If the
+    // caller pre-seeded a future value, snap back to today.
+    if (this.restrictFutureDate) {
+      const endOfToday = new Date();
+      endOfToday.setHours(23, 59, 59, 999);
+      this.maxISO = this.tsToISO(endOfToday.getTime());
+
+      const startTs = new Date(this.startISO).getTime();
+      if (Number.isFinite(startTs) && startTs > endOfToday.getTime()) {
+        this.startISO = this.maxISO;
+        if (new Date(this.endISO).getTime() > endOfToday.getTime()) {
+          this.endISO = this.maxISO;
         }
       }
     }
@@ -140,6 +166,17 @@ export class DateTimeSelectionDlgComponent implements OnInit, AfterViewInit {
     return start < today.getTime();
   }
 
+  // Symmetric to isPastDateInvalid — when restrictFutureDate is on, the picked
+  // start must not fall after today. Drives inline error and disables Apply.
+  get isFutureDateInvalid(): boolean {
+    if (!this.restrictFutureDate) return false;
+    const start = new Date(this.startISO).getTime();
+    if (!Number.isFinite(start)) return false;
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+    return start > endOfToday.getTime();
+  }
+
   close() {
     this.modalCtrl.dismiss(null);
   }
@@ -148,7 +185,7 @@ export class DateTimeSelectionDlgComponent implements OnInit, AfterViewInit {
     // Defensive: never emit an inverted range even if the UI's disable-guard
     // is bypassed. Bail silently — the button is already disabled and the
     // inline error tells the user why.
-    if (this.isRangeInvalid || this.isPastDateInvalid) return;
+    if (this.isRangeInvalid || this.isPastDateInvalid || this.isFutureDateInvalid) return;
 
     const start = new Date(this.startISO).getTime();
     let end: number;

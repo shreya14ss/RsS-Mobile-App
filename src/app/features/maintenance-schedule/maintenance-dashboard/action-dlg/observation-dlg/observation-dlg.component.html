@@ -60,31 +60,36 @@
             </span>
           </div>
 
+          <!-- Ionic 6's formControlName doesn't reliably reflect FormControl.disabled
+               on ion-radio/ion-input at the visual/interaction layer, so bind
+               [disabled]/[readonly] explicitly against the FormControl state.
+               This matches the pattern used by shared/components/rs-input. -->
           <ion-radio-group formControlName="tower_type" (ionChange)="updateTower()">
             <ion-item>
               <ion-label>
                 {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.tower }}
               </ion-label>
-              <ion-radio slot="start" value="Tower"></ion-radio>
+              <ion-radio slot="start" value="Tower" [disabled]="form.get('tower_type')?.disabled"></ion-radio>
             </ion-item>
             <ion-item>
               <ion-label>
                 {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.inter_tower }}
               </ion-label>
-              <ion-radio slot="start" value="Inter Tower"></ion-radio>
+              <ion-radio slot="start" value="Inter Tower" [disabled]="form.get('tower_type')?.disabled"></ion-radio>
             </ion-item>
           </ion-radio-group>
 
           <div class="tower-row">
             <ion-item class="tower-input">
-              <ion-label position="stacked">Tower From</ion-label>
+              <ion-label position="stacked">Tower From<span class="rs-required-mark">&nbsp;*</span></ion-label>
               <ion-input type="number" formControlName="tower_s" [min]="min" [max]="max"
+                [readonly]="form.get('tower_s')?.disabled"
                 (ionInput)="updateTowerE($event)">
               </ion-input>
             </ion-item>
 
             <ion-item class="tower-input" *ngIf="form.get('tower_type').value === 'Inter Tower'">
-              <ion-label position="stacked">Tower To</ion-label>
+              <ion-label position="stacked">Tower To<span class="rs-required-mark">&nbsp;*</span></ion-label>
               <ion-input type="number" formControlName="tower_e" [readonly]="true"></ion-input>
             </ion-item>
           </div>
@@ -132,18 +137,6 @@
 
         <ion-item>
           <ion-label position="stacked">
-            {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.remarks }}<!--
-            When status is 'fixed', isRemarksReq() attaches Validators.required
-            to the remarks control. Angular Material shows the asterisk
-            automatically via mat-form-field on the web; ion-label doesn't, so
-            we mirror it manually here.
-         --><span class="rs-required-mark" *ngIf="form.get('status')?.value === 'fixed'">&nbsp;*</span>
-          </ion-label>
-          <ion-input formControlName="remarks" [readonly]="dialogData?.readonly"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">
             {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.status }}
           </ion-label>
           <ion-select formControlName="status" (ionChange)="onStatusChange($event.detail.value)">
@@ -157,6 +150,18 @@
               {{ statusoption.value }}
             </ion-select-option>
           </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">
+            {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.remarks }}<!--
+            When status is 'fixed', isRemarksReq() attaches Validators.required
+            to the remarks control. Angular Material shows the asterisk
+            automatically via mat-form-field on the web; ion-label doesn't, so
+            we mirror it manually here.
+         --><span class="rs-required-mark" *ngIf="form.get('status')?.value === 'fixed'">&nbsp;*</span>
+          </ion-label>
+          <ion-input formControlName="remarks" [readonly]="dialogData?.readonly"></ion-input>
         </ion-item>
 
         <!-- Equipment Name -->

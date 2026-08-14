@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { throwError, Observable, Subject, Subscription } from 'rxjs';
@@ -42,7 +42,7 @@ export class SignalRService {
   private messageTimeoutCheckInterval: any = null;
   pvmain: PVMainComponent = null;
   message$: any;
-  constructor(private appSerive: AppService, private router: Router) {
+  constructor(private appSerive: AppService, private router: Router, private ngZone: NgZone) {
     this.createConnection();
     this.registerOnServerEvents();
   }
@@ -66,7 +66,12 @@ export class SignalRService {
    * Disconnected and the caller's next invoke() will fail cleanly.
    */
   public async ensureConnected(): Promise<void> {
-    if (this.ManualDisconnect) return;
+    // ManualDisconnect sticks around after logout; if the user has since logged
+    // back in (access_token present again), treat it as a fresh session and
+    // fall through to the reconnect branch. Without this, the resolver on the
+    // first navigation after re-login hits invoke() on a stopped hub and
+    // cancels the route — the login page then spins forever.
+    if (this.ManualDisconnect && !sessionStorage.getItem('access_token')) return;
     const state = this._hubConnection.state;
     if (state === 'Connected') return;
 
@@ -78,6 +83,7 @@ export class SignalRService {
 
     // Disconnected — auto-reconnect already exhausted (or never started).
     // Reset flags so startConnection() re-enters its retry loop.
+    this.ManualDisconnect = false;
     this.connectionIsEstablished = false;
     this.running = false;
     try {
@@ -751,11 +757,20 @@ export class SignalRService {
     });
 
     this._hubConnection.onreconnected((connectionId) => {
-      this.InProgress = false;
-      console.log(new Date(), 'SignalR Reconnected', connectionId);
-      this.connectionRetryCount = 0;
-      this.startMessageTimeoutCheck();
-      this.reconnection.emit(true);
+      // Force into NgZone: SignalR fires this callback from its WebSocket
+      // event handler, outside Angular's zone. Downstream this triggers
+      // project-resolver.reconnection.subscribe → pvmain.resolve → dashboard
+      // component re-creation. Running that whole chain outside NgZone leaves
+      // change detection unwired, which manifests as the maintenance-details
+      // modal (opened via notification tap) freezing its ion-segment tabs a
+      // few switches after a resume-triggered reconnect completes.
+      this.ngZone.run(() => {
+        this.InProgress = false;
+        console.log(new Date(), 'SignalR Reconnected', connectionId);
+        this.connectionRetryCount = 0;
+        this.startMessageTimeoutCheck();
+        this.reconnection.emit(true);
+      });
     });
     this._hubConnection.on('alarms', (data: any) => {
       this.startMessageTimeoutCheck();

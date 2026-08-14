@@ -70,9 +70,14 @@
       </ion-segment-button>
 
       <!-- ================= TL OBSERVATION LIST TAB ================= -->
+      <!-- Keep visible after Complete Patrolling so the user can still view
+           the completed observation history — matches ClientApp which has a
+           dedicated post-completion variant (maintenance-details-dlg L3070).
+           The Add-Observation button inside the tab is separately disabled
+           via isObsListAddObservationButtonDisabled once maintenance is
+           complete, so this only affects visibility, not edit gating. -->
       <ion-segment-button value="observations_list"
-        *ngIf="!isCompleteDashboard
-               && dialogData?.device_details?.maintenance_type === 'TL'
+        *ngIf="dialogData?.device_details?.maintenance_type === 'TL'
                && dialogData?.device_details?.activity_parameters?.length == 0">
         <ion-label>{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.dialog_heading.observations_list }}</ion-label>
         <ion-badge *ngIf="observationDatasource?.data?.length" color="primary">
@@ -135,17 +140,43 @@
             <ion-text>{{ form.value.cutoffDate | date:'dd/MM/yyyy' }}</ion-text>
           </ion-item>
 
-          <!-- Planned Date: non-patrolling. Row becomes tappable when the user
-               has the maintenance_date right and the status still allows a
-               reschedule (Planned / XenApprovalRequested). Otherwise the value
-               is read-only. Matches the client app's Planned Date behavior. -->
-          <ion-item *ngIf="!isPatrollingTL && !canEditPlannedDate">
+          <!-- Maintenance Start Date — the actual timestamp when Start was
+               clicked, separate from the Planned Date. Mirrors ClientApp
+               maintenance-details-dlg.component.html:78-87: prefers
+               ptw_requested_datetime (shutdown flows) and falls back to
+               in_progress_datetime (patrolling / non-shutdown). Hidden until
+               one of them is > 0. -->
+          <ion-item *ngIf="maintenanceDetails?.requests_approves?.ptw_requested_datetime > 0
+                         || maintenanceDetails?.requests_approves?.in_progress_datetime > 0">
+            <ion-icon name="play" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">Maintenance Start Date</ion-label>
+            <ion-text>
+              {{ (maintenanceDetails?.requests_approves?.ptw_requested_datetime > 0
+                    ? maintenanceDetails.requests_approves.ptw_requested_datetime
+                    : maintenanceDetails.requests_approves.in_progress_datetime)
+                 | date:'dd-MM-yyyy HH:mm:ss' }}
+            </ion-text>
+          </ion-item>
+
+          <!-- Planned Date: read-only when the maintenance is no longer in a
+               reschedulable status (In Progress, Complete, Cancel, ...). -->
+          <ion-item *ngIf="form.value.current_status != MaintenanceStatus.Planned
+                          && form.value.current_status != MaintenanceStatus.XenApprovalRequested">
             <ion-icon name="calendar" slot="start"></ion-icon>
             <ion-label class="ion-text-wrap">{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.plnddate }}</ion-label>
             <ion-text>{{ form.value.plannedDate | date:'dd-MM-yyyy HH:mm:ss' }}</ion-text>
           </ion-item>
 
-          <ion-item *ngIf="!isPatrollingTL && canEditPlannedDate"
+          <!-- Planned Date (tappable): opens the date picker whenever the
+               maintenance is Planned / XenApprovalRequested — this is
+               deliberately broader than canEditPlannedDate so that a user who
+               sees the past-date warning always has a way to open the
+               calendar. The Apply Changes button below is still gated by
+               canEditPlannedDate (needs maintenance_date right + no blocking
+               connected work), so saving remains permission-checked and the
+               backend will reject anything the picker itself can't authorise. -->
+          <ion-item *ngIf="form.value.current_status == MaintenanceStatus.Planned
+                          || form.value.current_status == MaintenanceStatus.XenApprovalRequested"
                     button detail="false"
                     (click)="(assetDamageFeatureOn && assetDamageBayLocked) ? null : dateClicked(null, null)"
                     [disabled]="assetDamageFeatureOn && assetDamageBayLocked"
@@ -155,37 +186,6 @@
             <ion-text>{{ form.value.plannedDate | date:'dd-MM-yyyy HH:mm:ss' }}</ion-text>
             <ion-icon name="chevron-down-outline" slot="end" class="dt-chevron"></ion-icon>
           </ion-item>
-
-          <!-- Patrolling TL: stacked label + date-time picker row -->
-          <ng-container *ngIf="isPatrollingTL">
-
-            <ion-item button detail="false"
-                      (click)="(assetDamageFeatureOn && assetDamageBayLocked) ? null : openPatrollingDatePicker()"
-                      [disabled]="assetDamageFeatureOn && assetDamageBayLocked"
-                      class="patrolling-date-item">
-              <ion-icon name="calendar" slot="start"></ion-icon>
-              <div class="patrolling-date-inner">
-                <span class="patrolling-date-label">{{ locale_service.Locale.language.project.maintenancesettings.maintenancedlgtabs.plnddate }}</span>
-                <div class="patrolling-dt-display">
-                  <span>{{ patrollingPlannedDateDisplay }}</span>
-                  <span class="dt-sep">|</span>
-                  <span>{{ patrollingPlannedTimeDisplay }}</span>
-                  <ion-icon name="chevron-down-outline" class="dt-chevron"></ion-icon>
-                </div>
-              </div>
-            </ion-item>
-
-            <!-- Inline hint / validation -->
-            <div class="patrolling-hint" [class.hint-warning]="isPatrollingDateInPast">
-              <ion-icon [name]="isPatrollingDateInPast ? 'warning-outline' : 'information-circle-outline'"></ion-icon>
-              <span>
-                {{ isPatrollingDateInPast
-                  ? 'Selected date is in the past. Please select today or a future date.'
-                  : 'Tap above to set the patrolling start date and time.' }}
-              </span>
-            </div>
-
-          </ng-container>
 
           <!-- Shutdown Duration: hidden for TL scheduled/patrolling; shown for Bay/Substation/Equipment with shutdown required -->
           <ion-item *ngIf="!dialogData.device_details.maintenance_list?.template?.scheduled_patrolling
@@ -495,8 +495,11 @@
           <!-- DYNAMIC WARNING — lists towers in the maintenance_list.tower_range
                that don't yet have a patrolling row. Populated from
                MaintenanceService.unassignedTLTowers(). Mirrors ClientApp
-               maintenance-details-dlg.component.html L2140-2142. -->
-          <p *ngIf="patrolling_warning" class="patrolling-warning">
+               maintenance-details-dlg.component.html L2140-2142.
+               Gated on the list having entries so it doesn't duplicate the
+               empty-state div above — unassignedTLTowers() returns the same
+               "No Towers has been assigned" string when the list is empty. -->
+          <p *ngIf="patrolling_warning && patrolling_details?.length" class="patrolling-warning">
             {{ patrolling_warning }}
           </p>
 
@@ -546,8 +549,14 @@
 
             <ion-item-sliding *ngFor="let row of filterObservationDatasource.data; let rindex = index">
 
-              <!-- ROW -->
-              <ion-item>
+              <!-- ROW — tap opens the edit dialog when editing is allowed;
+                   otherwise falls back to the view dialog. Matches the same
+                   tap-to-edit pattern the patrolling list uses at L412 above,
+                   and works when maintenance is completed (view still opens). -->
+              <ion-item button detail="false"
+                (click)="isEditObservationBtninObservationsListdisabled(row)
+                          ? viewObRow(row, rindex)
+                          : updateObRow(row, rindex, row?.disable_button)">
                 <ion-label class="ion-text-wrap">
                   <div class="obs-row-grid">
 
@@ -608,7 +617,7 @@
 
           <!-- HINT -->
           <div class="hint-text" *ngIf="filterObservationDatasource?.data?.length">
-            Swipe left to view • Swipe right to edit
+            Tap row to edit • Swipe left to view • Swipe right to edit
           </div>
 
         </ion-card-content>

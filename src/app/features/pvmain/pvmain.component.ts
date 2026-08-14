@@ -69,6 +69,7 @@ interface Notice {
   receivingUsers: UserInfo[];
   receivingGroups: string[];
   messageText: string;
+  uniqueCode?: string;
   timestamp: string;
   isUrgent: boolean;
   isNotification: boolean;
@@ -397,6 +398,7 @@ export class PVMainComponent implements OnInit, OnDestroy, AfterViewInit {
         receivingUsers: message.receivingUsers,
         receivingGroups: message.receivingGroups,
         messageText: message.messageText,
+        uniqueCode: message.uniqueCode,
         timestamp: message.timestamp,
         isUrgent: message.isUrgent,
         isNotification: message.isNotification,
@@ -679,8 +681,14 @@ if (this.snackBarRef) {
         this.location.replaceState(this.myParentPath);
       this.queryParams = query_params;
     }
-    // If no view is selected (e.g. first login), navigate to the first available view
-    if (!this.viewData.viewData) {
+    // If no view is selected (e.g. first login) and the URL doesn't already
+    // pin one, navigate to the first available view. Guarding on the URL
+    // matters because reloadMain() re-runs this resolve() on every SignalR
+    // reconnection (fires on platform.resume post-screen-unlock). Without the
+    // guard, a reload where the backend response is missing viewData.viewData
+    // would kick the user off their current view and back to the default —
+    // the exact symptom users see after unlocking the screen.
+    if (!this.viewData.viewData && !this.route.snapshot.queryParamMap.get('view')) {
       const firstView: any = this.viewData.menu?.userViews?.[0]
         ?? this.viewData.menu?.projectViews?.[0];
       if (firstView) {

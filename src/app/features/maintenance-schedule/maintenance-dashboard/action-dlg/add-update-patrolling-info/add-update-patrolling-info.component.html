@@ -18,7 +18,7 @@
 
     <ion-item>
       <ion-label position="stacked">
-        {{locale_service.Locale.language.project.maintenancesettings.heading.towerstart}}
+        {{locale_service.Locale.language.project.maintenancesettings.heading.towerstart}}<span class="rs-required-mark">&nbsp;*</span>
       </ion-label>
       <ion-input type="number" [min]="dialogData.min" [max]="dialogData.max" formControlName="tower_start">
       </ion-input>
@@ -30,7 +30,7 @@
 
     <ion-item>
       <ion-label position="stacked">
-        {{locale_service.Locale.language.project.maintenancesettings.heading.towerend}}
+        {{locale_service.Locale.language.project.maintenancesettings.heading.towerend}}<span class="rs-required-mark">&nbsp;*</span>
       </ion-label>
       <ion-input type="number" [min]="dialogData.min" [max]="dialogData.max" formControlName="tower_end">
       </ion-input>

@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Capacitor } from '@capacitor/core';
 import {
@@ -20,10 +20,41 @@ export class PushNotificationService {
   constructor(
     private http: HttpClient,
     private noticeAction: NoticeActionService,
-    private injector: Injector
+    private injector: Injector,
+    private ngZone: NgZone
   ) {}
 
-  async init(): Promise<void> {
+  // In-memory cache of the resolved device_id. Preferences round-trips are
+  // async, so concurrent callers (login init + resume refreshToken) used to
+  // race: both read undefined, both minted fresh UUIDs, both POSTed to
+  // /api/DeviceTokens. Result: user docs accumulated 20+ device_id/token
+  // pairs for one physical device. This promise is created the first time
+  // getOrCreateDeviceId runs and every subsequent caller awaits the same
+  // promise — the read+write becomes atomic from the caller's POV.
+  private deviceIdPromise: Promise<string> | null = null;
+  // Guards init() from re-registering listeners and re-invoking register()
+  // when UpdateToken is called more than once in a session (double-login,
+  // token refresh flows).
+  private initPromise: Promise<void> | null = null;
+  // Last (token, deviceId) tuple successfully posted. Skips the network
+  // hop when FCM re-fires 'registration' with the same token — which is
+  // the common case since Firebase's token is stable across register() calls.
+  private lastPosted: { token: string; deviceId: string } | null = null;
+
+  init(): Promise<void> {
+    // Idempotent: return the in-flight / completed promise instead of
+    // running init a second time. Prevents duplicate 'registration' listeners
+    // and duplicate register() calls after a re-login.
+    if (this.initPromise) return this.initPromise;
+    this.initPromise = this.initInternal().catch(e => {
+      // On failure, clear so a subsequent login can retry.
+      this.initPromise = null;
+      throw e;
+    });
+    return this.initPromise;
+  }
+
+  private async initInternal(): Promise<void> {
     console.log('[FCM] init called, isNative:', Capacitor.isNativePlatform());
     if (!Capacitor.isNativePlatform()) return;
 
@@ -41,7 +72,14 @@ export class PushNotificationService {
       // App is foregrounded — SignalR dialog handles the UI; suppress the OS banner
       // by using data-only payloads on the backend (no notification key in payload).
     });
-    PushNotifications.addListener('pushNotificationActionPerformed', a => this.onTap(a));
+    // Capacitor invokes plugin listeners from the native bridge, which is
+    // OUTSIDE Angular's NgZone. Anything onTap does (tab switch, modal open,
+    // subsequent state changes) then runs without change detection, so the
+    // opened modal renders but its tab clicks and controls are dead. Force
+    // the whole handler back into NgZone.
+    PushNotifications.addListener('pushNotificationActionPerformed', a =>
+      this.ngZone.run(() => this.onTap(a))
+    );
 
     await PushNotifications.register();
   }
@@ -68,13 +106,27 @@ export class PushNotificationService {
       await Preferences.remove({ key: FCM_TOKEN_KEY });
     }
 
+    // Reset session guards so a subsequent login re-registers cleanly.
+    this.lastPosted = null;
+    this.initPromise = null;
     await PushNotifications.removeAllListeners();
   }
 
   private async onToken(token: string): Promise<void> {
     console.log('[FCM] registration event fired, token length:', token?.length);
-    await Preferences.set({ key: FCM_TOKEN_KEY, value: token });
     const deviceId = await this.getOrCreateDeviceId();
+
+    // Skip the network hop if this exact (token, deviceId) pair was already
+    // POSTed in this session. Firebase re-fires 'registration' with the same
+    // token on every register() call — without this guard, the backend saw
+    // one POST from init() and another from every resume-triggered
+    // refreshToken(), even when nothing had changed.
+    if (this.lastPosted && this.lastPosted.token === token && this.lastPosted.deviceId === deviceId) {
+      console.log('[FCM] token unchanged since last POST; skipping');
+      return;
+    }
+
+    await Preferences.set({ key: FCM_TOKEN_KEY, value: token });
     console.log('[FCM] posting token to backend, deviceId:', deviceId);
     try {
       await this.http
@@ -84,6 +136,7 @@ export class PushNotificationService {
           platform: 'android'
         })
         .toPromise();
+      this.lastPosted = { token, deviceId };
       console.log('[FCM] token registered with backend successfully');
     } catch (e) {
       console.error('[FCM] failed to register token with backend', e);
@@ -111,6 +164,7 @@ export class PushNotificationService {
         _id: data['noticeId'] ?? '',
         _rev: '',
         messageText: data['body'] ?? '',
+        uniqueCode: data['uniqueCode'] ?? '',
         timestamp: Date.now(),
         sender: { id: '', name: data['title'] ?? 'RsS', loginId: '' },
         receivingUsers: [],
@@ -126,12 +180,21 @@ export class PushNotificationService {
     }
   }
 
-  private async getOrCreateDeviceId(): Promise<string> {
-    const { value: existing } = await Preferences.get({ key: DEVICE_ID_KEY });
-    if (existing) return existing;
-    const id = this.generateUUID();
-    await Preferences.set({ key: DEVICE_ID_KEY, value: id });
-    return id;
+  private getOrCreateDeviceId(): Promise<string> {
+    // Serialize: all concurrent callers await the same promise so only one
+    // read-and-conditional-write against Preferences ever runs. Fixes the
+    // race where init() and refreshToken() both saw undefined and each
+    // minted their own UUID, causing duplicate (token, deviceId) pairs to
+    // accumulate in the user doc on the backend.
+    if (this.deviceIdPromise) return this.deviceIdPromise;
+    this.deviceIdPromise = (async () => {
+      const { value: existing } = await Preferences.get({ key: DEVICE_ID_KEY });
+      if (existing) return existing;
+      const id = this.generateUUID();
+      await Preferences.set({ key: DEVICE_ID_KEY, value: id });
+      return id;
+    })();
+    return this.deviceIdPromise;
   }
 
   private generateUUID(): string {

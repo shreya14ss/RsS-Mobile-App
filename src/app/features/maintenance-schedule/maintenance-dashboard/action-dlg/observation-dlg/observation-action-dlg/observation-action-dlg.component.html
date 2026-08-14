@@ -84,7 +84,13 @@
               *ngFor="let observation of filteredObservationDatasource"
               [value]="observation._id"
               [disabled]="observation._id == dialogData.observation_details._id">
-              {{ observation.description }}
+              <!-- observation.description is the user's free-text notes and is
+                   often empty; observation.observations holds the observation
+                   name (e.g. "Presence of Birds") which is the semantic
+                   identifier shown in the Observations List. Fall through to
+                   description then a fixed label so the checkbox is never
+                   blank. -->
+              {{ observation.observations || observation.description || 'Observation' }}
             </ion-select-option>
           </ion-select>
         </ion-item>

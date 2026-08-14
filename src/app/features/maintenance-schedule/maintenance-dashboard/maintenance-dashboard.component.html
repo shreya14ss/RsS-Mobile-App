@@ -105,7 +105,7 @@
       <!-- Observation type -->
       <div class="meta-row" *ngIf="item.observationtype">
         <ion-icon name="eye-outline" class="meta-icon obs-icon"></ion-icon>
-        <span>{{ item.observationtype }}</span>
+        <span>{{ getObservationUserTypeLabel(item.observationtype) }}</span>
       </div>
 
       <!-- Location (parent substation, or line name for TL observations) -->

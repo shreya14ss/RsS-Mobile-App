@@ -108,7 +108,7 @@ export class ObservationDlgComponent implements OnInit {
       observation_id: this.observationDetails ? this.observationDetails.observation_id : '',
       observationtype: this.observationDetails ? this.observationDetails.observationtype : this.dialogData.observationtype,
       tower_type: this.observationDetails ? this.observationDetails.tower_type : 'Tower',
-      tower_s: this.observationDetails ? this.observationDetails.tower_s : '',
+      tower_s: [this.observationDetails ? this.observationDetails.tower_s : '', Validators.required],
       tower_e: this.observationDetails ? this.observationDetails.tower_e : '',
       time: this.observationDetails ? this.observationDetails.time : Date.now(),
       description: this.observationDetails ? this.observationDetails.description : '',
@@ -215,9 +215,18 @@ export class ObservationDlgComponent implements OnInit {
 
     if (this.dialogData.observationtype) {
       if (!this.resolver.MaintenanceAccessRights.maintenence_input_save_submit && this.resolver.MaintenanceAccessRights.tl_maintenance_parameter_input_save_submit) {
-        this.form.addControl('tower_type', new FormControl(this.observationDetails ? this.observationDetails.tower_type : 'Tower'));
-        this.form.addControl('tower_s', new FormControl(this.observationDetails ? this.observationDetails.tower_s : ''));
-        this.form.addControl('tower_e', new FormControl(this.observationDetails ? this.observationDetails.tower_e : ''));
+        // For a JETL-only user, the addControl below REPLACES the tower controls
+        // (and their disabled state from lines ~153-169) with fresh ones. Without
+        // carrying the disable flag through, updating an existing observation
+        // would leave the tower range editable — the client app has the same bug
+        // in principle but isn't hit because ClientApp users on this test have JE
+        // rights, which skips this branch entirely. Preserve the disabled state
+        // by constructing the new controls with { disabled: true } when the
+        // dialog was opened in update (disable) or readonly mode.
+        const lockTowers = !!this.dialogData.disable || !!this.dialogData.readonly;
+        this.form.addControl('tower_type', new FormControl({ value: this.observationDetails ? this.observationDetails.tower_type : 'Tower', disabled: lockTowers }));
+        this.form.addControl('tower_s', new FormControl({ value: this.observationDetails ? this.observationDetails.tower_s : '', disabled: lockTowers }, Validators.required));
+        this.form.addControl('tower_e', new FormControl({ value: this.observationDetails ? this.observationDetails.tower_e : '', disabled: lockTowers }));
       }
     }
 
@@ -684,9 +693,11 @@ export class ObservationDlgComponent implements OnInit {
     if (towerType === 'Inter Tower') {
       this.observationList('maintenance_observation_list_span');
       this.form.patchValue({ observations: null });
+      // Always mark tower_e required for Inter Tower — do not gate on tower_s
+      // being filled, otherwise the user could submit with only tower_s set.
+      this.form.get('tower_e')?.setValidators([Validators.required]);
       if (towerSValue) {
         this.form.patchValue({ tower_e: towerSValue !== null ? towerSValue + 1 : null });
-        this.form.get('tower_e')?.setValidators([Validators.required]);
       }
     } else {
       this.form.patchValue({ tower_e: null });
