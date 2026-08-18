@@ -111,7 +111,7 @@ export class ObservationDlgComponent implements OnInit {
       tower_s: [this.observationDetails ? this.observationDetails.tower_s : '', Validators.required],
       tower_e: this.observationDetails ? this.observationDetails.tower_e : '',
       time: this.observationDetails ? this.observationDetails.time : Date.now(),
-      description: this.observationDetails ? this.observationDetails.description : '',
+      description: [this.observationDetails ? this.observationDetails.description : '', Validators.required],
       equipment_name: this.observationDetails ? this.observationDetails.equipment_name : 'NA',
       observations: [this.observationDetails ? this.observationDetails.observations : '', !this.observationDetails ? [Validators.required] : []],
       remarks: this.observationDetails ? this.observationDetails?.remarks : '',

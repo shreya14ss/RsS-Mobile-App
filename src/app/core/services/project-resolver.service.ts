@@ -180,6 +180,9 @@ export enum GroupAccessRight {
   StartUnscheduledMaintenance,
 
   SchdeuledDashboardBayEquipmentTabView,
+  SchdeuledDashboardSubstationTabView,
+  SchdeuledDashboardBayTabView,
+  SchdeuledDashboardEquipmentTabView,
   SchdeuledDashboardTLTabView,
   observationstartMaintenanceInput,
   ScheduledObservationTLTab,
@@ -309,6 +312,9 @@ export const SGroupAccessRight: any = {
   start_unscheduled_maintenance: GroupAccessRight.StartUnscheduledMaintenance,
 
   scheduled_sub_bay_eqp_tab_view: GroupAccessRight.SchdeuledDashboardBayEquipmentTabView,
+  scheduled_substation_tab_view: GroupAccessRight.SchdeuledDashboardSubstationTabView,
+  scheduled_bay_tab_view: GroupAccessRight.SchdeuledDashboardBayTabView,
+  scheduled_equipment_tab_view: GroupAccessRight.SchdeuledDashboardEquipmentTabView,
   scheduled_tl_tab_view: GroupAccessRight.SchdeuledDashboardTLTabView,
   scheduled_observation_tl_tab_view: GroupAccessRight.ScheduledObservationTLTab,
   scheduled_connected_tl_for_bay_tab_view: GroupAccessRight.ScheduledConnectedTLForBayTab,

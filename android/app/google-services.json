@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "386753902337",
-    "project_id": "rss-mobile-d9b9d",
-    "storage_bucket": "rss-mobile-d9b9d.firebasestorage.app"
+    "project_number": "359063785482",
+    "project_id": "hvpn-oms",
+    "storage_bucket": "hvpn-oms.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:386753902337:android:aadcede1150e49d2c2cd00",
+        "mobilesdk_app_id": "1:359063785482:android:e7a3a8d7d462686b2b0ff3",
         "android_client_info": {
           "package_name": "com.rss.mobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBIqQ_whuetZr4c5xldrL7Bkow3fqEobcQ"
+          "current_key": "AIzaSyBJ9wikBTXErdnIS7htZczup0kSmEan8uE"
         }
       ],
       "services": {

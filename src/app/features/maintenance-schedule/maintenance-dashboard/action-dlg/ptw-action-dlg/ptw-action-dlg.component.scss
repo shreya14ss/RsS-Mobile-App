@@ -468,6 +468,23 @@ mat-form-field {
   background: #f5f7fa; /* subtle contrast */
   border-left: 4px solid #1976d2; /* visual anchor */
   border-radius: 2px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
+}
+
+// Override Ionic's default ion-title ellipsis truncation so full titles show
+ion-title.full-title {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+
+  &::part(toolbar-title) {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
 }
 
 .log-card {

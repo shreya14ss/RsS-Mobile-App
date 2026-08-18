@@ -274,9 +274,9 @@ export class PvPlanMaintenanceComponent implements OnInit {
   getPlanMaintenanceTabDetails() {
     const r = this.resolver.MaintenanceAccessRights;
     return [
-      { label: this.locale_service.Locale.language.project.maintenancesettings.heading.substation, index: 1, dataSource: this.subDatasource, ngIf: r.scheduled_sub_bay_eqp_tab_view },
-      { label: this.locale_service.Locale.language.project.maintenancesettings.heading.bay, index: 2, dataSource: this.bayDatasource, ngIf: r.scheduled_sub_bay_eqp_tab_view },
-      { label: this.locale_service.Locale.language.project.maintenancesettings.heading.eqp, index: 3, dataSource: this.eqpDatasource, ngIf: r.scheduled_sub_bay_eqp_tab_view },
+      { label: this.locale_service.Locale.language.project.maintenancesettings.heading.substation, index: 1, dataSource: this.subDatasource, ngIf: r.scheduled_substation_tab_view || r.scheduled_sub_bay_eqp_tab_view },
+      { label: this.locale_service.Locale.language.project.maintenancesettings.heading.bay, index: 2, dataSource: this.bayDatasource, ngIf: r.scheduled_bay_tab_view || r.scheduled_sub_bay_eqp_tab_view },
+      { label: this.locale_service.Locale.language.project.maintenancesettings.heading.eqp, index: 3, dataSource: this.eqpDatasource, ngIf: r.scheduled_equipment_tab_view || r.scheduled_sub_bay_eqp_tab_view },
       { label: this.locale_service.Locale.language.project.maintenancesettings.heading.transmission, index: 4, dataSource: this.tlDatasource, ngIf: r.scheduled_tl_tab_view },
       { label: this.locale_service.Locale.language.project.maintenancesettings.heading.transmission_observation, index: 5, dataSource: this.obtlDatasource, ngIf: r.scheduled_observation_tl_tab_view },
       { label: this.locale_service.Locale.language.project.maintenancesettings.heading.connected_bay, index: 6, dataSource: this.tlConnectedBayDatasource, ngIf: r.scheduled_connected_tl_for_bay_tab_view },

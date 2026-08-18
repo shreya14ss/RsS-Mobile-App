@@ -105,7 +105,7 @@
     <ion-button fill="clear"
       *ngIf="dialogData?.maintenanceDetails.requests_approves.ptw_issued_datetime > 0 && eventLogsPerformed?.length > 0"
       (click)="openEventPerformedDialog()">
-      <ion-icon name="calendar"></ion-icon>
+      <ion-icon name="receipt-outline"></ion-icon>
     </ion-button>
   </div>
 
@@ -115,7 +115,7 @@
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Event Log</ion-title>
+          <ion-title class="full-title">Event Log Performed</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="showEventLogModal = false">
               <ion-icon name="close-outline"></ion-icon>
@@ -147,7 +147,7 @@
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>PTW Export Preview</ion-title>
+          <ion-title class="full-title">PTW Export Preview</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="showExportModal = false">
               <ion-icon name="close-outline"></ion-icon>

@@ -13,7 +13,7 @@
 <mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange($event)" #tabGroup [(selectedIndex)]="selectedTabIndex">
 
   <!-- ═══════════════════════ SUBSTATION TAB ═══════════════════════ -->
-  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_substation_tab_view || resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
            [label]="locale_service.Locale.language.project.maintenancesettings.heading.substation">
 
     <div class="tab-body">
@@ -114,7 +114,7 @@
   </mat-tab>
 
   <!-- ═══════════════════════ BAY TAB ═══════════════════════ -->
-  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_bay_tab_view || resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
            [label]="locale_service.Locale.language.project.maintenancesettings.heading.bay">
 
     <div class="tab-body">
@@ -226,7 +226,7 @@
   </mat-tab>
 
   <!-- ═══════════════════════ EQUIPMENT TAB ═══════════════════════ -->
-  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
+  <mat-tab *ngIf="resolver.MaintenanceAccessRights.scheduled_equipment_tab_view || resolver.MaintenanceAccessRights.scheduled_sub_bay_eqp_tab_view"
            [label]="locale_service.Locale.language.project.maintenancesettings.heading.eqp">
 
     <div class="tab-body">
