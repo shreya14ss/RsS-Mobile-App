@@ -27,6 +27,9 @@
     <ion-text color="danger" *ngIf="form.get('tower_start')?.hasError('min')">
       Tower Number must be ≥ {{ dialogData.min }}
     </ion-text>
+    <ion-text color="danger" *ngIf="form.get('tower_start')?.hasError('max')">
+      Tower Number must be ≤ {{ dialogData.max }}
+    </ion-text>
 
     <ion-item>
       <ion-label position="stacked">
@@ -36,6 +39,9 @@
       </ion-input>
     </ion-item>
 
+    <ion-text color="danger" *ngIf="form.get('tower_end')?.hasError('min')">
+      Tower Number must be ≥ {{ dialogData.min }}
+    </ion-text>
     <ion-text color="danger" *ngIf="form.get('tower_end')?.hasError('max')">
       Tower Number must be ≤ {{ dialogData.max }}
     </ion-text>

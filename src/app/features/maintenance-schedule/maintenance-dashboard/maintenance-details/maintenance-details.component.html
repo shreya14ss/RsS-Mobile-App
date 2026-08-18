@@ -545,9 +545,9 @@
           </div>
 
           <!-- LIST -->
-          <ion-list *ngIf="filterObservationDatasource?.data?.length">
+          <ion-list *ngIf="visibleObservations.length">
 
-            <ion-item-sliding *ngFor="let row of filterObservationDatasource.data; let rindex = index">
+            <ion-item-sliding *ngFor="let row of visibleObservations; let rindex = index">
 
               <!-- ROW — tap opens the edit dialog when editing is allowed;
                    otherwise falls back to the view dialog. Matches the same
@@ -611,12 +611,12 @@
           </ion-list>
 
           <!-- EMPTY STATE -->
-          <div class="empty-state" *ngIf="!filterObservationDatasource?.data?.length">
+          <div class="empty-state" *ngIf="!visibleObservations.length">
             No observations found.
           </div>
 
           <!-- HINT -->
-          <div class="hint-text" *ngIf="filterObservationDatasource?.data?.length">
+          <div class="hint-text" *ngIf="visibleObservations.length">
             Tap row to edit • Swipe left to view • Swipe right to edit
           </div>
 

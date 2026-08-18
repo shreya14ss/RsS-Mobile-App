@@ -51,7 +51,7 @@
                         [checked]="category.value.selected[option] === '1'"
                         (click)="$event.stopPropagation()"
                         (change)="onCheckboxChange(option, category.value.selected)">
-            {{ option }}
+            {{ formatFilterOption(selectedTabLabel, category.key, option) }}
           </mat-checkbox>
           <div class="filter-empty" *ngIf="filteredCategoryOptions(category.key, category.value.options).length === 0">
             No matches
@@ -108,10 +108,11 @@
         <span>{{ getObservationUserTypeLabel(item.observationtype) }}</span>
       </div>
 
-      <!-- Location (parent substation, or line name for TL observations) -->
-      <div class="meta-row" *ngIf="item.substation || item.ob_line_name">
+      <!-- Location (parent substation only — the TL/line name is already the
+           card title, so falling back to ob_line_name here would duplicate it). -->
+      <div class="meta-row" *ngIf="item.substation">
         <ion-icon name="location-outline" class="meta-icon loc-icon"></ion-icon>
-        <span>{{ item.substation || item.ob_line_name }}</span>
+        <span>{{ item.substation }}</span>
       </div>
 
       <!-- Line number (TL observations) -->

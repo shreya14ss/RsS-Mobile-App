@@ -81,7 +81,13 @@
 
           <div class="tower-row">
             <ion-item class="tower-input">
-              <ion-label position="stacked">Tower From<span class="rs-required-mark">&nbsp;*</span></ion-label>
+              <ion-label position="stacked">
+                <ng-container *ngIf="form.get('tower_type').value === 'Tower'; else towerFromLabel">
+                  {{ locale_service.Locale.language.project.maintenancesettings.actiondlg.observation.select_tower_number }}
+                </ng-container>
+                <ng-template #towerFromLabel>Tower From</ng-template>
+                <span class="rs-required-mark">&nbsp;*</span>
+              </ion-label>
               <ion-input type="number" formControlName="tower_s" [min]="min" [max]="max"
                 [readonly]="form.get('tower_s')?.disabled"
                 (ionInput)="updateTowerE($event)">

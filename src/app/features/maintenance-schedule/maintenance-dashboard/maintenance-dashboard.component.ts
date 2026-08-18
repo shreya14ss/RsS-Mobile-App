@@ -392,13 +392,13 @@ export class MaintenanceDashboardComponent implements OnInit, AfterViewInit {
         unique_opts: {},
         options: [],
         selected: {}
+      },
+      status: {
+        name: "Status",
+        unique_opts: {},
+        options: [],
+        selected: {}
       }
-      /*      status: {
-              name: "Status",
-              unique_opts: {},
-              options: [],
-              selected: {}
-            }*/
     },
     "Backfeeding Requests": {
 
@@ -2736,7 +2736,7 @@ export class MaintenanceDashboardComponent implements OnInit, AfterViewInit {
       Equipment: { dataSource: this.eqpDatasource, original: this.originalData.Equipment, filters: ['mnttype', 'baytype', 'eqptype', 'eqp', 'bay'] },
       "Scheduled TL": { dataSource: this.sc_tlDatasource, original: this.originalData["Scheduled TL"], filters: ['mnttype', 'line_name', 'status'] },
       "Patrolling TL": { dataSource: this.pt_tlDatasource, original: this.originalData["Patrolling TL"], filters: ['mnttype', 'line_name', 'status'] },
-      "Observations List": { dataSource: this.observationDatasource, original: this.originalData["Observations List"], filters: ['ob_line_name', 'device_type', 'maintenance_type', 'user_role_based'] },
+      "Observations List": { dataSource: this.observationDatasource, original: this.originalData["Observations List"], filters: ['ob_line_name', 'device_type', 'maintenance_type', 'user_role_based', 'status'] },
       "XEN Approved": { dataSource: this.xenApprovedDataSource, original: this.originalData["XEN Approved"], filters: ['mnttype', 'status'] },
       "Maintenance Planned": { dataSource: this.plannedDatasource, original: this.originalData["Maintenance Planned"], filters: ['mnttype', 'status'] },
       "Observation Maintenance": { dataSource: this.obMaintenanceDatasource, original: this.originalData["Observation Maintenance"], filters: ['mnttype', 'status'] },
@@ -3002,6 +3002,7 @@ export class MaintenanceDashboardComponent implements OnInit, AfterViewInit {
   getObsStatusLabel(status: string): string {
     const map: Record<string, string> = {
       open: 'Open',
+      close: 'Close',
       fixed: 'Fixed',
       inprogress: 'In Progress',
       requireshutdown: 'Requires Shutdown',
@@ -3009,6 +3010,17 @@ export class MaintenanceDashboardComponent implements OnInit, AfterViewInit {
       scheduled: 'Scheduled',
     };
     return map[status?.toLowerCase()] ?? status ?? '';
+  }
+
+  // Display-only remap for filter checkbox labels. Selection/filtering still
+  // uses the raw option value, so filter matching is unaffected. Currently
+  // only used on Observations List → Status where the raw values are enum
+  // keys like "open"/"fixed" that shouldn't be shown as-is.
+  formatFilterOption(tabLabel: string, categoryKey: string, option: string): string {
+    if (tabLabel === 'Observations List' && categoryKey === 'status') {
+      return this.getObsStatusLabel(option);
+    }
+    return option;
   }
 
   // Mirrors ClientApp's OBSERVATION_USER_TYPE_OPTIONS mapping so the mobile

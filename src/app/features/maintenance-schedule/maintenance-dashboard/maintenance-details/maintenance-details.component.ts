@@ -168,6 +168,9 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
   isXenApprovedButtonDisabled: boolean = false;
   observationDatasource: MatTableDataSource<any> = new MatTableDataSource<any>();
   filterObservationDatasource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  // ion-list can't drive MatTableDataSource.filteredData (no connect() on ion-list),
+  // so we run the search predicate ourselves and let the template read this getter.
+  obsSearchTerm: string = '';
 
   TLmaintenanceobservationDatasource: MatTableDataSource<any> = new MatTableDataSource<any>();
   othermaintenanceobservationDatasource: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -2753,6 +2756,11 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
       (this.selectedTabLabel && this.selectedTabLabel.toLowerCase().includes('observation')) ||
       this.selectedTabLabel === 'Pending Observations';
 
+    // Track the observation search term separately — ion-list can't observe
+    // MatTableDataSource.filteredData, so the template reads visibleObservations
+    // which applies the predicate against this term.
+    this.obsSearchTerm = filterValue;
+
     if (isObservationClick || selectedIsObsList) {
       if (this.filterObservationDatasource) {
         this.filterObservationDatasource.filter = filterValue;
@@ -2806,6 +2814,14 @@ export class MaintenanceDetailsDlgComponent implements OnInit, AfterViewInit {
     if (this.filterObservationDatasource) {
       this.filterObservationDatasource.filter = filterValue;
     }
+  }
+
+  get visibleObservations(): any[] {
+    const ds = this.filterObservationDatasource;
+    const data = ds?.data ?? [];
+    const term = (this.obsSearchTerm || '').trim().toLowerCase();
+    if (!term || !ds?.filterPredicate) return data;
+    return data.filter(row => ds.filterPredicate(row, term));
   }
 
 
